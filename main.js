@@ -27,11 +27,36 @@
 
 
 /***************************************************************************************************
+ * callGoogleData
+ * @params {string} input from the User to search through Google Maps
+ * @returns: {undefined}
+ * Sends request to Google API to pull data based off search input from User
+ */
+
+
+/***************************************************************************************************
  * renderInformationOnDOM
  * @params {object} results from ajax calls
  * @returns: {undefined}
  * Takes the information from the ajax calls and displays on to DOM
  */
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
