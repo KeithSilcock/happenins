@@ -178,7 +178,8 @@ function eventfulEventRequest(){
                     var description = rawData.events.event[event].description;
                 }
 
-
+                var startTime = rawData.events.event[event].start_time;
+                startTime = startTime.split(" ")[1]; // converting "2018-04-20 20:30:00" to "20:30:00"
                 var latitude = rawData.events.event[event].latitude;
                 var longitude = rawData.events.event[event].longitude;
 
@@ -187,11 +188,12 @@ function eventfulEventRequest(){
                     cityName: cityName,
                     imageSmallUrl: imageSmallUrl,
                     imageLargeUrl: imageLargeUrl,
-                    venue_address: venue_address,
-                    venue_name: venue_name,
+                    venueAddress: venue_address,
+                    venueName: venue_name,
                     description: description,
                     latitude: latitude,
-                    longitude: longitude
+                    longitude: longitude,
+                    startTime: startTime,
                 }
 
                 eventSearchResultArray.push(eventSearchResultObject);
