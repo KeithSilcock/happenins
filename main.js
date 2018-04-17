@@ -167,6 +167,11 @@ $(window).on('load', function () {
 class EventRenderer{
     constructor(infoToRender){
         this.infoToRender = infoToRender;
+        this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
+            'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
+            'other'];
+
+        this.renderDropDownMenu(this.arrayOfEventCategories);
 
         let domElement1 = this.parseData(this.infoToRender);
         this.renderOnScreen(domElement1)
@@ -178,9 +183,24 @@ class EventRenderer{
         this.renderOnScreen(domElement3)
     }
 
+    renderDropDownMenu(arrayOfEventCats){
+        let dropDownMenuUL=$(".dropDownUL");
+
+        arrayOfEventCats.forEach(function (liName) {
+            let thisLI= $("<li>",{
+                'class': `dropDownLI dropDown${liName}`,
+                text: liName
+            })
+            dropDownMenuUL.append(thisLI)
+        })
+    }
+
     parseData(infoToParse){
         let eventContainer = $("<div>",{
             'class':'event col-xs-12',
+            on:{
+                'click': this.handlePopOutAnimation.bind(this),
+            },
         });
         let pictureEl = $("<img>",{
             'class':'eventImg col-xs-3',
@@ -203,11 +223,72 @@ class EventRenderer{
             text: `Where: ${infoToParse.location}`,
         });
 
+
+        // start extra information
+        let extraEl = $("<div>",{
+            'class':'eventExtra shrink',
+        });
+
+        let extraInfoText = $("<div>",{
+            'class':'eventExtraInfo',
+            text: "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids" +
+            "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids",
+
+        });
+        let addButton = $("<button>", {
+            'type':'button',
+            'class': 'addEventButton col-xs-offset-4 col-xs-4',
+            'text':'add to list',
+        });
+
+        //closure to get added data
+        (function (that) {
+            addButton.on({
+                'click':that.handleAddToListButtonClick.bind(this, that, infoToParse),
+            })
+        })(this);
+
+        extraEl.append(extraInfoText, addButton);
+
         // let arrayOfElements = [pictureEl, nameEl, dateEl, locationEl];
 
         // this.bootstrapClassAdder(arrayOfElements);
 
-        return eventContainer.append(pictureEl, nameEl, dateEl, locationEl);
+        return eventContainer.append(pictureEl, nameEl, dateEl, locationEl, extraEl);
+    }
+
+    handlePopOutAnimation(eventOfClick){
+        let parent = $(eventOfClick.target).closest('.event');
+        let extraInfoDiv = parent.find('.eventExtra');
+
+        this.shrinkAnyExpandedDivs(extraInfoDiv);
+        this.popOutAnimation(extraInfoDiv);
+    }
+
+    shrinkAnyExpandedDivs(divToSkip){
+        let expandedDivs=$(".expand");
+        for(let divIndex = 0; divIndex < expandedDivs.length; divIndex++){
+            if(expandedDivs[divIndex] !== divToSkip[0])
+            expandedDivs.removeClass('expand').addClass('shrink')
+        }
+    }
+
+    popOutAnimation(extraInfoDiv){
+        if(extraInfoDiv.hasClass('expand')) {
+            extraInfoDiv.removeClass('expand').addClass('shrink');
+        }else{
+            extraInfoDiv.removeClass('shrink').addClass('expand');
+        }
+    }
+
+    handleAddToListButtonClick(thisObj, info, event){
+        thisObj.handlePopOutAnimation(event);
+        // ^^^ keeps expanded list from closing, but need to fix in later edition
+
+        console.log(info)
+
+        //collect data from event clicked
+
     }
 
     bootstrapClassAdder(arrayOfElements){
