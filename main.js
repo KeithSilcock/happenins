@@ -4,15 +4,15 @@
 
 // variables to pull data from DOM
 var yelpSearchObj = {
-    term: /*DOM element search item*/,
-    latitude: /*DOM element search item*/,
-    longitude: /*DOM element search item*/,
-    location: /*DOM element search item*/,
-    radius: /*DOM element search item*/,
-    categories: /*DOM element search item*/,
-    price: /*DOM element search item*/,
-    open_now: /*DOM element search item*/,
-    sort_by: /*DOM element search item*/,
+    term: 'bbq',
+    latitude: 34.0522/*DOM element search item*/,
+    longitude: -118.2437/*DOM element search item*/,
+    location: ""/*DOM element search item*/,
+    radius: 2/*DOM element search item*/,
+    // categories: /*DOM element search item*/,
+    // price: /*DOM element search item*/,
+    // open_now: /*DOM element search item*/,
+    // sort_by: /*DOM element search item*/,
 };
 const yelpBusinessResultsArray = [];
 
@@ -37,7 +37,7 @@ function initializeApp() {
  */
 
 function addHoverhandler() {
-    $(/*DOM element to be selected*/).hover(/*some function to display data*/)
+    // $(/*DOM element to be selected*/).hover(/*some function to display data*/)
 }
 
 /***************************************************************************************************
