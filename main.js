@@ -6,8 +6,10 @@
 var searchFoodItem;
 var foodLatitude;
 var foodLongitude;
+var eventSearchResultArray = [];
+var a = [];
 
-$(document).ready(initializing);
+$(document).ready(initializeApp);
 
 // variables to pull data from DOM
 var yelpSearchObj = {}
@@ -24,11 +26,6 @@ var yelpSearchObj = {}
 // };
 const yelpBusinessResultsArray = [];
 
-function initializing() {
-    eventfulEventRequest();
-    //eventfulEventRequest(startDate, endDate, category)
-}
-
 /***************************************************************************************************
  * initializeApp
  * @params {undefined} none
@@ -37,7 +34,7 @@ function initializing() {
  */
 
 function initializeApp() {
-    addHoverHandlers();
+    //addHoverHandlers();
     addClickHandlers();
 }
 
@@ -60,7 +57,12 @@ function addHoverhandler() {
  */
 
 function addClickHandlers() {
-    // $(#eventSearchButton).click(/*some function*/);
+    $('#searchButten').click(function(){
+        eventfulEventRequest();
+    });
+
+    //var eventSearch = $('#searchButten').click(eventfulEventRequest(startDate, endDate, category));
+
     // $("#yelpSearchButton").click(submitYelpButtonClicked);
 }
 
@@ -150,7 +152,6 @@ console.log(newYelpCall);
 //function eventfulEventRequest(startDate, endDate, category){
 function eventfulEventRequest(){
 
-    var eventSearchResultArray = [];
     var eventSearchResultObject = {};
 
     $.ajax({
@@ -192,10 +193,6 @@ function eventfulEventRequest(){
 
                 eventSearchResultArray.push(eventSearchResultObject);
             }
-
-
-
-            console.log(eventSearchResultArray);
 
             return eventSearchResultArray;
 
