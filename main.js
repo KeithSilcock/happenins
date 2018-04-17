@@ -35,6 +35,7 @@ const yelpBusinessResultsArray = [];
 
 
 function initializeApp() {
+    eventfulEventRequest()
     //addHoverHandlers();
     addClickHandlers();
     //eventfulEventRequest(startDate, endDate, category)
@@ -61,6 +62,7 @@ function addHoverHandler() {
 function addClickHandlers() {
     $('#searchButten').click(function(){
         eventfulEventRequest();
+
     });
 
     //var eventSearch = $('#searchButten').click(eventfulEventRequest(startDate, endDate, category));
@@ -142,7 +144,6 @@ console.log(newYelpCall);
  * @para`ms {string} input from the User to search through PredictHQ
  * @returns: {object} data from PredictHQ
  * Sends request to PredictHQ API to pull data based off search input from User
->>>>>>> bdfd4bfb3304a34041fa6092b04ac50fab2e3818
  */
 //function eventfulEventRequest(startDate, endDate, category){
 function eventfulEventRequest(){
@@ -156,6 +157,7 @@ function eventfulEventRequest(){
         data: {},
         success: function (rawData) {
             for (var event=0; event<rawData.events.event.length; event++){
+
                 if (rawData.events.event[event].title !== null) {
                     var title = rawData.events.event[event].title;
                 }
@@ -176,6 +178,10 @@ function eventfulEventRequest(){
                     var description = rawData.events.event[event].description;
                 }
 
+
+                var latitude = rawData.events.event[event].latitude;
+                var longitude = rawData.events.event[event].longitude;
+
                 eventSearchResultObject = {
                     title: title,
                     cityName: cityName,
@@ -183,12 +189,14 @@ function eventfulEventRequest(){
                     imageLargeUrl: imageLargeUrl,
                     venue_address: venue_address,
                     venue_name: venue_name,
-                    description: description
+                    description: description,
+                    latitude: latitude,
+                    longitude: longitude
                 }
 
                 eventSearchResultArray.push(eventSearchResultObject);
             }
-
+            console.log(eventSearchResultArray);
             return eventSearchResultArray;
 
         },
