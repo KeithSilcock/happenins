@@ -10,18 +10,18 @@ var foodLongitude;
 $(document).ready(initializing);
 
 // variables to pull data from DOM
-var yelpSearchObj = {
-    access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-    term: /*DOM element search item - a string*/,
-    latitude: 34.0522 // current number is for LA  /*DOM element search item - a number, can have decimals*/,
-    longitude: -118.2437// current number is for LA   /*DOM element search item - a number, can have decimals*/,
-    location: /*DOM element search item - a string*/,
-    radius: /*DOM element search item in METERS - a number*/,
-    categories: /*DOM element search item - a string*/,
-    price: /*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
-    open_now: /*DOM element search item - boolean*/,
-    sort_by: /*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
-};
+var yelpSearchObj = {}
+//     access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
+//     term: /*DOM element search item - a string*/,
+//     latitude: 34.0522 // current number is for LA  /*DOM element search item - a number, can have decimals*/,
+//     longitude: -118.2437// current number is for LA   /*DOM element search item - a number, can have decimals*/,
+//     location: /*DOM element search item - a string*/,
+//     radius: /*DOM element search item in METERS - a number*/,
+//     categories: /*DOM element search item - a string*/,
+//     price: /*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
+//     open_now: /*DOM element search item - boolean*/,
+//     sort_by: /*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
+// };
 const yelpBusinessResultsArray = [];
 
 function initializing() {
@@ -97,13 +97,13 @@ class yelpData {
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
-        debugger;
-        console.log(data);
-        yelpBusinessResultsArray.length = 0;
-        data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-        console.log(yelpBusinessResultsArray);
-        var {latitude, longitude} = data.region.center;
-        console.log(latitude, longitude);
+        // debugger;
+        // console.log(data);
+        // yelpBusinessResultsArray.length = 0;
+        // data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
+        // console.log(yelpBusinessResultsArray);
+        // var {latitude, longitude} = data.region.center;
+        // console.log(latitude, longitude);
     }
 }
 
