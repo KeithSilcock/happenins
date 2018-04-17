@@ -2,6 +2,13 @@
  * Global variables
  */
 
+
+var searchFoodItem;
+var foodLatitude;
+var foodLongitude;
+
+$(document).ready(initializing);
+
 // variables to pull data from DOM
 var yelpSearchObj = {}
 //     access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
@@ -17,6 +24,10 @@ var yelpSearchObj = {}
 // };
 const yelpBusinessResultsArray = [];
 
+function initializing() {
+    eventfulEventRequest();
+    //eventfulEventRequest(startDate, endDate, category)
+}
 
 /***************************************************************************************************
  * initializeApp
@@ -134,7 +145,68 @@ console.log(newYelpCall);
  * @para`ms {string} input from the User to search through PredictHQ
  * @returns: {object} data from PredictHQ
  * Sends request to PredictHQ API to pull data based off search input from User
+>>>>>>> bdfd4bfb3304a34041fa6092b04ac50fab2e3818
  */
+//function eventfulEventRequest(startDate, endDate, category){
+function eventfulEventRequest(){
+
+    var eventSearchResultArray = [];
+    var eventSearchResultObject = {};
+
+    $.ajax({
+        //url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date="+  startDate +"00-" + endDate + "00&category=" +  category + "&image_sizes=blackborder250,block100&page_size=10&category=new",
+        url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=2018042000-2018042000&category=music&image_sizes=blackborder250,block100&page_size=20&category=new",
+        dataType: 'jsonp',
+        data: {},
+        success: function (rawData) {
+            for (var event=0; event<rawData.events.event.length; event++){
+                if (rawData.events.event[event].title !== null) {
+                    var title = rawData.events.event[event].title;
+                }
+                if (rawData.events.event[event].city_name !== null) {
+                    var cityName = rawData.events.event[event].city_name;
+                }
+                if (rawData.events.event[event].image !== null) {
+                    var imageSmallUrl = 'http:' + rawData.events.event[event].image.block100.url;
+                    var imageLargeUrl = 'http:' + rawData.events.event[event].image.blackborder250.url;
+                }
+                if (rawData.events.event[event].venue_address !== null) {
+                    var venue_address = rawData.events.event[event].venue_address;
+                }
+                if (rawData.events.event[event].venue_name!== null) {
+                    var venue_name = rawData.events.event[event].venue_name;
+                }
+                if (rawData.events.event[event].description !== null) {
+                    var description = rawData.events.event[event].description;
+                }
+
+                eventSearchResultObject = {
+                    title: title,
+                    cityName: cityName,
+                    imageSmallUrl: imageSmallUrl,
+                    imageLargeUrl: imageLargeUrl,
+                    venue_address: venue_address,
+                    venue_name: venue_name,
+                    description: description
+                }
+
+                eventSearchResultArray.push(eventSearchResultObject);
+            }
+
+
+
+            console.log(eventSearchResultArray);
+
+            return eventSearchResultArray;
+
+        },
+        error: function (error) { console.log(error) },
+    });
+
+
+
+}
+
 
 
 /***************************************************************************************************
