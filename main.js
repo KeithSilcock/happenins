@@ -10,18 +10,18 @@ var foodLongitude;
 $(document).ready(initializing);
 
 // variables to pull data from DOM
-var yelpSearchObj = {}
-//     access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-//     term: /*DOM element search item - a string*/,
-//     latitude: 34.0522 // current number is for LA  /*DOM element search item - a number, can have decimals*/,
-//     longitude: -118.2437// current number is for LA   /*DOM element search item - a number, can have decimals*/,
-//     location: /*DOM element search item - a string*/,
-//     radius: /*DOM element search item in METERS - a number*/,
-//     categories: /*DOM element search item - a string*/,
-//     price: /*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
-//     open_now: /*DOM element search item - boolean*/,
-//     sort_by: /*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
-// };
+var yelpSearchObj = {
+    access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
+    term: "bbq"/*DOM element search item - a string*/,
+    latitude: 34.0522, // current number is for LA  /*DOM element search item - a number, can have decimals*/,
+    longitude: -118.2437, // current number is for LA   /*DOM element search item - a number, can have decimals*/,
+    location: "Los Angeles"/*DOM element search item - a string*/,
+    radius: 4000/*DOM element search item in METERS - a number*/,
+    categories: "bbq"/*DOM element search item - a string*/,
+    price: "1,2,3"/*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
+    open_now: false /*DOM element search item - boolean*/,
+    sort_by: "review_count"/*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
+};
 const yelpBusinessResultsArray = [];
 
 
@@ -82,18 +82,12 @@ class yelpData {
             method: 'POST',
             url: "http://yelp.ongandy.com/businesses",
             data: this.searchObject,
-            //     {
-            //     "access_token": "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-            //     "term" :"bbq",
-            //     "latitude": 34.0522/*DOM element search item*/,
-            //     "longitude": -118.2437/*DOM element search item*/
-            // },
             success: this.pullBusinessData,
             error: function (errors) {
                 console.log("errors : ", errors);
             }
         };
-        // $.ajax(yelpAjaxCall);
+        $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
         console.log(data);
