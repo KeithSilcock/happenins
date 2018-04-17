@@ -422,7 +422,16 @@ function submitYelpButtonClicked() {
 }
 
 
+/***************************************************************************************************
+ * createGoogleMap
+ * @params {undefined}
+ * @returns: {object} searchObject that contains properties that contain an address or coordinates to center map
+ * creates a map to display onto page that will contain makers. Markers will be yelp results
+ */
 
+function createGoogleMap(searchObj) {
+
+}
 
 
 
