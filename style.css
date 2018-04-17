@@ -61,3 +61,6 @@ body{
 .shrink{
     display: none;
 }
+.addEventButton{
+text-align: center;
+}

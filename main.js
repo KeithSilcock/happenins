@@ -94,10 +94,9 @@ class EventRenderer{
     parseData(infoToParse){
         let eventContainer = $("<div>",{
             'class':'event col-xs-12',
-            'data-collapsed':false,
             on:{
                 'click': this.handlePopOutAnimation.bind(this),
-            }
+            },
         });
         let pictureEl = $("<img>",{
             'class':'eventImg col-xs-3',
@@ -121,21 +120,31 @@ class EventRenderer{
         });
 
 
+        // start extra information
         let extraEl = $("<div>",{
             'class':'eventExtra shrink',
+        });
+
+        let extraInfoText = $("<div>",{
+            'class':'eventExtraInfo',
             text: "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids" +
             "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids",
 
         });
+        let addButton = $("<button>", {
+            'type':'button',
+            'class': 'addEventButton col-xs-offset-4 col-xs-4',
+            'text':'add to list',
+        });
 
-        //for click handler
-        // let eventCover= $("<div>",{
-        //     'class':'eventCover',
-        //     'data-collapsed':false,
-        //     on:{
-        //         'click': this.handlePopOutAnimation.bind(this),
-        //     }
-        // });
+        //closure to get added data
+        (function (that) {
+            addButton.on({
+                'click':that.handleAddToListButtonClick.bind(this, that, infoToParse),
+            })
+        })(this);
+
+        extraEl.append(extraInfoText, addButton);
 
         // let arrayOfElements = [pictureEl, nameEl, dateEl, locationEl];
 
@@ -166,6 +175,16 @@ class EventRenderer{
         }else{
             extraInfoDiv.removeClass('shrink').addClass('expand');
         }
+    }
+
+    handleAddToListButtonClick(thisObj, info, event){
+        thisObj.handlePopOutAnimation(event);
+        // ^^^ keeps expanded list from closing, but need to fix in later edition
+
+        console.log(info)
+
+        //collect data from event clicked
+
     }
 
     bootstrapClassAdder(arrayOfElements){
