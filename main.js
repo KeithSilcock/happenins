@@ -2,21 +2,32 @@
  * Global variables
  */
 
+
+var searchFoodItem;
+var foodLatitude;
+var foodLongitude;
+
+$(document).ready(initializing);
+
 // variables to pull data from DOM
-var yelpSearchObj = {
-    access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-    term: /*DOM element search item - a string*/,
-    latitude: 34.0522 // current number is for LA  /*DOM element search item - a number, can have decimals*/,
-    longitude: -118.2437// current number is for LA   /*DOM element search item - a number, can have decimals*/,
-    location: /*DOM element search item - a string*/,
-    radius: /*DOM element search item in METERS - a number*/,
-    categories: /*DOM element search item - a string*/,
-    price: /*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
-    open_now: /*DOM element search item - boolean*/,
-    sort_by: /*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
-};
+var yelpSearchObj = {}
+//     access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
+//     term: /*DOM element search item - a string*/,
+//     latitude: 34.0522 // current number is for LA  /*DOM element search item - a number, can have decimals*/,
+//     longitude: -118.2437// current number is for LA   /*DOM element search item - a number, can have decimals*/,
+//     location: /*DOM element search item - a string*/,
+//     radius: /*DOM element search item in METERS - a number*/,
+//     categories: /*DOM element search item - a string*/,
+//     price: /*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
+//     open_now: /*DOM element search item - boolean*/,
+//     sort_by: /*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
+// };
 const yelpBusinessResultsArray = [];
 
+function initializing() {
+    eventfulEventRequest();
+    //eventfulEventRequest(startDate, endDate, category)
+}
 
 /***************************************************************************************************
  * initializeApp
@@ -86,13 +97,13 @@ class yelpData {
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
-        debugger;
-        console.log(data);
-        yelpBusinessResultsArray.length = 0;
-        data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-        console.log(yelpBusinessResultsArray);
-        var {latitude, longitude} = data.region.center;
-        console.log(latitude, longitude);
+        // debugger;
+        // console.log(data);
+        // yelpBusinessResultsArray.length = 0;
+        // data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
+        // console.log(yelpBusinessResultsArray);
+        // var {latitude, longitude} = data.region.center;
+        // console.log(latitude, longitude);
     }
 }
 
@@ -125,13 +136,77 @@ console.log(newYelpCall);
 // $.ajax(yelpAjaxCall);
 
 
+// $.ajax(yelpAjaxCall);
+
+
 
 /***************************************************************************************************
  * callEventData
  * @para`ms {string} input from the User to search through PredictHQ
  * @returns: {object} data from PredictHQ
  * Sends request to PredictHQ API to pull data based off search input from User
+>>>>>>> bdfd4bfb3304a34041fa6092b04ac50fab2e3818
  */
+//function eventfulEventRequest(startDate, endDate, category){
+function eventfulEventRequest(){
+
+    var eventSearchResultArray = [];
+    var eventSearchResultObject = {};
+
+    $.ajax({
+        //url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date="+  startDate +"00-" + endDate + "00&category=" +  category + "&image_sizes=blackborder250,block100&page_size=10&category=new",
+        url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=2018042000-2018042000&category=music&image_sizes=blackborder250,block100&page_size=20&category=new",
+        dataType: 'jsonp',
+        data: {},
+        success: function (rawData) {
+            for (var event=0; event<rawData.events.event.length; event++){
+                if (rawData.events.event[event].title !== null) {
+                    var title = rawData.events.event[event].title;
+                }
+                if (rawData.events.event[event].city_name !== null) {
+                    var cityName = rawData.events.event[event].city_name;
+                }
+                if (rawData.events.event[event].image !== null) {
+                    var imageSmallUrl = 'http:' + rawData.events.event[event].image.block100.url;
+                    var imageLargeUrl = 'http:' + rawData.events.event[event].image.blackborder250.url;
+                }
+                if (rawData.events.event[event].venue_address !== null) {
+                    var venue_address = rawData.events.event[event].venue_address;
+                }
+                if (rawData.events.event[event].venue_name!== null) {
+                    var venue_name = rawData.events.event[event].venue_name;
+                }
+                if (rawData.events.event[event].description !== null) {
+                    var description = rawData.events.event[event].description;
+                }
+
+                eventSearchResultObject = {
+                    title: title,
+                    cityName: cityName,
+                    imageSmallUrl: imageSmallUrl,
+                    imageLargeUrl: imageLargeUrl,
+                    venue_address: venue_address,
+                    venue_name: venue_name,
+                    description: description
+                }
+
+                eventSearchResultArray.push(eventSearchResultObject);
+            }
+
+
+
+            console.log(eventSearchResultArray);
+
+            return eventSearchResultArray;
+
+        },
+        error: function (error) { console.log(error) },
+    });
+
+
+
+}
+
 
 
 /***************************************************************************************************
@@ -149,11 +224,153 @@ console.log(newYelpCall);
  * Takes the information from the ajax calls and displays on to DOM
  */
 
+$(window).on('load', function () {
 
+    let dummyData = {
+        location: '24576 villa tonda',
+        'eventName': 'Huge Great Party',
+        'time': "14:30",
+        'date': "05-04-18",
+    };
 
-class eventRenderer{
+    let newEventRenderer = new EventRenderer(dummyData);
+})
+
+class EventRenderer{
     constructor(infoToRender){
-        this.infoToRender = infoToRender
+        this.infoToRender = infoToRender;
+        this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
+            'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
+            'other'];
+
+        this.renderDropDownMenu(this.arrayOfEventCategories);
+
+        let domElement1 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement1)
+
+        let domElement2 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement2)
+
+        let domElement3 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement3)
+    }
+
+    renderDropDownMenu(arrayOfEventCats){
+        let dropDownMenuUL=$(".dropDownUL");
+
+        arrayOfEventCats.forEach(function (liName) {
+            let thisLI= $("<li>",{
+                'class': `dropDownLI dropDown${liName}`,
+                text: liName
+            })
+            dropDownMenuUL.append(thisLI)
+        })
+    }
+
+    parseData(infoToParse){
+        let eventContainer = $("<div>",{
+            'class':'event col-xs-12',
+            on:{
+                'click': this.handlePopOutAnimation.bind(this),
+            },
+        });
+        let pictureEl = $("<img>",{
+            'class':'eventImg col-xs-3',
+            src:"includes/images/testPartyImg.jpeg",
+        });
+        let nameEl = $("<div>",{
+            'class':'eventName row col-xs-8',
+            text: infoToParse.eventName,
+        });
+        let dateEl = $("<div>",{
+            'class':'eventDate',
+            text: `When: ${infoToParse.time}, ${infoToParse.date}`,
+        });
+        // let timeEl = $("<div>",{
+        //     'class':'eventTime',
+        //     text: infoToParse.time,
+        // });
+        let locationEl = $("<div>",{
+            'class':'eventLoc',
+            text: `Where: ${infoToParse.location}`,
+        });
+
+
+        // start extra information
+        let extraEl = $("<div>",{
+            'class':'eventExtra shrink',
+        });
+
+        let extraInfoText = $("<div>",{
+            'class':'eventExtraInfo',
+            text: "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids" +
+            "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids",
+
+        });
+        let addButton = $("<button>", {
+            'type':'button',
+            'class': 'addEventButton col-xs-offset-4 col-xs-4',
+            'text':'add to list',
+        });
+
+        //closure to get added data
+        (function (that) {
+            addButton.on({
+                'click':that.handleAddToListButtonClick.bind(this, that, infoToParse),
+            })
+        })(this);
+
+        extraEl.append(extraInfoText, addButton);
+
+        // let arrayOfElements = [pictureEl, nameEl, dateEl, locationEl];
+
+        // this.bootstrapClassAdder(arrayOfElements);
+
+        return eventContainer.append(pictureEl, nameEl, dateEl, locationEl, extraEl);
+    }
+
+    handlePopOutAnimation(eventOfClick){
+        let parent = $(eventOfClick.target).closest('.event');
+        let extraInfoDiv = parent.find('.eventExtra');
+
+        this.shrinkAnyExpandedDivs(extraInfoDiv);
+        this.popOutAnimation(extraInfoDiv);
+    }
+
+    shrinkAnyExpandedDivs(divToSkip){
+        let expandedDivs=$(".expand");
+        for(let divIndex = 0; divIndex < expandedDivs.length; divIndex++){
+            if(expandedDivs[divIndex] !== divToSkip[0])
+            expandedDivs.removeClass('expand').addClass('shrink')
+        }
+    }
+
+    popOutAnimation(extraInfoDiv){
+        if(extraInfoDiv.hasClass('expand')) {
+            extraInfoDiv.removeClass('expand').addClass('shrink');
+        }else{
+            extraInfoDiv.removeClass('shrink').addClass('expand');
+        }
+    }
+
+    handleAddToListButtonClick(thisObj, info, event){
+        thisObj.handlePopOutAnimation(event);
+        // ^^^ keeps expanded list from closing, but need to fix in later edition
+
+        console.log(info)
+
+        //collect data from event clicked
+
+    }
+
+    bootstrapClassAdder(arrayOfElements){
+        arrayOfElements.forEach(function (item) {
+            item.addClass('col-xs-3')
+        })
+    }
+
+    renderOnScreen(domElement){
+        $(".eventsContainer").append(domElement);
     }
 }
 
