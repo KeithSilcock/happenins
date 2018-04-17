@@ -1,0 +1,19 @@
+.body{
+    width: 100vw;
+    height: 100vh;
+}
+.event{
+    border: 2px solid black;
+}
+
+.eventsContainer{
+
+}
+.event, .eventImg{
+    padding:0;
+}
+
+.eventImg{
+    width: 40%;
+    /*height: 5%;*/
+}
