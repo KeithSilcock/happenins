@@ -80,6 +80,11 @@ $(window).on('load', function () {
 class EventRenderer{
     constructor(infoToRender){
         this.infoToRender = infoToRender;
+        this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
+            'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
+            'other'];
+
+        this.renderDropDownMenu(this.arrayOfEventCategories);
 
         let domElement1 = this.parseData(this.infoToRender);
         this.renderOnScreen(domElement1)
@@ -89,6 +94,18 @@ class EventRenderer{
 
         let domElement3 = this.parseData(this.infoToRender);
         this.renderOnScreen(domElement3)
+    }
+
+    renderDropDownMenu(arrayOfEventCats){
+        let dropDownMenuUL=$(".dropDownUL");
+
+        arrayOfEventCats.forEach(function (liName) {
+            let thisLI= $("<li>",{
+                'class': `dropDownLI dropDown${liName}`,
+                text: liName
+            })
+            dropDownMenuUL.append(thisLI)
+        })
     }
 
     parseData(infoToParse){
