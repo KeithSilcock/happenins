@@ -125,6 +125,9 @@ console.log(newYelpCall);
 // $.ajax(yelpAjaxCall);
 
 
+// $.ajax(yelpAjaxCall);
+
+
 
 /***************************************************************************************************
  * callEventData
@@ -149,11 +152,72 @@ console.log(newYelpCall);
  * Takes the information from the ajax calls and displays on to DOM
  */
 
+$(window).on('load', function () {
 
+    let dummyData = {
+        location: '24576 villa tonda',
+        'eventName': 'Huge Great Party',
+        'time': "14:30",
+        'date': "05-04-18",
+    };
 
-class eventRenderer{
+    let newEventRenderer = new EventRenderer(dummyData);
+})
+
+class EventRenderer{
     constructor(infoToRender){
-        this.infoToRender = infoToRender
+        this.infoToRender = infoToRender;
+
+        let domElement1 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement1)
+
+        let domElement2 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement2)
+
+        let domElement3 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement3)
+    }
+
+    parseData(infoToParse){
+        let eventContainer = $("<div>",{
+            'class':'event col-xs-12',
+        });
+        let pictureEl = $("<img>",{
+            'class':'eventImg col-xs-3',
+            src:"includes/images/testPartyImg.jpeg",
+        });
+        let nameEl = $("<div>",{
+            'class':'eventName row col-xs-8',
+            text: infoToParse.eventName,
+        });
+        let dateEl = $("<div>",{
+            'class':'eventDate',
+            text: `When: ${infoToParse.time}, ${infoToParse.date}`,
+        });
+        // let timeEl = $("<div>",{
+        //     'class':'eventTime',
+        //     text: infoToParse.time,
+        // });
+        let locationEl = $("<div>",{
+            'class':'eventLoc',
+            text: `Where: ${infoToParse.location}`,
+        });
+
+        // let arrayOfElements = [pictureEl, nameEl, dateEl, locationEl];
+
+        // this.bootstrapClassAdder(arrayOfElements);
+
+        return eventContainer.append(pictureEl, nameEl, dateEl, locationEl);
+    }
+
+    bootstrapClassAdder(arrayOfElements){
+        arrayOfElements.forEach(function (item) {
+            item.addClass('col-xs-3')
+        })
+    }
+
+    renderOnScreen(domElement){
+        $(".eventsContainer").append(domElement);
     }
 }
 
