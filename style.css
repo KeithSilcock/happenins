@@ -50,3 +50,14 @@ body{
 .eventImg{
     width: 40%;
 }
+.eventCover{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+}
+.expand{
+    display: block;
+}
+.shrink{
+    display: none;
+}

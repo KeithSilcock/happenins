@@ -94,6 +94,10 @@ class EventRenderer{
     parseData(infoToParse){
         let eventContainer = $("<div>",{
             'class':'event col-xs-12',
+            'data-collapsed':false,
+            on:{
+                'click': this.handlePopOutAnimation.bind(this),
+            }
         });
         let pictureEl = $("<img>",{
             'class':'eventImg col-xs-3',
@@ -116,11 +120,52 @@ class EventRenderer{
             text: `Where: ${infoToParse.location}`,
         });
 
+
+        let extraEl = $("<div>",{
+            'class':'eventExtra shrink',
+            text: "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids" +
+            "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids",
+
+        });
+
+        //for click handler
+        // let eventCover= $("<div>",{
+        //     'class':'eventCover',
+        //     'data-collapsed':false,
+        //     on:{
+        //         'click': this.handlePopOutAnimation.bind(this),
+        //     }
+        // });
+
         // let arrayOfElements = [pictureEl, nameEl, dateEl, locationEl];
 
         // this.bootstrapClassAdder(arrayOfElements);
 
-        return eventContainer.append(pictureEl, nameEl, dateEl, locationEl);
+        return eventContainer.append(pictureEl, nameEl, dateEl, locationEl, extraEl);
+    }
+
+    handlePopOutAnimation(eventOfClick){
+        let parent = $(eventOfClick.target).closest('.event');
+        let extraInfoDiv = parent.find('.eventExtra');
+
+        this.shrinkAnyExpandedDivs(extraInfoDiv);
+        this.popOutAnimation(extraInfoDiv);
+    }
+
+    shrinkAnyExpandedDivs(divToSkip){
+        let expandedDivs=$(".expand");
+        for(let divIndex = 0; divIndex < expandedDivs.length; divIndex++){
+            if(expandedDivs[divIndex] !== divToSkip[0])
+            expandedDivs.removeClass('expand').addClass('shrink')
+        }
+    }
+
+    popOutAnimation(extraInfoDiv){
+        if(extraInfoDiv.hasClass('expand')) {
+            extraInfoDiv.removeClass('expand').addClass('shrink');
+        }else{
+            extraInfoDiv.removeClass('shrink').addClass('expand');
+        }
     }
 
     bootstrapClassAdder(arrayOfElements){
