@@ -154,33 +154,44 @@ console.log(newYelpCall);
 
 $(window).on('load', function () {
 
-    let dummyData = {
-        location: '24576 villa tonda',
-        'eventName': 'Huge Great Party',
-        'time': "14:30",
-        'date': "05-04-18",
-    };
+    let arrayOfDummyData = [
+        {
+            location: '24576 villa tonda',
+            'eventName': 'Huge Great Party',
+            'time': "14:30",
+            'date': "05-04-18",
+        },
+        {
+            location: '24576 villa tonda',
+            'eventName': 'Huge Great Party',
+            'time': "14:30",
+            'date': "05-04-18",
+        },
+        {
+            location: '24576 villa tonda',
+            'eventName': 'Huge Great Party',
+            'time': "14:30",
+            'date': "05-04-18",
+        },
+        {
+            location: '24576 villa tonda',
+            'eventName': 'Huge Great Party',
+            'time': "14:30",
+            'date': "05-04-18",
+        }];
 
-    let newEventRenderer = new EventRenderer(dummyData);
+    let newEventRenderer = new EventRenderer(arrayOfDummyData);
 })
 
 class EventRenderer{
-    constructor(infoToRender){
-        this.infoToRender = infoToRender;
+    constructor(arrayOfData){
+        this.arrayOfData = arrayOfData;
         this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
             'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
             'other'];
 
         this.renderDropDownMenu(this.arrayOfEventCategories);
-
-        let domElement1 = this.parseData(this.infoToRender);
-        this.renderOnScreen(domElement1)
-
-        let domElement2 = this.parseData(this.infoToRender);
-        this.renderOnScreen(domElement2)
-
-        let domElement3 = this.parseData(this.infoToRender);
-        this.renderOnScreen(domElement3)
+        this.turnDataIntoDomElements(this.arrayOfData)
     }
 
     renderDropDownMenu(arrayOfEventCats){
@@ -195,23 +206,34 @@ class EventRenderer{
         })
     }
 
-    parseData(infoToParse){
+    turnDataIntoDomElements(arrayOfInfo){
+        for(let objectIndex=0; objectIndex<arrayOfInfo.length; objectIndex++){
+            let infoObject = arrayOfInfo[objectIndex];
+
+            let domElement = this.parseData(infoObject);
+            this.renderOnScreen(domElement);
+        }
+
+    }
+
+    parseData(infoToParse, odd){
         let eventContainer = $("<div>",{
-            'class':'event col-xs-12',
+            'class':'event col-xs-12 col-md-5',
             on:{
-                'click': this.handlePopOutAnimation.bind(this),
+                // 'click': this.handlePopOutAnimation.bind(this),
             },
         });
+
         let pictureEl = $("<img>",{
-            'class':'eventImg col-xs-3',
+            'class':'eventImg eventContent col-xs-3 col-md-6',
             src:"includes/images/testPartyImg.jpeg",
         });
         let nameEl = $("<div>",{
-            'class':'eventName row col-xs-8',
+            'class':'eventName eventContent row col-xs-8 col-md-6',
             text: infoToParse.eventName,
         });
         let dateEl = $("<div>",{
-            'class':'eventDate',
+            'class':'eventDate eventContent row  col-xs-8 col-md-6',
             text: `When: ${infoToParse.time}, ${infoToParse.date}`,
         });
         // let timeEl = $("<div>",{
@@ -219,7 +241,7 @@ class EventRenderer{
         //     text: infoToParse.time,
         // });
         let locationEl = $("<div>",{
-            'class':'eventLoc',
+            'class':'eventLoc eventContent row  col-xs-8 col-md-6',
             text: `Where: ${infoToParse.location}`,
         });
 
@@ -269,7 +291,7 @@ class EventRenderer{
         let expandedDivs=$(".expand");
         for(let divIndex = 0; divIndex < expandedDivs.length; divIndex++){
             if(expandedDivs[divIndex] !== divToSkip[0])
-            expandedDivs.removeClass('expand').addClass('shrink')
+                expandedDivs.removeClass('expand').addClass('shrink')
         }
     }
 
