@@ -35,7 +35,7 @@ const yelpBusinessResultsArray = [];
 
 function initializing() {
     eventfulEventRequest();
-    addHoverHandlers();
+    addHoverHandler();
     addClickHandlers();
     //eventfulEventRequest(startDate, endDate, category)
 }
@@ -47,10 +47,8 @@ function initializing() {
  * adds events for when DOM element is hovered over
  */
 
-function addHoverhandler() {
-    $(".event").mouseover(function() {
-        $(".eventImg").css("transform", "scale(1.5)");
-    })
+function addHoverHandler() {
+
 }
 
 /***************************************************************************************************
@@ -95,10 +93,9 @@ class yelpData {
                 console.log("errors : ", errors);
             }
         };
-        $.ajax(yelpAjaxCall);
+        // $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
-        debugger;
         console.log(data);
         yelpBusinessResultsArray.length = 0;
         data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
