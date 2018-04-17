@@ -142,7 +142,6 @@ console.log(newYelpCall);
  * @para`ms {string} input from the User to search through PredictHQ
  * @returns: {object} data from PredictHQ
  * Sends request to PredictHQ API to pull data based off search input from User
->>>>>>> bdfd4bfb3304a34041fa6092b04ac50fab2e3818
  */
 //function eventfulEventRequest(startDate, endDate, category){
 function eventfulEventRequest(){
@@ -430,10 +429,59 @@ function submitYelpButtonClicked() {
  */
 
 function createGoogleMap(searchObj) {
+    function createMap() {
+        var losAngeles = {
+            latitude: 34.0522, longitude: -118.2437
+        };
+
+        var map = new google.maps.Map(document.getElementById('map'), {
+            center: losAngeles,
+            zoom: 20
+        });
+
+        var infoWindow = new google.maps.InfoWindow();
+        var service = new google.maps.places.PlacesService(map);
+        service.nearbySearch({
+            location: losAngeles,
+            radius: 800,
+            type: ['restaurant']
+        }, callback);
+    }
+
+    function callback(results, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+            for (var i = 0; i < results.length; i++) {
+                createMarker(results[i]);
+            }
+        }
+    }
+
+    function createMarker(place) {
+        var placeLoc = place.geometry.location;
+        var marker = new google.maps.Marker({
+            map: map,
+            position: place.geometry.location
+        });
+
+        google.maps.event.addListener(marker, 'click', function() {
+            infowindow.setContent(place.name);
+            infowindow.open(map, this);
+        });
+    }
 
 }
 
 
+/***************************************************************************************************
+ * autoCompleteLocation
+ * @params {undefined}
+ * @returns: {object}
+ *
+ */
+
+function autoCompleteLocation() {
+
+}
 
 
 
