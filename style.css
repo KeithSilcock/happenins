@@ -34,5 +34,17 @@ body{
 	border: 1px solid green;
 	position: absolute;
 
+.event{
+    border: 2px solid black;
+}
 
+.eventsContainer{
+
+}
+.event, .eventImg{
+    padding:0;
+}
+
+.eventImg{
+    width: 40%;
 }
