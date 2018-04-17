@@ -59,8 +59,9 @@ function addHoverHandler() {
  */
 
 function addClickHandlers() {
-    $('#searchButten').click(function(){
-        eventfulEventRequest();
+    $('#searchButton').click(function(){
+        let data = eventfulEventRequest();
+        console.log(data)
     });
 
     //var eventSearch = $('#searchButten').click(eventfulEventRequest(startDate, endDate, category));
@@ -142,61 +143,70 @@ console.log(newYelpCall);
  * @para`ms {string} input from the User to search through PredictHQ
  * @returns: {object} data from PredictHQ
  * Sends request to PredictHQ API to pull data based off search input from User
->>>>>>> bdfd4bfb3304a34041fa6092b04ac50fab2e3818
+ >>>>>>> bdfd4bfb3304a34041fa6092b04ac50fab2e3818
  */
 //function eventfulEventRequest(startDate, endDate, category){
-function eventfulEventRequest(){
+class eventfullEventRequester {
 
-    var eventSearchResultObject = {};
+    constructor() {
 
-    $.ajax({
-        //url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date="+  startDate +"00-" + endDate + "00&category=" +  category + "&image_sizes=blackborder250,block100&page_size=10&category=new",
-        url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=2018042000-2018042000&category=music&image_sizes=blackborder250,block100&page_size=20&category=new",
-        dataType: 'jsonp',
-        data: {},
-        success: function (rawData) {
-            for (var event=0; event<rawData.events.event.length; event++){
-                if (rawData.events.event[event].title !== null) {
-                    var title = rawData.events.event[event].title;
+    }
+
+    eventfulEventRequest(renderFunc, date, numOfEntries, category){
+
+        var eventSearchResultObject = {};
+
+        $.ajax({
+            //url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date="+  startDate +"00-" + endDate + "00&category=" +  category + "&image_sizes=blackborder250,block100&page_size=10&category=new",
+            url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=2018042000-2018042000&category=music&image_sizes=blackborder250,block100&page_size=20&category=new",
+            dataType: 'jsonp',
+            data: {},
+            success: function (rawData) {
+                for (var event = 0; event < rawData.events.event.length; event++) {
+                    if (rawData.events.event[event].title !== null) {
+                        var title = rawData.events.event[event].title;
+                    }
+                    if (rawData.events.event[event].city_name !== null) {
+                        var cityName = rawData.events.event[event].city_name;
+                    }
+                    if (rawData.events.event[event].image !== null) {
+                        var imageSmallUrl = 'http:' + rawData.events.event[event].image.block100.url;
+                        var imageLargeUrl = 'http:' + rawData.events.event[event].image.blackborder250.url;
+                    }
+                    if (rawData.events.event[event].venue_address !== null) {
+                        var venue_address = rawData.events.event[event].venue_address;
+                    }
+                    if (rawData.events.event[event].venue_name !== null) {
+                        var venue_name = rawData.events.event[event].venue_name;
+                    }
+                    if (rawData.events.event[event].description !== null) {
+                        var description = rawData.events.event[event].description;
+                    }
+
+                    eventSearchResultObject = {
+                        title: title,
+                        cityName: cityName,
+                        imageSmallUrl: imageSmallUrl,
+                        imageLargeUrl: imageLargeUrl,
+                        venue_address: venue_address,
+                        venue_name: venue_name,
+                        description: description
+                    }
+
+                    eventSearchResultArray.push(eventSearchResultObject);
                 }
-                if (rawData.events.event[event].city_name !== null) {
-                    var cityName = rawData.events.event[event].city_name;
-                }
-                if (rawData.events.event[event].image !== null) {
-                    var imageSmallUrl = 'http:' + rawData.events.event[event].image.block100.url;
-                    var imageLargeUrl = 'http:' + rawData.events.event[event].image.blackborder250.url;
-                }
-                if (rawData.events.event[event].venue_address !== null) {
-                    var venue_address = rawData.events.event[event].venue_address;
-                }
-                if (rawData.events.event[event].venue_name!== null) {
-                    var venue_name = rawData.events.event[event].venue_name;
-                }
-                if (rawData.events.event[event].description !== null) {
-                    var description = rawData.events.event[event].description;
-                }
+                console.log(eventSearchResultArray);
 
-                eventSearchResultObject = {
-                    title: title,
-                    cityName: cityName,
-                    imageSmallUrl: imageSmallUrl,
-                    imageLargeUrl: imageLargeUrl,
-                    venue_address: venue_address,
-                    venue_name: venue_name,
-                    description: description
-                }
+                renderFunc(eventSearchResultArray)
 
-                eventSearchResultArray.push(eventSearchResultObject);
-            }
-
-            return eventSearchResultArray;
-
-        },
-        error: function (error) { console.log(error) },
-    });
+            },
+            error: function (error) {
+                console.log(error)
+            },
+        });
 
 
-
+    }
 }
 
 
@@ -217,45 +227,61 @@ function eventfulEventRequest(){
  */
 
 $(window).on('load', function () {
+    let controller = new HappeninsController();
+    controller.requestEventData();
+    // let arrayOfDummyData = [
+    //     {
+    //         location: '24576 villa tonda',
+    //         'eventName': 'Huge Great Party',
+    //         'time': "14:30",
+    //         'date': "05-04-18",
+    //     },
+    //     {
+    //         location: '24576 villa tonda',
+    //         'eventName': 'Huge Great Party',
+    //         'time': "14:30",
+    //         'date': "05-04-18",
+    //     },
+    //     {
+    //         location: '24576 villa tonda',
+    //         'eventName': 'Huge Great Party',
+    //         'time': "14:30",
+    //         'date': "05-04-18",
+    //     },
+    //     {
+    //         location: '24576 villa tonda',
+    //         'eventName': 'Huge Great Party',
+    //         'time': "14:30",
+    //         'date': "05-04-18",
+    //     }];
 
-    let arrayOfDummyData = [
-        {
-            location: '24576 villa tonda',
-            'eventName': 'Huge Great Party',
-            'time': "14:30",
-            'date': "05-04-18",
-        },
-        {
-            location: '24576 villa tonda',
-            'eventName': 'Huge Great Party',
-            'time': "14:30",
-            'date': "05-04-18",
-        },
-        {
-            location: '24576 villa tonda',
-            'eventName': 'Huge Great Party',
-            'time': "14:30",
-            'date': "05-04-18",
-        },
-        {
-            location: '24576 villa tonda',
-            'eventName': 'Huge Great Party',
-            'time': "14:30",
-            'date': "05-04-18",
-        }];
-
-    let newEventRenderer = new EventRenderer(arrayOfDummyData);
 })
 
+
+class HappeninsController{
+    constructor(){
+        this.newEventfulRequest = new eventfullEventRequester(null, null,null);
+        this.newEventRenderer = new EventRenderer();
+    }
+
+    requestEventData(){
+        this.newEventfulRequest.eventfulEventRequest(this.renderEventDataOnSuccess.bind(this), null, null, null)
+    }
+
+    renderEventDataOnSuccess(dataArray){
+        this.newEventRenderer.turnDataIntoDomElements(dataArray);
+    }
+}
+
 class EventRenderer{
-    constructor(arrayOfData){
-        this.arrayOfData = arrayOfData;
+    constructor(){
+        // this.arrayOfData = arrayOfData;
         this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
             'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
             'other'];
 
         this.renderDropDownMenu(this.arrayOfEventCategories);
-        this.turnDataIntoDomElements(this.arrayOfData)
+        // this.turnDataIntoDomElements(this.arrayOfData)
     }
 
     renderDropDownMenu(arrayOfEventCats){
@@ -288,25 +314,25 @@ class EventRenderer{
             },
         });
 
+        if(infoToParse.imageSmallUrl === undefined){
+            infoToParse.imageSmallUrl= 'includes/images/testPartyImg.jpeg'
+        }
+
         let pictureEl = $("<img>",{
             'class':'eventImg eventContent col-xs-3 col-md-6',
-            src:"includes/images/testPartyImg.jpeg",
+            src:`${infoToParse.imageSmallUrl}`,
         });
         let nameEl = $("<div>",{
             'class':'eventName eventContent row col-xs-8 col-md-6',
-            text: infoToParse.eventName,
+            text: infoToParse.title,
         });
         let dateEl = $("<div>",{
             'class':'eventDate eventContent row  col-xs-8 col-md-6',
-            text: `When: ${infoToParse.time}, ${infoToParse.date}`,
+            // text: `When: ${infoToParse.time}, ${infoToParse.date}`,
         });
-        // let timeEl = $("<div>",{
-        //     'class':'eventTime',
-        //     text: infoToParse.time,
-        // });
         let locationEl = $("<div>",{
             'class':'eventLoc eventContent row  col-xs-8 col-md-6',
-            text: `Where: ${infoToParse.location}`,
+            text: `Where: ${infoToParse.venue_address}`,
         });
 
 
@@ -317,8 +343,7 @@ class EventRenderer{
 
         let extraInfoText = $("<div>",{
             'class':'eventExtraInfo',
-            text: "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids" +
-            "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids",
+            text: `${infoToParse.description}`,
 
         });
         let addButton = $("<button>", {
