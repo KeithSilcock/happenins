@@ -1,0 +1,18 @@
+*{
+	margin: 0;
+	padding: 0;
+}
+
+
+#headerArea{
+  height: 10vh;
+  display: flex;
+  background-color:lavender;
+}
+
+#logo{
+	border: 1px solid green;
+}
+#myEventLink{
+	border: 1px solid blue;
+}
