@@ -24,24 +24,23 @@ var yelpSearchObj = {}
 // };
 const yelpBusinessResultsArray = [];
 
+
+
+/***************************************************************************************************
+ * initializing
+ * @params {undefined} none
+ * @returns: {undefined} none
+ * initializes the application: adds click/hover handlers, eventfulEventRequest();
+ */
+
 function initializing() {
     eventfulEventRequest();
+    addHoverHandlers();
+    addClickHandlers();
     //eventfulEventRequest(startDate, endDate, category)
 }
 
-/***************************************************************************************************
- * initializeApp
- * @params {undefined} none
- * @returns: {undefined} none
- * initializes the application: adds click/hover handlers
- */
-
-function initializeApp() {
-    addHoverHandlers();
-    addClickHandlers();
-}
-
-/***************************************************************************************************
+/*************************************************************************x**************************
  * addHoverHandler
  * @params {undefined}
  * @returns: {undefined}
@@ -49,7 +48,9 @@ function initializeApp() {
  */
 
 function addHoverhandler() {
-    // $(/*DOM element to be selected*/).hover(/*some function to display data*/)
+    $(".event").mouseover(function() {
+        $(".eventImg").css("transform", "scale(1.5)");
+    })
 }
 
 /***************************************************************************************************
@@ -97,13 +98,13 @@ class yelpData {
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
-        // debugger;
-        // console.log(data);
-        // yelpBusinessResultsArray.length = 0;
-        // data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-        // console.log(yelpBusinessResultsArray);
-        // var {latitude, longitude} = data.region.center;
-        // console.log(latitude, longitude);
+        debugger;
+        console.log(data);
+        yelpBusinessResultsArray.length = 0;
+        data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
+        console.log(yelpBusinessResultsArray);
+        var {latitude, longitude} = data.region.center;
+        console.log(latitude, longitude);
     }
 }
 
