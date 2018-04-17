@@ -180,7 +180,7 @@ function eventfulEventRequest(){
                     var description = rawData.events.event[event].description;
                 }
 
-                dataObject = {
+                eventSearchResultObject = {
                     title: title,
                     cityName: cityName,
                     imageSmallUrl: imageSmallUrl,
@@ -190,7 +190,7 @@ function eventfulEventRequest(){
                     description: description
                 }
 
-                eventSearchResultArray.push(dataObject);
+                eventSearchResultArray.push(eventSearchResultObject);
             }
 
 
