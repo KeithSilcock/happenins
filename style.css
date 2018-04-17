@@ -3,48 +3,90 @@
 	padding: 0;
 }
 
-
 body{
+  display: block;
+  width: 100%;
 	background-color: lavender;
 
 }
+
 #headerArea{
   height: 10vh;
-  display: flex;
   background-color:lightpink;
+  /*border: 1px solid black;*/
 }
 
 #logo{
+  width:  80px;
+  height: 100%;
+
 	border: 1px solid green;
+  display: inline-block;
+  float: left;
 }
 #myEventLink{
 	border: 1px solid blue;
+  display: inline-block;
+  float: right;
+  height: 100%;
 }
 
 #mainBody{
-	width: 100%; 
-	height: 100%;
-	position: relative;
+  height: 90vh;
+ /* border: 1px solid green;*/
+
+}
+#centerContianer {
+    width: 80%;
+    height: 70%;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    background-color: white;
+    opacity: 0.6;
+    border-radius: 15px;
+}
+
+.search-form{
+  border: 1px solid pink;
+  text-align: center;
+  position: relative;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+
+
+}
+#searchButten{
+  width: 20vw;
 
 }
 
-#inputArea{
-	width: 60vw;
-	height: 50vh;
-	border: 1px solid green;
-	position: absolute;
+
+
+
+
+
+
+
+/*page 2*/
+
+#findEvent{
+  display: flex;
+
+}
 
 .event{
     border: 2px solid black;
+    margin: 1% 0;
 }
-
 .eventsContainer{
 
 }
 .event, .eventImg{
     padding:0;
 }
-
 .eventImg{
     width: 40%;
 }

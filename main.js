@@ -39,7 +39,7 @@ var yelpAjaxCall = {
     }
 };
 
-$.ajax(yelpAjaxCall);
+// $.ajax(yelpAjaxCall);
 
 
 /***************************************************************************************************
@@ -81,9 +81,16 @@ class EventRenderer{
     constructor(infoToRender){
         this.infoToRender = infoToRender;
 
-        let domElement = this.parseData(this.infoToRender);
-        this.renderOnScreen(domElement)
+        let domElement1 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement1)
+
+        let domElement2 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement2)
+
+        let domElement3 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement3)
     }
+
     parseData(infoToParse){
         let eventContainer = $("<div>",{
             'class':'event col-xs-12',

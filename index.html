@@ -5,8 +5,6 @@
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <script src="https://code.jquery.com/jquery.min.js"></script>
-    <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
-    <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
@@ -17,15 +15,40 @@
 
 </head>
 <body>
- <header id="headerArea" class=".container-flui col-sm-12 col-lg-12" >
-   <div id="logo" >logoArea</div>
+<!-- start with header area -->
+ <header id="headerArea" class="container-fluid col-sm-12 col-lg-12">
+   <div id="logo">logoArea</div>
    <div id="myEventLink"><a href="eventPage.html">My Event</a></div>
  </header>
-    <div id="mainBody">
-	  <div id="inputArea" class="">
-	  
-
-	  </div>
+ <!-- start with the mainBody area -->
+ <div id="mainBody" class="col-sm-12">
+	<div id="centerContianer" class="col-lg-12" >  
+    <!-- start input form -->
+         <div class="search-form col-lg-7 col-md-7 col-sm-12 col-xs-12 ">
+                <h4>Find Event in: </h4>
+                <div class="input-group form-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-map-marker"></span>
+                        </span>
+                        <input class="form-control" id="autocomplete" placeholder="Enter a city" type="text" >
+                </div>
+                 <div class="input-group form-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </span>
+                        <input type="text" class="form-control" name="userInputEventType" id="inputEventType" placeholder="Event Type">
+                </div>
+                <div class="input-group form-group">
+                        <span class="input-group-addon">
+                            <span class="glyphicon glyphicon-calendar"></span>
+                        </span>
+                        <input type="date" class="form-control" name="userInputDate" id="inputDate">
+                </div>
+               
+                <button type="button" class="btn btn-warning btn-md" id="searchButten">Search</button>
+        </div> 
+    <!-- end input form -->
 	</div>
+  </div>
 </body>
 </html>
