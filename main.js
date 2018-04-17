@@ -43,6 +43,12 @@
 
 
 
+class eventRenderer{
+    constructor(infoToRender){
+        this.infoToRender = infoToRender
+    }
+}
+
 
 
 
