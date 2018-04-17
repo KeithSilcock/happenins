@@ -6,7 +6,11 @@ var searchFoodItem;
 var foodLatitude;
 var foodLongitude;
 
+$(document).ready(initializing);
 
+function initializing() {
+    eventfulEventRequest();
+}
 
 /***************************************************************************************************
  * initializeApp
@@ -44,10 +48,20 @@ $.ajax(yelpAjaxCall);
 
 /***************************************************************************************************
  * callEventData
- * @params {string} input from the User to search through PredictHQ
- * @returns: {object} data from PredictHQ
- * Sends request to PredictHQ API to pull data based off search input from User
+ * @params {string} input from the User to search through eventful
+ * @returns: {object} data from eventful
+ * Sends request to eventful API to pull data based off search input from User
  */
+//function eventfulEventRequest(city,date){
+function eventfulEventRequest(){
+    $.ajax({
+        url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date='2018042000-2018042100';&page_size=50&category=new",
+        dataType: 'jsonp',
+        data: {},
+        success: function (data) {console.log(data) },
+        error: function (error) {console.log(error) },
+    });
+}
 
 
 /***************************************************************************************************
