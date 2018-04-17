@@ -67,6 +67,12 @@ $.ajax(yelpAjaxCall);
 
 
 
+class eventRenderer{
+    constructor(infoToRender){
+        this.infoToRender = infoToRender
+    }
+}
+
 
 
 
