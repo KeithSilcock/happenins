@@ -2,6 +2,12 @@
  * Define all global variables here.
  */
 
+var searchFoodItem;
+var foodLatitude;
+var foodLongitude;
+
+
+
 /***************************************************************************************************
  * initializeApp
  * @params {undefined} none
@@ -16,6 +22,24 @@
  * @returns: {object} data from Yelp
  * Sends request to Yelp API to pull data based off search input from User
  */
+
+var yelpAjaxCall = {
+    dataType: "JSON",
+    method: 'GET',
+    // url: `https://api.yelp.com/v3/businesses/search?term=${searchFoodItem}&latitude=${latitude}&longitude=${longitude}",
+    url: "https://api.yelp.com/v3/businesses/search?term=bbq&latitude=34.0522&longitude=-118.2437",
+    data : {
+        Authorization : "Bearer 17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
+    },
+    success : function(results) {
+        console.log("success : " + results);
+    },
+    error : function(errors) {
+        console.log( "errors : " + errors );
+    }
+};
+
+$.ajax(yelpAjaxCall);
 
 
 /***************************************************************************************************
