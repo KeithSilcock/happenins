@@ -2,6 +2,7 @@
  * Define all global variables here.
  */
 
+// variables to pull data from DOM
 var searchFoodTerm;
 var foodLatitude;
 var foodLongitude;
@@ -12,16 +13,41 @@ var yelpPrice;
 var yelpOpen_now;
 var yelpSort_by;
 const yelpBusinessResultsArray = [];
-const yelpLocationCoordinates = {};
 
 
 /***************************************************************************************************
  * initializeApp
  * @params {undefined} none
  * @returns: {undefined} none
- * initializes the application: adds click handlers and pulls in data from server
+ * initializes the application: adds click/hover handlers
  */
 
+function initializeApp() {
+    addHoverHandlers();
+    addClickHandlers();
+}
+
+/***************************************************************************************************
+ * addHoverHandler
+ * @params {undefined}
+ * @returns: {undefined}
+ * adds events for when DOM element is hovered over
+ */
+
+function addHoverhandler() {
+    $(/*DOM element to be selected*/).hover(/*some function to display data*/)
+}
+
+/***************************************************************************************************
+ * addClickHandlers
+ * @params {undefined}
+ * @returns: {undefined}
+ * adds events for when DOM element is clicked
+ */
+
+function addClickHandlers() {
+    $(#searchButton).click(/*some function*/);
+}
 
 /***************************************************************************************************
  * callYelpData
@@ -40,10 +66,9 @@ class yelpData {
         this.open_now = open_now;
         this.latitude = latitude;
         this.longitude = longitude;
-        this.sort_by = sort_by;
+        this.sort_by = sort_by; // includes rating, review count, and price
         this.pullBusinessData = this.pullBusinessData.bind(this);
         this.ajaxCall();
-
     }
     ajaxCall() {
         var yelpAjaxCall = {
@@ -77,8 +102,6 @@ class yelpData {
         var {latitude, longitude} = data.region.center;
         console.log(latitude, longitude);
     }
-
-
 }
 
 var newYelpCall = new yelpData("bbq", 34.0522, -118.2437);
@@ -141,4 +164,46 @@ class eventRenderer{
         this.infoToRender = infoToRender
     }
 }
+
+/***************************************************************************************************
+ * searchButtonClicked
+ * @params {undefined}
+ * @returns: {undefined}
+ * actions for when the submit button has been clicked
+ */
+
+function submitButtonClicked() {
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
