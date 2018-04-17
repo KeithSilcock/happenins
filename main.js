@@ -11,15 +11,16 @@ $(document).ready(initializing);
 
 // variables to pull data from DOM
 var yelpSearchObj = {
-    term: 'bbq',
-    latitude: 34.0522/*DOM element search item*/,
-    longitude: -118.2437/*DOM element search item*/,
-    location: ""/*DOM element search item*/,
-    radius: 2/*DOM element search item*/,
-    // categories: /*DOM element search item*/,
-    // price: /*DOM element search item*/,
-    // open_now: /*DOM element search item*/,
-    // sort_by: /*DOM element search item*/,
+    access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
+    term: /*DOM element search item - a string*/,
+    latitude: 34.0522 // current number is for LA  /*DOM element search item - a number, can have decimals*/,
+    longitude: -118.2437// current number is for LA   /*DOM element search item - a number, can have decimals*/,
+    location: /*DOM element search item - a string*/,
+    radius: /*DOM element search item in METERS - a number*/,
+    categories: /*DOM element search item - a string*/,
+    price: /*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
+    open_now: /*DOM element search item - boolean*/,
+    sort_by: /*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
 };
 const yelpBusinessResultsArray = [];
 
@@ -72,7 +73,7 @@ function addClickHandlers() {
 
 class yelpData {
     constructor(searchObj) {
-        var {term, latitude, longitude, location, radius, categories, price, open_now, sort_by} = searchObj;
+        this.searchObject = searchObj;
         this.pullBusinessData = this.pullBusinessData.bind(this);
         this.ajaxCall();
     }
@@ -81,18 +82,13 @@ class yelpData {
             dataType: "JSON",
             method: 'POST',
             url: "http://yelp.ongandy.com/businesses",
-            data: {
-                "access_token": "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-                "term": this.term,
-                "location" : this.location,
-                "radius" : this.radius,
-                "categories" : this.categories,
-                "price" : this.price,
-                "open_now" : this.open_now,
-                "latitude": this.latitude, // 34.0522,
-                "longitude": this.longitude, //  -118.2437,
-                'sort_by' : this.sort_by
-            },
+            data: this.searchObject,
+            //     {
+            //     "access_token": "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
+            //     "term" :"bbq",
+            //     "latitude": 34.0522/*DOM element search item*/,
+            //     "longitude": -118.2437/*DOM element search item*/
+            // },
             success: this.pullBusinessData,
             error: function (errors) {
                 console.log("errors : ", errors);
@@ -101,8 +97,9 @@ class yelpData {
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
-        yelpBusinessResultsArray.length = 0;
         debugger;
+        console.log(data);
+        yelpBusinessResultsArray.length = 0;
         data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
         console.log(yelpBusinessResultsArray);
         var {latitude, longitude} = data.region.center;
@@ -110,7 +107,7 @@ class yelpData {
     }
 }
 
-var newYelpCall = new yelpData("bbq", 10, 'bbq', 34.0522, -118.2437);
+var newYelpCall = new yelpData(yelpSearchObj);
 
 console.log(newYelpCall);
 
@@ -136,6 +133,9 @@ console.log(newYelpCall);
 //     }
 // };
 //
+// $.ajax(yelpAjaxCall);
+
+
 // $.ajax(yelpAjaxCall);
 
 
@@ -224,11 +224,153 @@ function eventfulEventRequest(){
  * Takes the information from the ajax calls and displays on to DOM
  */
 
+$(window).on('load', function () {
 
+    let dummyData = {
+        location: '24576 villa tonda',
+        'eventName': 'Huge Great Party',
+        'time': "14:30",
+        'date': "05-04-18",
+    };
 
-class eventRenderer{
+    let newEventRenderer = new EventRenderer(dummyData);
+})
+
+class EventRenderer{
     constructor(infoToRender){
-        this.infoToRender = infoToRender
+        this.infoToRender = infoToRender;
+        this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
+            'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
+            'other'];
+
+        this.renderDropDownMenu(this.arrayOfEventCategories);
+
+        let domElement1 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement1)
+
+        let domElement2 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement2)
+
+        let domElement3 = this.parseData(this.infoToRender);
+        this.renderOnScreen(domElement3)
+    }
+
+    renderDropDownMenu(arrayOfEventCats){
+        let dropDownMenuUL=$(".dropDownUL");
+
+        arrayOfEventCats.forEach(function (liName) {
+            let thisLI= $("<li>",{
+                'class': `dropDownLI dropDown${liName}`,
+                text: liName
+            })
+            dropDownMenuUL.append(thisLI)
+        })
+    }
+
+    parseData(infoToParse){
+        let eventContainer = $("<div>",{
+            'class':'event col-xs-12',
+            on:{
+                'click': this.handlePopOutAnimation.bind(this),
+            },
+        });
+        let pictureEl = $("<img>",{
+            'class':'eventImg col-xs-3',
+            src:"includes/images/testPartyImg.jpeg",
+        });
+        let nameEl = $("<div>",{
+            'class':'eventName row col-xs-8',
+            text: infoToParse.eventName,
+        });
+        let dateEl = $("<div>",{
+            'class':'eventDate',
+            text: `When: ${infoToParse.time}, ${infoToParse.date}`,
+        });
+        // let timeEl = $("<div>",{
+        //     'class':'eventTime',
+        //     text: infoToParse.time,
+        // });
+        let locationEl = $("<div>",{
+            'class':'eventLoc',
+            text: `Where: ${infoToParse.location}`,
+        });
+
+
+        // start extra information
+        let extraEl = $("<div>",{
+            'class':'eventExtra shrink',
+        });
+
+        let extraInfoText = $("<div>",{
+            'class':'eventExtraInfo',
+            text: "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids" +
+            "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids",
+
+        });
+        let addButton = $("<button>", {
+            'type':'button',
+            'class': 'addEventButton col-xs-offset-4 col-xs-4',
+            'text':'add to list',
+        });
+
+        //closure to get added data
+        (function (that) {
+            addButton.on({
+                'click':that.handleAddToListButtonClick.bind(this, that, infoToParse),
+            })
+        })(this);
+
+        extraEl.append(extraInfoText, addButton);
+
+        // let arrayOfElements = [pictureEl, nameEl, dateEl, locationEl];
+
+        // this.bootstrapClassAdder(arrayOfElements);
+
+        return eventContainer.append(pictureEl, nameEl, dateEl, locationEl, extraEl);
+    }
+
+    handlePopOutAnimation(eventOfClick){
+        let parent = $(eventOfClick.target).closest('.event');
+        let extraInfoDiv = parent.find('.eventExtra');
+
+        this.shrinkAnyExpandedDivs(extraInfoDiv);
+        this.popOutAnimation(extraInfoDiv);
+    }
+
+    shrinkAnyExpandedDivs(divToSkip){
+        let expandedDivs=$(".expand");
+        for(let divIndex = 0; divIndex < expandedDivs.length; divIndex++){
+            if(expandedDivs[divIndex] !== divToSkip[0])
+            expandedDivs.removeClass('expand').addClass('shrink')
+        }
+    }
+
+    popOutAnimation(extraInfoDiv){
+        if(extraInfoDiv.hasClass('expand')) {
+            extraInfoDiv.removeClass('expand').addClass('shrink');
+        }else{
+            extraInfoDiv.removeClass('shrink').addClass('expand');
+        }
+    }
+
+    handleAddToListButtonClick(thisObj, info, event){
+        thisObj.handlePopOutAnimation(event);
+        // ^^^ keeps expanded list from closing, but need to fix in later edition
+
+        console.log(info)
+
+        //collect data from event clicked
+
+    }
+
+    bootstrapClassAdder(arrayOfElements){
+        arrayOfElements.forEach(function (item) {
+            item.addClass('col-xs-3')
+        })
+    }
+
+    renderOnScreen(domElement){
+        $(".eventsContainer").append(domElement);
     }
 }
 
