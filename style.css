@@ -28,11 +28,12 @@ body{
 
 }
 
-#inputArea{
-	width: 60vw;
-	height: 50vh;
-	border: 1px solid green;
-	position: absolute;
+#inputArea {
+    width: 60vw;
+    height: 50vh;
+    border: 1px solid green;
+    position: absolute;
+}
 
 .event{
     border: 2px solid black;
