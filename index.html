@@ -29,3 +29,13 @@
 
 </body>
 </html>
+
+
+
+<?php session_start();
+   $msg = $_SESSION['msg'];
+?>
+
+<script>
+   <?php echo "var msg = '" .$msg . "'"; ?>
+</script>
