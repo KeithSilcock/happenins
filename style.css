@@ -5,35 +5,36 @@
 
 body{
 
-  display: block;
-  width: 100%;
-	background-color: lavender;
+    display: block;
+    width: 100%;
+    background-color: lavender;
 }
 
 #headerArea{
-  height: 10vh;
-  background-color:lightpink;
-  /*border: 1px solid black;*/
+    height: 10vh;
+    background-color:lightpink;
+    padding-right: 0;
+    /*border: 1px solid black;*/
 }
 
 #logo{
-  width:  80px;
-  height: 100%;
+    width:  80px;
+    height: 100%;
 
-	border: 1px solid green;
-  display: inline-block;
-  float: left;
+    border: 1px solid green;
+    display: inline-block;
+    float: left;
 }
 #myEventLink{
-	border: 1px solid blue;
-  display: inline-block;
-  float: right;
-  height: 100%;
+    border: 1px solid blue;
+    display: inline-block;
+    float: right;
+    height: 100%;
 }
 
 #mainBody{
-  height: 90vh;
- /* border: 1px solid green;*/
+    height: 90vh;
+    /* border: 1px solid green;*/
 
 }
 #centerContianer {
@@ -49,17 +50,17 @@ body{
 }
 
 .search-form{
-  border: 1px solid pink;
-  text-align: center;
-  position: relative;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+    border: 1px solid pink;
+    text-align: center;
+    position: relative;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 
 
 }
 #searchButten{
-  width: 20vw;
+    width: 20vw;
 
 }
 
@@ -73,7 +74,7 @@ body{
 /*page 2*/
 
 #findEvent{
-  display: flex;
+    display: flex;
 
 }
 
@@ -107,7 +108,10 @@ body{
 
 .event{
     border: 2px solid black;
-    margin: 1% 0;
+    margin: 1% 4%;
+}
+.spacer{
+    height:100%;
 }
 .eventsContainer{
 
@@ -117,12 +121,24 @@ body{
 }
 .eventImg{
     width: 40%;
+    border: none;
+    transition-duration: 0.5s;
 }
+
+/* Dylan's Code*/
+.eventImg:hover {
+    transform: scale(0.99);
+    border: 2px solid red;
+    transition-duration: 0.3s;
+}
+/* End Dylan's Code*/
+
 .eventCover{
     width: 100%;
     height: 100%;
     position: absolute;
 }
+
 .expand{
     display: block;
 }

@@ -12,41 +12,43 @@ var a = [];
 $(document).ready(initializeApp);
 
 // variables to pull data from DOM
-var yelpSearchObj = {}
-//     access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-//     term: /*DOM element search item - a string*/,
-//     latitude: 34.0522 // current number is for LA  /*DOM element search item - a number, can have decimals*/,
-//     longitude: -118.2437// current number is for LA   /*DOM element search item - a number, can have decimals*/,
-//     location: /*DOM element search item - a string*/,
-//     radius: /*DOM element search item in METERS - a number*/,
-//     categories: /*DOM element search item - a string*/,
-//     price: /*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
-//     open_now: /*DOM element search item - boolean*/,
-//     sort_by: /*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
-// };
+var yelpSearchObj = {
+    access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
+    term: "bbq"/*DOM element search item - a string*/,
+    latitude: 34.0522, // current number is for LA  /*DOM element search item - a number, can have decimals*/,
+    longitude: -118.2437, // current number is for LA   /*DOM element search item - a number, can have decimals*/,
+    location: "Los Angeles"/*DOM element search item - a string*/,
+    radius: 4000/*DOM element search item in METERS - a number*/,
+    categories: "bbq"/*DOM element search item - a string*/,
+    price: "1,2,3"/*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
+    open_now: false /*DOM element search item - boolean*/,
+    sort_by: "review_count"/*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
+};
 const yelpBusinessResultsArray = [];
 
 /***************************************************************************************************
- * initializeApp
+ * initializing
  * @params {undefined} none
  * @returns: {undefined} none
- * initializes the application: adds click/hover handlers
+ * initializes the application: adds click/hover handlers, eventfulEventRequest();
  */
+
 
 function initializeApp() {
     //addHoverHandlers();
     addClickHandlers();
+    //eventfulEventRequest(startDate, endDate, category)
 }
 
-/***************************************************************************************************
+/*************************************************************************x**************************
  * addHoverHandler
  * @params {undefined}
  * @returns: {undefined}
  * adds events for when DOM element is hovered over
  */
 
-function addHoverhandler() {
-    // $(/*DOM element to be selected*/).hover(/*some function to display data*/)
+function addHoverHandler() {
+
 }
 
 /***************************************************************************************************
@@ -85,12 +87,6 @@ class yelpData {
             method: 'POST',
             url: "http://yelp.ongandy.com/businesses",
             data: this.searchObject,
-            //     {
-            //     "access_token": "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-            //     "term" :"bbq",
-            //     "latitude": 34.0522/*DOM element search item*/,
-            //     "longitude": -118.2437/*DOM element search item*/
-            // },
             success: this.pullBusinessData,
             error: function (errors) {
                 console.log("errors : ", errors);
@@ -99,13 +95,12 @@ class yelpData {
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
-        // debugger;
-        // console.log(data);
-        // yelpBusinessResultsArray.length = 0;
-        // data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-        // console.log(yelpBusinessResultsArray);
-        // var {latitude, longitude} = data.region.center;
-        // console.log(latitude, longitude);
+        console.log(data);
+        yelpBusinessResultsArray.length = 0;
+        data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
+        console.log(yelpBusinessResultsArray);
+        var {latitude, longitude} = data.region.center;
+        console.log(latitude, longitude);
     }
 }
 
@@ -223,33 +218,44 @@ function eventfulEventRequest(){
 
 $(window).on('load', function () {
 
-    let dummyData = {
-        location: '24576 villa tonda',
-        'eventName': 'Huge Great Party',
-        'time': "14:30",
-        'date': "05-04-18",
-    };
+    let arrayOfDummyData = [
+        {
+            location: '24576 villa tonda',
+            'eventName': 'Huge Great Party',
+            'time': "14:30",
+            'date': "05-04-18",
+        },
+        {
+            location: '24576 villa tonda',
+            'eventName': 'Huge Great Party',
+            'time': "14:30",
+            'date': "05-04-18",
+        },
+        {
+            location: '24576 villa tonda',
+            'eventName': 'Huge Great Party',
+            'time': "14:30",
+            'date': "05-04-18",
+        },
+        {
+            location: '24576 villa tonda',
+            'eventName': 'Huge Great Party',
+            'time': "14:30",
+            'date': "05-04-18",
+        }];
 
-    let newEventRenderer = new EventRenderer(dummyData);
+    let newEventRenderer = new EventRenderer(arrayOfDummyData);
 })
 
 class EventRenderer{
-    constructor(infoToRender){
-        this.infoToRender = infoToRender;
+    constructor(arrayOfData){
+        this.arrayOfData = arrayOfData;
         this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
             'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
             'other'];
 
         this.renderDropDownMenu(this.arrayOfEventCategories);
-
-        let domElement1 = this.parseData(this.infoToRender);
-        this.renderOnScreen(domElement1)
-
-        let domElement2 = this.parseData(this.infoToRender);
-        this.renderOnScreen(domElement2)
-
-        let domElement3 = this.parseData(this.infoToRender);
-        this.renderOnScreen(domElement3)
+        this.turnDataIntoDomElements(this.arrayOfData)
     }
 
     renderDropDownMenu(arrayOfEventCats){
@@ -264,23 +270,34 @@ class EventRenderer{
         })
     }
 
-    parseData(infoToParse){
+    turnDataIntoDomElements(arrayOfInfo){
+        for(let objectIndex=0; objectIndex<arrayOfInfo.length; objectIndex++){
+            let infoObject = arrayOfInfo[objectIndex];
+
+            let domElement = this.parseData(infoObject);
+            this.renderOnScreen(domElement);
+        }
+
+    }
+
+    parseData(infoToParse, odd){
         let eventContainer = $("<div>",{
-            'class':'event col-xs-12',
+            'class':'event col-xs-12 col-md-5',
             on:{
-                'click': this.handlePopOutAnimation.bind(this),
+                // 'click': this.handlePopOutAnimation.bind(this),
             },
         });
+
         let pictureEl = $("<img>",{
-            'class':'eventImg col-xs-3',
+            'class':'eventImg eventContent col-xs-3 col-md-6',
             src:"includes/images/testPartyImg.jpeg",
         });
         let nameEl = $("<div>",{
-            'class':'eventName row col-xs-8',
+            'class':'eventName eventContent row col-xs-8 col-md-6',
             text: infoToParse.eventName,
         });
         let dateEl = $("<div>",{
-            'class':'eventDate',
+            'class':'eventDate eventContent row  col-xs-8 col-md-6',
             text: `When: ${infoToParse.time}, ${infoToParse.date}`,
         });
         // let timeEl = $("<div>",{
@@ -288,7 +305,7 @@ class EventRenderer{
         //     text: infoToParse.time,
         // });
         let locationEl = $("<div>",{
-            'class':'eventLoc',
+            'class':'eventLoc eventContent row  col-xs-8 col-md-6',
             text: `Where: ${infoToParse.location}`,
         });
 
@@ -338,7 +355,7 @@ class EventRenderer{
         let expandedDivs=$(".expand");
         for(let divIndex = 0; divIndex < expandedDivs.length; divIndex++){
             if(expandedDivs[divIndex] !== divToSkip[0])
-            expandedDivs.removeClass('expand').addClass('shrink')
+                expandedDivs.removeClass('expand').addClass('shrink')
         }
     }
 
