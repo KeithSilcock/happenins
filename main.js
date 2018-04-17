@@ -1,17 +1,19 @@
 /**
- * Define all global variables here.
+ * Global variables
  */
 
 // variables to pull data from DOM
-var searchFoodTerm;
-var foodLatitude;
-var foodLongitude;
-var yelpLocation;
-var yelpRadius;
-var yelpCategories;
-var yelpPrice;
-var yelpOpen_now;
-var yelpSort_by;
+var yelpSearchObj = {
+    term: /*DOM element search item*/,
+    latitude: /*DOM element search item*/,
+    longitude: /*DOM element search item*/,
+    location: /*DOM element search item*/,
+    radius: /*DOM element search item*/,
+    categories: /*DOM element search item*/,
+    price: /*DOM element search item*/,
+    open_now: /*DOM element search item*/,
+    sort_by: /*DOM element search item*/,
+};
 const yelpBusinessResultsArray = [];
 
 
@@ -46,7 +48,8 @@ function addHoverhandler() {
  */
 
 function addClickHandlers() {
-    $(#searchButton).click(/*some function*/);
+    // $(#eventSearchButton).click(/*some function*/);
+    // $("#yelpSearchButton").click(submitYelpButtonClicked);
 }
 
 /***************************************************************************************************
@@ -57,16 +60,8 @@ function addClickHandlers() {
  */
 
 class yelpData {
-    constructor(term, location, radius, categories, price, open_now, latitude, longitude, sort_by) { // we might not need any of these parameters and instead pull our data from DOM elements in global variables. This way every section does not have to be filled out.
-        this.term = term;
-        this.location = location;
-        this.radius = radius;
-        this.categories = categories;
-        this.price = price;
-        this.open_now = open_now;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.sort_by = sort_by; // includes rating, review count, and price
+    constructor(searchObj) {
+        var {term, latitude, longitude, location, radius, categories, price, open_now, sort_by} = searchObj;
         this.pullBusinessData = this.pullBusinessData.bind(this);
         this.ajaxCall();
     }
@@ -83,7 +78,7 @@ class yelpData {
                 "categories" : this.categories,
                 "price" : this.price,
                 "open_now" : this.open_now,
-                "latitude": this.latitude, //34.0522,
+                "latitude": this.latitude, // 34.0522,
                 "longitude": this.longitude, //  -118.2437,
                 'sort_by' : this.sort_by
             },
@@ -95,8 +90,8 @@ class yelpData {
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
-        debugger;
         yelpBusinessResultsArray.length = 0;
+        debugger;
         data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
         console.log(yelpBusinessResultsArray);
         var {latitude, longitude} = data.region.center;
@@ -104,7 +99,7 @@ class yelpData {
     }
 }
 
-var newYelpCall = new yelpData("bbq", 34.0522, -118.2437);
+var newYelpCall = new yelpData("bbq", 10, 'bbq', 34.0522, -118.2437);
 
 console.log(newYelpCall);
 
@@ -166,19 +161,37 @@ class eventRenderer{
 }
 
 /***************************************************************************************************
- * searchButtonClicked
+ * submitEventButtonClicked
  * @params {undefined}
  * @returns: {undefined}
- * actions for when the submit button has been clicked
+ * Leads user to eventPage from index upon click and fills in an object with search properties. Must be able to take all search parameters to filter through Event API.
  */
 
-function submitButtonClicked() {
+function eventSubmitButtonClicked() {
 
 }
 
 
+/***************************************************************************************************
+ * submitYelpButtonClicked
+ * @params {undefined}
+ * @returns: {object} object with all of the search parameters from the user.
+ * Creates an object from user search input upon click. Must be able to take all search parameters to filter through Yelp APIs.
+ */
 
-
+function submitYelpButtonClicked() {
+    var searchObj = {};
+    searchObj.term = $(/*#searchTerm*/).val();
+    searchObj.latitude = $(/*#latitude*/).val();
+    searchObj.longitude = $(/*#longitude*/).val();
+    searchObj.location = $(/*#location*/).val();
+    searchObj.radius = $(/*#radius*/).val();
+    searchObj.categories = $(/*#categories*/).val();
+    searchObj.price = $(/*#price*/).val();
+    searchObj.open_now = $(/*#open_now*/).val();
+    searchObj.sort_by = $(/*#sort_by*/).val();
+    return searchObj;
+}
 
 
 
