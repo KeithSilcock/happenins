@@ -73,20 +73,3 @@ class eventRenderer{
     }
 }
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
