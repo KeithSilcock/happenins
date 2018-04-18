@@ -15,9 +15,9 @@ var yelpSearchObj = {
     latitude: 34.0522, // current number is for LA  /*DOM element search item - a number, can have decimals*/,
     longitude: -118.2437, // current number is for LA   /*DOM element search item - a number, can have decimals*/,
     location: "Los Angeles"/*DOM element search item - a string*/,
-    radius: 4000/*DOM element search item in METERS - a number*/,
+    radius: 1000/*DOM element search item in METERS - a number*/,
     categories: "bbq"/*DOM element search item - a string*/,
-    price: "1,2,3"/*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
+    price: "1,2,3,4"/*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
     open_now: false /*DOM element search item - boolean*/,
     sort_by: "review_count"/*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
 };
@@ -502,7 +502,17 @@ function eventSubmitButtonClicked() {
  */
 
 function submitYelpButtonClicked() {
-    var searchObj = {};
+    var searchObj = {
+        term: "restaurants",
+        latitude: 34.0522, // current number is for LA  /*DOM element search item - a number, can have decimals*/,
+        longitude: -118.2437, // current number is for LA   /*DOM element search item - a number, can have decimals*/,
+        location : "Los Angeles",
+        radius : 800,
+        categories: "American (New)",
+        price : "1,2,3,4",
+        open_now: false,
+        sort_by: "best_match"
+    };
     //should have default values if no value entered
     searchObj.term = $(/*#searchTerm*/).val();
     searchObj.latitude = $(/*#latitude*/).val();
@@ -513,7 +523,7 @@ function submitYelpButtonClicked() {
     searchObj.price = $(/*#price*/).val();
     searchObj.open_now = $(/*#open_now*/).val();
     searchObj.sort_by = $(/*#sort_by*/).val();
-    return searchObj;
+    var map = new CreateGoogleMap(searchObj);
 }
 
 
