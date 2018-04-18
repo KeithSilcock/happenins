@@ -59,7 +59,7 @@ header{
 
 }
 
-#inputrContianer {
+#inputContianer {
    /*width: 80%;*/
     height: 60%;
     position: absolute;
@@ -71,7 +71,7 @@ header{
     opacity: 0.5;
     border: 10px double white;
 }
-#inputrContianer-wraper{
+#inputContianer-wraper{
     height: 60%;
     position: absolute;
     left: 50%;
@@ -94,7 +94,7 @@ header{
     z-index: 100;
 }
 #autoCompleteLI{
-
+    color: black;
 }
 
 .search-form{
@@ -292,4 +292,13 @@ button{
 
 .pageHidden{
     display: none;
+}
+.closePage3{
+    position: absolute;
+    left: 97%;
+
+    font-size: 2em;
+    color: grey;
+    font-weight: bold;
+    cursor: pointer;
 }
