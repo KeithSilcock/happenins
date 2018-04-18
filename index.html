@@ -9,7 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
 
-    <script rel="script" type="text/javascript" src="main.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0vWkoQQodvGBX2l0i1_oRnO6V-9RMyLM&callback=initMap"></script>
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -17,7 +17,7 @@
     <title>Happenins</title>
     <style>
         #map{
-            height:100px;
+            height:100%;
             width:100%;
         }
     </style>
@@ -28,15 +28,16 @@
 <div id="top-container">
 
     <header id="headerArea" class="container-fluid col-sm-12 col-lg-12">
-        <div id="logo">logoArea</div>
+        <div id="logo"><spam id='logoSpam'>Circled</spam></div>
+
         <!--<div class="eventsDropDownCont dropdown col-xs-offset-7 col-xs-2 col-md-offset-10 col-md-1 clearfix">-->
         <!--<button data-toggle="dropdown" type="button" class="page2 dropdown-toggle btn btn-primary">&#8801;<span class="caret"></span></button>-->
         <!--<ul class="dropdown-menu dropDownUL">-->
 
         <!--</ul>-->
         <!--</div>-->
-        <div class="page2 col-md-offset-3 col-md-5 input-group form-group">
-            <span class="input-group-addon">
+        <div class="page2 headerSearch input-group form-group">
+            <span class="input-group-addon searchCategory">
                 <span class="glyphicon glyphicon-search"></span>
             </span>
             <input type="text" class="form-control categoryInput" name="userInputEventType" id="inputEventType2" placeholder="Event Type">
@@ -46,6 +47,7 @@
     <!-- input page -->
     <div class="mainBody col-lg-12">
         <!-- input module-->
+
         <div class="page1">
             <div id="inputContainer" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10" ></div>
 
@@ -60,6 +62,7 @@
                         <input class="form-control" id="search-city" value="Los Angeles, CA" placeholder="Enter a city" type="text" >
                     </div>
                     <div class="input-group form-group page2CategorySearch">
+
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-search"></span>
                                         </span>
@@ -77,12 +80,12 @@
         </div>
 
         <!-- events page -->
-        <div class="page2 eventPageContainer">
+        <div class="page2 eventPageContainer initialHide">
             <div class="eventsContainer col-xs-12"></div>
         </div>
         <!-- detail module -->
 
-        <div class="eventDetailPageContainer page3">
+        <div class="eventDetailPageContainer page3 initialHide">
             <span class="closePage3">&times;</span>
 
             <!--                     <div id="pageContainerbackground" class="container-fluid"></div>
@@ -108,33 +111,39 @@
 
                     <div>
                         <span class="glyphicon glyphicon-calendar"></span>
-                        <span class="eventDate">April 18 2018</span>
+                        <span id="eventDate">April 18 2018</span>
                     </div>
 
                     <div>
                         <span class="glyphicon glyphicon-time"></span>
-                        <span class="eventTime"> 8:30 PM</span>
+                        <span id="eventTime"> 8:30 PM</span>
                     </div>
+
+                    </span>
+                </div>
+
+
+                <!-- events page -->
+                <div class="secondPageContainer pageHidden">
+                    <div class="eventsContainer col-xs-12">
+
                     <div id="evnetDetailBox">
                         <!-- <div id="iconForEvent"> -->
                         <span id="iconForEvent" class="icon glyphicon glyphicon-info-sign"></span>
                         <!--  </div> -->
-                        <span id="eventdetail">soafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisj
-                                    eoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisj
-                                    eoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisj
+                        <span id="eventDetail">Stuff and things</span>
 
-                                    </span>
 
                     </div>
-
                 </div>
+
                 <div id="mapArea" class="containerSize col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
                 <div id="surroundingAreaInfo" class="containerSize col-lg-3 col-md-3 col-sm-12 col-xs-12">
                     <div class="input-group form-group">
                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-cutlery"></span>
                                         </span>
-                        <input id="yelpSearchBoxterm" class="form-control" id="search-city" placeholder="Find.. (ex. American, BBQ)" type="text" >
+                        <input id="yelpSearchBoxterm" class="form-control" placeholder="Find.. (ex. American, BBQ)" type="text" >
                     </div>
                     <div class="input-group form-group">
                         <span class="input-group-addon">
@@ -159,20 +168,29 @@
                         <button data-toggle="dropdown" type="button" class="page2 dropdown-toggle btn btn-primary">&#8801;<span class="caret"></span></button>
                     </div>
 
+                <div id="mapArea" class="containerSize col-lg-6 col-md-6 col-sm-12 col-xs-12"><div id="google-map"></div></div></div>
+                <div id="surroundingAreaInfo" class="containerSize col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
 
 
                     <button type="button" class="btn btn-danger btn-md" id="yelpSearchButton">Go!</button>
                 </div>
         </div>
     </div>
+
+
+
+</div>
+
+    <script rel="script" type="text/javascript" src="main.js"></script>
+
     <!-- the main body area -->
 
 </div>
 </div>
 </div>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPN4nvPi1zuanO-esg1xO-4UybPxShug0&libraries=places&callback=activePlaceSearch" async defer></script>
 
 </div>
+
 
 </body>
 

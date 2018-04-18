@@ -4,7 +4,8 @@
 
 
 var eventSearchResultArray = [];
-var a = [];
+var yelpArrayLength = [];
+var markersArray = [];
 
 $(document).ready(initializeApp);
 
@@ -23,6 +24,8 @@ const searchObjDefault = {
 };
 const yelpBusinessResultsArray = [];
 
+
+
 /***************************************************************************************************
  * initializing
  * @params {undefined} none
@@ -33,7 +36,13 @@ const yelpBusinessResultsArray = [];
 
 function initializeApp() {
 
+    addClickHandlers();
+    //eventfulEventRequest(startDate, endDate, category)
+    //center: new google.maps.LatLng(34.0522, -118.2437)
+
 }
+
+
 
 /*************************************************************************x**************************
  * addHoverHandler
@@ -62,9 +71,11 @@ function addClickHandlers() {
         //***** katy edited ends ****////
         $(".eventPageContainer").removeClass('pageHidden');
     });
+
     // Dylan's Addition - Search button for yelp
     $("#yelpSearchButton").click(submitYelpButtonClicked);
     
+
 
     //var eventSearch = $('#searchButten').click(eventfulEventRequest(startDate, endDate, category));
 
@@ -78,6 +89,7 @@ function addClickHandlers() {
  * Sends request to Yelp API to pull data based off search input from User
  */
 var testData = null;
+
 class YelpData {
     constructor(eventCoord, searchObj) {
         this.searchObject = searchObj;
@@ -95,23 +107,58 @@ class YelpData {
             data: this.searchObject,
             success: this.pullBusinessData,
             error: function (errors) {
-                console.log("errors : ", errors);
+                ////console.log("errors : ", errors);
             }
         };
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
+
+        ////console.log(data);
+
         testData = data.businesses;
         yelpBusinessResultsArray.length = 0;
         submitYelpButtonClicked(this.eventCoord, this.searchObject);
         data.businesses.map( item => this.yelpBusinessResultsArray.push( item ) );
         var {latitude, longitude} = data.region.center;
-        // console.log(data);
         console.log(this.yelpBusinessResultsArray);
-        // console.log(latitude, longitude);
-
+        initMap(34.0522, -118.2437);
     }
 }
+var newYelpCall = new YelpData(yelpSearchObj);
+
+//console.log(newYelpCall);
+
+
+
+
+function initMap(lat,lng) {
+    console.log(yelpBusinessResultsArray[0].coordinates.latitude)
+    var mapOptions = {
+        zoom: 16,
+        center: new google.maps.LatLng(lat,lng)
+
+        console.log(data);
+        console.log(this.yelpBusinessResultsArray);
+        console.log(latitude, longitude);
+        // submitYelpButtonClicked(this.eventCoord, this.searchObject)
+
+    }
+    var map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
+    var markerLocation = {lat: 34.0522, lng: -118.2437};
+    var markerLat;
+    var markerLng;
+        for (markerIndex=0; markerIndex<yelpBusinessResultsArray.length; markerIndex++) {
+            markerLat = yelpBusinessResultsArray[markerIndex].coordinates.latitude;
+            markerLng = yelpBusinessResultsArray[markerIndex].coordinates.longitude;
+            var marker = new google.maps.Marker({
+                map: map,
+                position: new google.maps.LatLng(markerLat, markerLng),
+                animation: google.maps.Animation.DROP,
+            });
+        }
+}
+
 
 
 var testSearchObject = {
@@ -128,6 +175,7 @@ var testSearchObject = {
 }
 var newYelpCall = new YelpData({latitude: 47.6062, longitude: -122.3321}, testSearchObject);
 console.log(testData);
+
 
 
 
@@ -165,6 +213,7 @@ class eventfulEventRequester {
             data: {},
             success: function (rawData) {
                 console.log("eventful" , rawData)
+
                 for (var event = 0; event < rawData.events.event.length; event++) {
                     if (rawData.events.event[event].title !== null) {
                         var title = rawData.events.event[event].title;
@@ -185,10 +234,10 @@ class eventfulEventRequester {
                     if (rawData.events.event[event].description !== null) {
                         var description = rawData.events.event[event].description;
                     }
-                    if (rawData.events.event[event].description !== null) {
+                    if (rawData.events.event[event].start_time !== null) {
                         var startTime = rawData.events.event[event].start_time;
                     }
-                    if (rawData.events.event[event].description !== null) {
+                    if (rawData.events.event[event].venue_url !== null) {
                         var venueURL = rawData.events.event[event].venue_url;
                     }
                     if (rawData.events.event[event].latitude !== null) {
@@ -197,6 +246,13 @@ class eventfulEventRequester {
                     if (rawData.events.event[event].longitude !== null) {
                         var venueLongitude = rawData.events.event[event].longitude;
                     }
+                    if (rawData.events.event[event].postal_code !== null) {
+                        var venueZip = rawData.events.event[event].postal_code;
+                    }
+                    if (rawData.events.event[event].region_abbr !== null) {
+                        var venueState = rawData.events.event[event].region_abbr;
+                    }
+
 
                     eventSearchResultObject = {
                         title: title,
@@ -210,6 +266,8 @@ class eventfulEventRequester {
                         venueURL: venueURL,
                         latitude: venueLatitude,
                         longitude: venueLongitude
+                        venueZip: venueZip,
+                        venueState:venueState,
                     };
 
                     var eventCoordinates = {
@@ -228,7 +286,7 @@ class eventfulEventRequester {
 
             },
             error: function (error) {
-                console.log(error)
+                ////console.log(error)
             },
         });
 
@@ -257,88 +315,97 @@ $(window).on('load', function () {
 });
 
 
-class CircleController{
-    constructor(){
-        this.newEventfulRequest = new eventfulEventRequester(null, null,null);
+class CircleController {
+    constructor() {
+        this.newEventfulRequest = new eventfulEventRequester(null, null, null);
         this.newEventRenderer = new EventRenderer(this.changePageState.bind(this));
 
-        this.autoCompleteTimeout=null;
-        this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
-            'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
+        this.autoCompleteTimeout = null;
+        this.arrayOfEventCategories = ['music', 'comedy', 'family_fun_kids', 'festivals', 'film', 'food', 'food &amp; Wine', 'art',
+            'holiday', 'museums', 'business', 'nightlife', 'clubs', 'outdoors', 'animals', 'sales', 'science', 'sports', 'technology',
             'other'];
-        this.categoryKeys={
-            'Music':'music',
-            'Comedy':'comedy',
-            'Kids/Family Fun':'family_fun_kids',
-            'Festivals':'festivals',
-            'Film':'film',
-            'Food & Wine':'food &amp; Wine',
-            'Art':'art',
-            'Holiday':'holiday',
-            'Museums':'museums',
-            'Buisiness':'business',
-            'Nightlife':'nightlife',
-            'Clubs':'clubs',
-            'Outdoors':'outdoors',
-            'Animals':'animals',
-            'Sales':'sales',
-            'Science':'science',
-            'Sports':'sports',
-            'Technology':'technology',
-            'Other':'other',
-        }
+        this.categoryKeys = {
+            'Music': 'music',
+            'Comedy': 'comedy',
+            'Kids/Family Fun': 'family_fun_kids',
+            'Festivals': 'festivals',
+            'Film': 'film',
+            'Food & Wine': 'food &amp; Wine',
+            'Art': 'art',
+            'Holiday': 'holiday',
+            'Museums': 'museums',
+            'Buisiness': 'business',
+            'Nightlife': 'nightlife',
+            'Clubs': 'clubs',
+            'Outdoors': 'outdoors',
+            'Animals': 'animals',
+            'Sales': 'sales',
+            'Science': 'science',
+            'Sports': 'sports',
+            'Technology': 'technology',
+            'Other': 'other',
+        };
 
         this.changePageState(1);
 
         this.handleEventHandlers();
+        this.removeInitialHide();
+    }
+    removeInitialHide(){
+        $(".initialHide").removeClass('initialHide');
     }
 
-    changePageState(state){
-        this.pageState=state;
+    changePageState(state) {
+        this.pageState = state;
         this[`pageState${state}`]();
     }
 
-    pageState1(){
+    pageState1() {
         $('.page1').removeClass('pageHidden');
         $('.page2').addClass('pageHidden');
         $('.page3').addClass('pageHidden');
     }
-    pageState2(){
+
+    pageState2() {
         $('.page1').addClass('pageHidden');
         $('.page2').removeClass('pageHidden');
         $('.page3').addClass('pageHidden');
     }
-    pageState3(){
+
+    pageState3() {
         $('.page1').addClass('pageHidden');
         $('.page2').addClass('pageHidden');
         $('.page3').removeClass('pageHidden');
     }
 
-    requestEventData(date, numOfEntries, category){
+    requestEventData(date, numOfEntries, category) {
         this.newEventfulRequest.eventfulEventRequest(this.renderEventDataOnSuccess.bind(this), date, numOfEntries, category)
     }
 
-    renderEventDataOnSuccess(dataArray){
+    renderEventDataOnSuccess(dataArray) {
         this.newEventRenderer.turnDataIntoDomElements(dataArray);
     }
 
-    handleEventHandlers(){
+    handleEventHandlers() {
         $("#inputEventType, #inputEventType2").on({
             'keyup': this.onKeyUp.bind(this),
+
             'focusout': this.onFocusOutCloseAutoComplete.bind(this),
             'focus': function () {
-                console.log('here')
-            }
+                ////console.log('here')
+
+
         });
 
-        $('#searchButton, .closePage3').on({
-            'click':() => {
+        $('#searchButton, .searchCategory').on({
+            'click': () => {
                 this.handleRequestEvents();
                 this.changePageState(2);
+
             }
         });
         $('.closePage3').on({
-            'click':() => {
+            'click': () => {
                 this.changePageState(2);
             }
         });
@@ -349,13 +416,17 @@ class CircleController{
 
     }
 
-    handleRequestEvents(){
+    handleRequestEvents() {
+        //remove previous events
+        $(".outerEventContainer ").remove();
+
+
         let categoryInputs = $(".categoryInput");
         let eventCategory = '';
 
-        for(let categoryIndex=0; categoryIndex<categoryInputs.length; categoryIndex++){
-            if(categoryInputs[categoryIndex].value !== ''){
-                eventCategory=categoryInputs[categoryIndex].value;
+        for (let categoryIndex = 0; categoryIndex < categoryInputs.length; categoryIndex++) {
+            if (categoryInputs[categoryIndex].value !== '') {
+                eventCategory = categoryInputs[categoryIndex].value;
             }
             categoryInputs[categoryIndex].value = '';
         }
@@ -367,23 +438,25 @@ class CircleController{
     }
 
     onKeyUp(event) {
-        if(event.key==='Escape'){
+        if (event.key === 'Escape') {
             this.removeAutoCompleteUL();
-        }else if(!this.autoCompleteTimeout) {
+        } else if (!this.autoCompleteTimeout) {
             this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this, event.target), 500);
-        }else{
+        } else {
             clearTimeout(this.autoCompleteTimeout);
             this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this, event.target), 500);
         }
     }
-    onFocusOutCloseAutoComplete(event){
-        if(!this.focusOutTimeout) {
+
+    onFocusOutCloseAutoComplete(event) {
+        if (!this.focusOutTimeout) {
             this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
-        }else{
+        } else {
             clearTimeout(this.focusOutTimeout);
             this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
         }
     }
+
     autoCompleteCourse(inputToComplete) {
         this.removeAutoCompleteUL();
 
@@ -391,56 +464,82 @@ class CircleController{
         let categoryInput = $(inputToComplete);
         let lettersSoFar = categoryInput.val().toLowerCase();
 
-        if(lettersSoFar.length===0){
-
+        if (lettersSoFar.length === 0) {
             // this.removeAutoCompleteUL();
             return;
         }
 
-        let autoCompleteUL=$("<ul>",{
-            'id':'autoComplete',
+        let autoCompleteUL = $("<ul>", {
+            'id': 'autoComplete',
+            on: {
+                'click': autoComplete.bind(this),
+            },
         });
-        autoCompleteUL.on('click', '#autoCompleteLI', autoComplete.bind(this));
+        //autoCompleteUL.on('click', '#autoCompleteLI', autoComplete.bind(this));
 
         let allAutoCorrectMatches = [];
-
-        for(let category in this.categoryKeys){
-            let sliceToCheck = category.toLowerCase().slice(0,lettersSoFar.length);
-            if(category.length === lettersSoFar.length){
+        for (let category in this.categoryKeys) {
+            let sliceToCheck = category.toLowerCase().slice(0, lettersSoFar.length);
+            if (category.length === lettersSoFar.length) {
                 this.removeAutoCompleteUL();
                 continue;
             }
-            if(sliceToCheck === lettersSoFar && lettersSoFar.length>0){
-                let autoCompleteLI = $("<li>",{
-                    text:category,
-                    'id':'autoCompleteLI',
+            if (sliceToCheck === lettersSoFar && lettersSoFar.length > 0) {
+                let autoCompleteLI = $("<li>", {
+                    text: category,
+                    'class':'form-control autoCompleteLI',
                 });
                 allAutoCorrectMatches.push(autoCompleteLI);
             }
         }
 
-        if(allAutoCorrectMatches.length>0){
-            for(let index in allAutoCorrectMatches){
+        if (allAutoCorrectMatches.length > 0) {
+            for (let index in allAutoCorrectMatches) {
                 autoCompleteUL.append(allAutoCorrectMatches[index]);
             }
             appendParent.append(autoCompleteUL);
         }
 
         function autoComplete(event) {
-            var clickedObj=event.target;
+            var clickedObj = event.target;
             categoryInput.val(clickedObj.outerText);
             this.removeAutoCompleteUL();
         }
     }
-    removeAutoCompleteUL(event){
+
+    removeAutoCompleteUL(event) {
         $("#autoComplete").remove();
     }
-    autocompleteAllChoices(){
 
+    autocompleteAllChoices(event) {
+        this.removeAutoCompleteUL();
+        let appendParent = $(event.target).closest('.input-group')
+
+        let autoCompleteUL = $("<ul>", {
+            'id': 'autoComplete',
+            on: {
+                'click': autoComplete.bind(this),
+            },
+        });
+
+        for (let category in this.categoryKeys) {
+            let autoCompleteLI = $("<li>", {
+                text: category,
+                'class':'form-control autoCompleteLI'
+            });
+            autoCompleteUL.append(autoCompleteLI);
+        }
+        appendParent.append(autoCompleteUL);
+
+        function autoComplete(clickedCategoryEvent) {
+            var clickedObj = clickedCategoryEvent.target;
+            $(event.target).val(clickedObj.outerText);
+            this.removeAutoCompleteUL();
+        }
     }
 }
 
-class EventRenderer{
+    class EventRenderer{
     constructor(changeStateCallback){
         // this.arrayOfData = arrayOfData;
         this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
@@ -475,8 +574,14 @@ class EventRenderer{
     }
 
     parseData(infoToParse, odd){
+        let outerContainer = $("<div>",{
+            'class': 'outerEventContainer col-xs-12 col-md-3'
+        });
         let eventContainer = $("<div>",{
-            'class':'event col-xs-12 col-md-3',
+            'class':'event innerEventContainer',
+            css:{
+                'background-image': `url("${infoToParse.imageLargeUrl}")`
+            },
             on:{
                 // 'click': this.handlePopOutAnimation.bind(this),
             },
@@ -486,23 +591,19 @@ class EventRenderer{
             infoToParse.imageLargeUrl= 'includes/images/testPartyImg.jpeg'
         }
 
-        let pictureEl = $("<img>",{
-            'class':'eventImg eventContent col-xs-3 col-md-12',
-            src:`${infoToParse.imageLargeUrl}`,
-        });
         let nameEl = $("<div>",{
-            'class':'eventName eventContent row col-xs-8 col-md-6',
+            'class':'eventName eventContent row col-xs-8 col-md-12',
             text: infoToParse.title,
         });
+
         let dateEl = $("<div>",{
-            'class':'eventDate eventContent row  col-xs-8 col-md-6',
-            // text: `When: ${infoToParse.time}, ${infoToParse.date}`,
-        });
-        let locationEl = $("<div>",{
-            'class':'eventLoc eventContent row  col-xs-8 col-md-6',
-            text: `Where: ${infoToParse.venue_address}`,
+            'class':'eventDate eventContent row  col-xs-8 col-md-12',
+            // text: `${infoToParse.time}, ${infoToParse.date}`,
         });
 
+        let infoDate = infoToParse.startTime.slice(8,10) +
+            infoToParse.startTime.slice(4,7) +
+            infoToParse.startTime.slice(0, 4);
 
         // start extra information
         let extraEl = $("<div>",{
@@ -523,7 +624,7 @@ class EventRenderer{
         //closure to get added data
         (function (that) {
             eventContainer.on({
-                'click':that.handleAddToListButtonClick.bind(this, that, infoToParse),
+                'click':that.openThirdPageInformation.bind(this, that, infoToParse),
             })
         })(this);
 
@@ -533,7 +634,10 @@ class EventRenderer{
 
         // this.bootstrapClassAdder(arrayOfElements);
 
-        return eventContainer.append(pictureEl, nameEl, dateEl, locationEl, extraEl);
+        eventContainer.append(nameEl, dateEl);
+        outerContainer.append(eventContainer)
+
+        $(".eventsContainer").append(outerContainer);
     }
 
     handlePopOutAnimation(eventOfClick){
@@ -558,13 +662,32 @@ class EventRenderer{
             extraInfoDiv.removeClass('shrink').addClass('expand');
         }
     }
-    handleAddToListButtonClick(thisObj, info, event){
+    openThirdPageInformation(thisObj, info, event){
+
         // thisObj.handlePopOutAnimation(event);
         // ^^^ keeps expanded list from closing, but need to fix in later edition
 
+
+        let infoTime = info.startTime.slice(11,17);
+        let infoDate = info.startTime.slice(8,10) +
+            info.startTime.slice(4,7) +
+            info.startTime.slice(0, 4);
+
+        // let address = `${info.venue_address} ${info.cityName}, ${info.venueState} ${info.venueZip} `
+
+
         thisObj.changeStateCallback(3);
+        let image =  $("#imageArea").attr('src', info.imageLargeUrl);
+        let street= $("#eventStreet").text(info.venue_address);
+        let city= $("#eventCity").text(info.cityName);
+        let state= $("#eventState").text(info.venueState);
+        let zip= $("#eventZip").text(info.venueZip);
+        let date= $("#eventDate").text(infoDate);
+        let time= $("#eventTime").text(infoTime);
+        let infoDetails= $("#eventDetail").text(info.description);
 
         console.log(info)
+
 
         //collect data from event clicked
 
@@ -577,7 +700,7 @@ class EventRenderer{
     }
 
     renderOnScreen(domElement){
-        $(".eventsContainer").append(domElement);
+
     }
 }
 
@@ -600,6 +723,21 @@ function eventSubmitButtonClicked() {
  * Creates an object from user search input upon click. Must be able to take all search parameters to filter through Yelp APIs.
  */
 
+
+// function submitYelpButtonClicked() {
+//     var searchObj = {};
+//     //should have default values if no value entered
+//     searchObj.term = $(/*#searchTerm*/).val();
+//     searchObj.latitude = $(/*#latitude*/).val();
+//     searchObj.longitude = $(/*#longitude*/).val();
+//     searchObj.location = $(/*#location*/).val();
+//     searchObj.radius = $(/*#radius*/).val();
+//     searchObj.categories = $(/*#categories*/).val();
+//     searchObj.price = $(/*#price*/).val();
+//     searchObj.open_now = $(/*#open_now*/).val();
+//     searchObj.sort_by = $(/*#sort_by*/).val();
+//     return searchObj;
+
 function submitYelpButtonClicked(eventLocation, searchObjectParameters) {
     // var searchObj = {
     //     access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx"
@@ -620,6 +758,7 @@ function submitYelpButtonClicked(eventLocation, searchObjectParameters) {
     // var newYelpCall = new YelpData(eventLocation, searchObjectParameters);
     // console.log(newYelpCall);
     // var map = new CreateGoogleMap(newYelpCall.yelpBusinessResultsArray);
+
 }
 
 
@@ -630,6 +769,67 @@ function submitYelpButtonClicked(eventLocation, searchObjectParameters) {
  * creates a map to display onto page that will contain makers. Markers will be yelp results
  */
 
+
+// class CreateGoogleMap {
+//     constructor(searchResults) {
+//         this.latitude = searchResults.latitude;
+//         this.longitude = searchResults.longitude;
+//         this.searchCoordinates = {
+//             lat: this.latitude,
+//             lng: this.longitude
+//         };
+//     }
+//
+//         this.searchArray = searchResults.businesses;
+//         this.map = new google.maps.Map(document.getElementById('map'), {
+//             center: this.searchCoordinates,
+//             zoom: 5
+//         });
+//         this.infoWindow = new google.maps.InfoWindow();
+//         this.service = new google.maps.places.PlacesService(map);
+//         this.service.nearbySearch({
+//             location: this.searchCoordinates,
+//             radius: 800,
+//             type: ['restaurant']
+//         }, this.callback);
+//     }
+//     callback(searchResults, status) {
+//         if (status === google.maps.places.PlacesServiceStatus.OK) {
+//             for(let i = 0; i < searchResults.businesses.length; i++) {
+//                 this.createMarker = this.createMarker.bind(this);
+//                 this.createMarker(searchResults.businesses[i]);
+//             }
+//         }
+//     }
+//     createMarker(place) {
+//         this.placeLocation = place.geometry.location;
+//         this.marker = new google.maps.Marker({
+//             map: map,
+//             position: this.placeLocation
+//         });
+//         google.maps.event.addListener(marker, 'click', function() {
+//             infowindow.setContent(/**/);
+//             infowindow.open(map, this);
+//         });
+//         this.provideLocationData(this.searchArray, this.marker);
+//     }
+//     provideLocationData(searchArray, marker /*businesses array*/) {
+//         searchArray.map(function(item) {
+//             this.locationDiv = $("<div>").addClass("locationDiv");
+//             this.locationName = $("<p>").text(item.name).addClass("locationName");
+//             this.locationImage = $("<img>").attr("src", item.image_url).addClass("locationImage");
+//             this.locationLocation = $("<p>").text(item.location["display_address"].map( address => "" + address + ", " + address)).addClass("locationLocation");
+//             this.locationPhoneNumber = $("<p>").text(item.phone).addClass("locationPhoneNumber");
+//             this.locationPrice = $("<p>").text(item.price).addClass("locationPrice");
+//             this.locationRating = $("<p>").text(item.rating).addClass("locationRating");
+//             this.locationReviewCount = $("<p>").text(item.review_count).addClass("locationReviewCount");
+//             this.locationURL = $("<p>").text(item.url).addClass("locationURL");
+//
+//             this.locationDiv.append(this.locationName, this.locationImage, this.locationPrice, this.locationRating, this.locationReviewCount, this.locationLocation, this.locationPhoneNumber, this.locationURL);
+//             marker.append(this.locationDiv);
+//         })
+//     }
+// }
 
 class CreateGoogleMap {
     constructor(searchResults) {
@@ -692,12 +892,22 @@ class CreateGoogleMap {
 
 
 
+
 /***************************************************************************************************
  * autoCompleteLocation
  * @params {undefined}
  * @returns: {object}
  *
  */
+
+
+// function activePlaceSearch(){
+//     // var input = $('#search-city');
+//     // var autocomplete = new google.maps.places.Autocomplete(input[0]);
+//     var input = document.getElementById('search-city');
+//     var autocomplete = new google.maps.places.Autocomplete(input);
+//
+// }
 
 function activePlaceSearch(){
     // var input = $('#search-city');
@@ -706,29 +916,5 @@ function activePlaceSearch(){
     var autocomplete = new google.maps.places.Autocomplete(input);
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
