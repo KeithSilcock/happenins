@@ -318,7 +318,7 @@ class CircleController {
             'focus': this.autocompleteAllChoices.bind(this)
         });
 
-        $('#searchButton, .closePage3').on({
+        $('#searchButton, .searchCategory').on({
             'click': () => {
                 this.handleRequestEvents();
                 this.changePageState(2);
@@ -337,6 +337,10 @@ class CircleController {
     }
 
     handleRequestEvents() {
+        //remove previous events
+        $(".outerEventContainer ").remove();
+
+
         let categoryInputs = $(".categoryInput");
         let eventCategory = '';
 
@@ -507,23 +511,19 @@ class CircleController {
             infoToParse.imageLargeUrl= 'includes/images/testPartyImg.jpeg'
         }
 
-        // let pictureEl = $("<img>",{
-        //     'class':'eventImg eventContent col-xs-3 col-md-12',
-        //     src:`${infoToParse.imageLargeUrl}`,
-        // });
         let nameEl = $("<div>",{
-            'class':'eventName eventContent row col-xs-8 col-md-6',
+            'class':'eventName eventContent row col-xs-8 col-md-12',
             text: infoToParse.title,
         });
+
         let dateEl = $("<div>",{
-            'class':'eventDate eventContent row  col-xs-8 col-md-6',
-            // text: `When: ${infoToParse.time}, ${infoToParse.date}`,
-        });
-        let locationEl = $("<div>",{
-            'class':'eventLoc eventContent row  col-xs-8 col-md-6',
-            text: `Where: ${infoToParse.venue_address}`,
+            'class':'eventDate eventContent row  col-xs-8 col-md-12',
+            // text: `${infoToParse.time}, ${infoToParse.date}`,
         });
 
+        let infoDate = infoToParse.startTime.slice(8,10) +
+            infoToParse.startTime.slice(4,7) +
+            infoToParse.startTime.slice(0, 4);
 
         // start extra information
         let extraEl = $("<div>",{
@@ -554,7 +554,7 @@ class CircleController {
 
         // this.bootstrapClassAdder(arrayOfElements);
 
-        eventContainer.append(nameEl, dateEl, locationEl, extraEl);
+        eventContainer.append(nameEl, dateEl);
         outerContainer.append(eventContainer)
 
         $(".eventsContainer").append(outerContainer);
