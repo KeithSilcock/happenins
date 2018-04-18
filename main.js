@@ -208,88 +208,92 @@ $(window).on('load', function () {
 });
 
 
-class CircleController{
-    constructor(){
-        this.newEventfulRequest = new eventfulEventRequester(null, null,null);
+class CircleController {
+    constructor() {
+        this.newEventfulRequest = new eventfulEventRequester(null, null, null);
         this.newEventRenderer = new EventRenderer(this.changePageState.bind(this));
 
-        this.autoCompleteTimeout=null;
-        this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
-            'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
+        this.autoCompleteTimeout = null;
+        this.arrayOfEventCategories = ['music', 'comedy', 'family_fun_kids', 'festivals', 'film', 'food', 'food &amp; Wine', 'art',
+            'holiday', 'museums', 'business', 'nightlife', 'clubs', 'outdoors', 'animals', 'sales', 'science', 'sports', 'technology',
             'other'];
-        this.categoryKeys={
-            'Music':'music',
-            'Comedy':'comedy',
-            'Kids/Family Fun':'family_fun_kids',
-            'Festivals':'festivals',
-            'Film':'film',
-            'Food & Wine':'food &amp; Wine',
-            'Art':'art',
-            'Holiday':'holiday',
-            'Museums':'museums',
-            'Buisiness':'business',
-            'Nightlife':'nightlife',
-            'Clubs':'clubs',
-            'Outdoors':'outdoors',
-            'Animals':'animals',
-            'Sales':'sales',
-            'Science':'science',
-            'Sports':'sports',
-            'Technology':'technology',
-            'Other':'other',
+        this.categoryKeys = {
+            'Music': 'music',
+            'Comedy': 'comedy',
+            'Kids/Family Fun': 'family_fun_kids',
+            'Festivals': 'festivals',
+            'Film': 'film',
+            'Food & Wine': 'food &amp; Wine',
+            'Art': 'art',
+            'Holiday': 'holiday',
+            'Museums': 'museums',
+            'Buisiness': 'business',
+            'Nightlife': 'nightlife',
+            'Clubs': 'clubs',
+            'Outdoors': 'outdoors',
+            'Animals': 'animals',
+            'Sales': 'sales',
+            'Science': 'science',
+            'Sports': 'sports',
+            'Technology': 'technology',
+            'Other': 'other',
         }
 
         this.changePageState(1);
 
         this.handleEventHandlers();
+        this.removeInitialHide();
+    }
+    removeInitialHide(){
+        $(".initialHide").removeClass('initialHide');
     }
 
-    changePageState(state){
-        this.pageState=state;
+    changePageState(state) {
+        this.pageState = state;
         this[`pageState${state}`]();
     }
 
-    pageState1(){
+    pageState1() {
         $('.page1').removeClass('pageHidden');
         $('.page2').addClass('pageHidden');
         $('.page3').addClass('pageHidden');
     }
-    pageState2(){
+
+    pageState2() {
         $('.page1').addClass('pageHidden');
         $('.page2').removeClass('pageHidden');
         $('.page3').addClass('pageHidden');
     }
-    pageState3(){
+
+    pageState3() {
         $('.page1').addClass('pageHidden');
         $('.page2').addClass('pageHidden');
         $('.page3').removeClass('pageHidden');
     }
 
-    requestEventData(date, numOfEntries, category){
+    requestEventData(date, numOfEntries, category) {
         this.newEventfulRequest.eventfulEventRequest(this.renderEventDataOnSuccess.bind(this), date, numOfEntries, category)
     }
 
-    renderEventDataOnSuccess(dataArray){
+    renderEventDataOnSuccess(dataArray) {
         this.newEventRenderer.turnDataIntoDomElements(dataArray);
     }
 
-    handleEventHandlers(){
+    handleEventHandlers() {
         $("#inputEventType, #inputEventType2").on({
             'keyup': this.onKeyUp.bind(this),
             'focusout': this.onFocusOutCloseAutoComplete.bind(this),
-            'focus': function () {
-                console.log('here')
-            }
+            'focus': this.autocompleteAllChoices.bind(this)
         });
 
         $('#searchButton, .closePage3').on({
-            'click':() => {
+            'click': () => {
                 this.handleRequestEvents();
                 this.changePageState(2);
             }
         });
         $('.closePage3').on({
-            'click':() => {
+            'click': () => {
                 this.changePageState(2);
             }
         });
@@ -300,13 +304,13 @@ class CircleController{
 
     }
 
-    handleRequestEvents(){
+    handleRequestEvents() {
         let categoryInputs = $(".categoryInput");
         let eventCategory = '';
 
-        for(let categoryIndex=0; categoryIndex<categoryInputs.length; categoryIndex++){
-            if(categoryInputs[categoryIndex].value !== ''){
-                eventCategory=categoryInputs[categoryIndex].value;
+        for (let categoryIndex = 0; categoryIndex < categoryInputs.length; categoryIndex++) {
+            if (categoryInputs[categoryIndex].value !== '') {
+                eventCategory = categoryInputs[categoryIndex].value;
             }
             categoryInputs[categoryIndex].value = '';
         }
@@ -318,23 +322,25 @@ class CircleController{
     }
 
     onKeyUp(event) {
-        if(event.key==='Escape'){
+        if (event.key === 'Escape') {
             this.removeAutoCompleteUL();
-        }else if(!this.autoCompleteTimeout) {
+        } else if (!this.autoCompleteTimeout) {
             this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this, event.target), 500);
-        }else{
+        } else {
             clearTimeout(this.autoCompleteTimeout);
             this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this, event.target), 500);
         }
     }
-    onFocusOutCloseAutoComplete(event){
-        if(!this.focusOutTimeout) {
+
+    onFocusOutCloseAutoComplete(event) {
+        if (!this.focusOutTimeout) {
             this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
-        }else{
+        } else {
             clearTimeout(this.focusOutTimeout);
             this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
         }
     }
+
     autoCompleteCourse(inputToComplete) {
         this.removeAutoCompleteUL();
 
@@ -342,56 +348,84 @@ class CircleController{
         let categoryInput = $(inputToComplete);
         let lettersSoFar = categoryInput.val().toLowerCase();
 
-        if(lettersSoFar.length===0){
+        if (lettersSoFar.length === 0) {
 
             // this.removeAutoCompleteUL();
             return;
         }
 
-        let autoCompleteUL=$("<ul>",{
-            'id':'autoComplete',
+        let autoCompleteUL = $("<ul>", {
+            'id': 'autoComplete',
         });
         autoCompleteUL.on('click', '#autoCompleteLI', autoComplete.bind(this));
 
         let allAutoCorrectMatches = [];
 
-        for(let category in this.categoryKeys){
-            let sliceToCheck = category.toLowerCase().slice(0,lettersSoFar.length);
-            if(category.length === lettersSoFar.length){
+        for (let category in this.categoryKeys) {
+            let sliceToCheck = category.toLowerCase().slice(0, lettersSoFar.length);
+            if (category.length === lettersSoFar.length) {
                 this.removeAutoCompleteUL();
                 continue;
             }
-            if(sliceToCheck === lettersSoFar && lettersSoFar.length>0){
-                let autoCompleteLI = $("<li>",{
-                    text:category,
-                    'id':'autoCompleteLI',
+            if (sliceToCheck === lettersSoFar && lettersSoFar.length > 0) {
+                let autoCompleteLI = $("<li>", {
+                    text: category,
+                    'id': 'autoCompleteLI',
+                    'class':'form-control'
                 });
                 allAutoCorrectMatches.push(autoCompleteLI);
             }
         }
 
-        if(allAutoCorrectMatches.length>0){
-            for(let index in allAutoCorrectMatches){
+        if (allAutoCorrectMatches.length > 0) {
+            for (let index in allAutoCorrectMatches) {
                 autoCompleteUL.append(allAutoCorrectMatches[index]);
             }
             appendParent.append(autoCompleteUL);
         }
 
         function autoComplete(event) {
-            var clickedObj=event.target;
+            var clickedObj = event.target;
             categoryInput.val(clickedObj.outerText);
             this.removeAutoCompleteUL();
         }
     }
-    removeAutoCompleteUL(event){
+
+    removeAutoCompleteUL(event) {
         $("#autoComplete").remove();
     }
-    autocompleteAllChoices(){
 
+    autocompleteAllChoices(event) {
+
+        let appendParent = $(event.target).closest('.input-group')
+
+        let autoCompleteUL = $("<ul>", {
+            'id': 'autoComplete',
+            on: {
+                'click': autoComplete.bind(this),
+            },
+        });
+
+        for (let category in this.categoryKeys) {
+            let autoCompleteLI = $("<li>", {
+                text: category,
+                'id': 'autoCompleteLI',
+                'class':'form-control'
+            });
+            autoCompleteUL.append(autoCompleteLI);
+        }
+
+        appendParent.append(autoCompleteUL);
+
+        function autoComplete(clickedCategoryEvent) {
+            var clickedObj = clickedCategoryEvent.target;
+            $(event.target).val(clickedObj.outerText);
+            this.removeAutoCompleteUL();
+        }
     }
 }
 
-class EventRenderer{
+    class EventRenderer{
     constructor(changeStateCallback){
         // this.arrayOfData = arrayOfData;
         this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',

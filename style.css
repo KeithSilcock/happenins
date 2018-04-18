@@ -94,6 +94,7 @@ header{
     z-index: 100;
 }
 #autoCompleteLI{
+    text-align: left;
     color: black;
 }
 
@@ -190,7 +191,7 @@ button{
 .expand{
     display: block;
 }
-.shrink{
+.initialHide{
     display: none;
 }
 .addEventButton{
