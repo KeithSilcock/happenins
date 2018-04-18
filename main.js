@@ -33,9 +33,9 @@ const yelpBusinessResultsArray = [];
 
 function initializeApp() {
 
-    // eventfulEventRequest()
 
-    //addHoverHandlers();
+
+
     addClickHandlers();
     //eventfulEventRequest(startDate, endDate, category)
 }
@@ -67,6 +67,7 @@ function addClickHandlers() {
         $(".secondPageContainer").removeClass('pageHidden');
 
     });
+    
 
     //var eventSearch = $('#searchButten').click(eventfulEventRequest(startDate, endDate, category));
 
@@ -157,7 +158,7 @@ class eventfullEventRequester {
 
     eventfulEventRequest(renderFunc, date, numOfEntries, category){
 
-        var eventSearchResultObject = {};
+        let eventSearchResultObject = {};
 
         $.ajax({
             //url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date="+  startDate +"00-" + endDate + "00&category=" +  category + "&image_sizes=blackborder250,block100&page_size=10&category=new",
