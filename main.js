@@ -612,6 +612,7 @@ class CircleController {
         let time= $("#eventTime").text(infoTime);
         let infoDetails= $("#eventDetail").text(info.description);
 
+        debugger
         console.log(info)
 
         //collect data from event clicked
