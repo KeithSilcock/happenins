@@ -15,9 +15,9 @@ var yelpSearchObj = {
     latitude: 34.0522, // current number is for LA  /*DOM element search item - a number, can have decimals*/,
     longitude: -118.2437, // current number is for LA   /*DOM element search item - a number, can have decimals*/,
     location: "Los Angeles"/*DOM element search item - a string*/,
-    radius: 4000/*DOM element search item in METERS - a number*/,
+    radius: 1000/*DOM element search item in METERS - a number*/,
     categories: "bbq"/*DOM element search item - a string*/,
-    price: "1,2,3"/*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
+    price: "1,2,3,4"/*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
     open_now: false /*DOM element search item - boolean*/,
     sort_by: "review_count"/*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
 };
@@ -62,7 +62,7 @@ function addHoverHandler() {
  * Sends request to Yelp API to pull data based off search input from User
  */
 var testData = null;
-class yelpData {
+class YelpData {
     constructor(searchObj) {
         this.searchObject = searchObj;
         this.pullBusinessData = this.pullBusinessData.bind(this);
@@ -82,46 +82,20 @@ class yelpData {
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
-        console.log(data);
         testData = data.businesses;
         yelpBusinessResultsArray.length = 0;
         data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-        console.log(yelpBusinessResultsArray);
         var {latitude, longitude} = data.region.center;
+        console.log(data);
+        console.log(yelpBusinessResultsArray);
         console.log(latitude, longitude);
     }
 }
 
-var newYelpCall = new yelpData(yelpSearchObj);
+var newYelpCall = new YelpData(yelpSearchObj);
 
 console.log(newYelpCall);
 
-// var yelpAjaxCall = {
-//     dataType: "JSON",
-//     method: 'POST',
-//     url: "http://yelp.ongandy.com/businesses",
-//     data : {
-//         "access_token" : "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-//         "term" : "bbq",
-//         "latitude" : 34.0522,
-//         "longitude" : -118.2437,
-//     },
-//     success : function(results) {
-//         console.log("success : " , results);
-//         results.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-//         console.log(yelpBusinessResultsArray);
-//         var {latitude, longitude} = results.region.center;
-//         console.log(latitude, longitude);
-//     },
-//     error : function(errors) {
-//         console.log( "errors : " , errors );
-//     }
-// };
-//
-// $.ajax(yelpAjaxCall);
-
-
-// $.ajax(yelpAjaxCall);
 
 
 
@@ -578,7 +552,18 @@ function eventSubmitButtonClicked() {
  */
 
 function submitYelpButtonClicked() {
-    var searchObj = {};
+    var searchObj = {
+        term: "restaurants",
+        latitude: 34.0522, // current number is for LA  /*DOM element search item - a number, can have decimals*/,
+        longitude: -118.2437, // current number is for LA   /*DOM element search item - a number, can have decimals*/,
+        location : "Los Angeles",
+        radius : 800,
+        categories: "American (New)",
+        price : "1,2,3,4",
+        open_now: false,
+        sort_by: "best_match"
+    };
+    //should have default values if no value entered
     searchObj.term = $(/*#searchTerm*/).val();
     searchObj.latitude = $(/*#latitude*/).val();
     searchObj.longitude = $(/*#longitude*/).val();
@@ -588,7 +573,7 @@ function submitYelpButtonClicked() {
     searchObj.price = $(/*#price*/).val();
     searchObj.open_now = $(/*#open_now*/).val();
     searchObj.sort_by = $(/*#sort_by*/).val();
-    return searchObj;
+    var map = new CreateGoogleMap(searchObj);
 }
 
 
@@ -599,28 +584,33 @@ function submitYelpButtonClicked() {
  * creates a map to display onto page that will contain makers. Markers will be yelp results
  */
 
-class createGoogleMap {
-    constructor(searchObj) {
-        this.latitude = searchObj.latitude;
-        this.longitude = searchObj.longitude;
-        this.searchArray = searchObj.businesses;
+
+class CreateGoogleMap {
+    constructor(searchResults) {
+        this.latitude = searchResults.latitude;
+        this.longitude = searchResults.longitude;
+        this.searchCoordinates = {
+            lat : this.latitude,
+            lng : this.longitude
+        };
+        this.searchArray = searchResults.businesses;
         this.map = new google.maps.Map(document.getElementById('map'), {
-            center: losAngeles,
-            zoom: 20
+            center: this.searchCoordinates,
+            zoom: 5
         });
         this.infoWindow = new google.maps.InfoWindow();
         this.service = new google.maps.places.PlacesService(map);
-        service.nearbySearch({
-            location: {latitude: this.latitude, longitude: this.longitude},
+        this.service.nearbySearch({
+            location: this.searchCoordinates,
             radius: 800,
             type: ['restaurant']
         }, this.callback);
     }
-    callback(results, status) {
-        if (status === google.maps.pleaces.PlacesServiceStatus.OK) {
-            for(let i = 0; i < results.length; i++) {
+    callback(searchResults, status) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
+            for(let i = 0; i < searchResults.businesses.length; i++) {
                 this.createMarker = this.createMarker.bind(this);
-                this.createMarker(results[i]);
+                this.createMarker(searchResults.businesses[i]);
             }
         }
     }
@@ -628,16 +618,16 @@ class createGoogleMap {
         this.placeLocation = place.geometry.location;
         this.marker = new google.maps.Marker({
             map: map,
-            position: placeLocation
+            position: this.placeLocation
         });
         google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent(place.name);
+            infowindow.setContent(/**/);
             infowindow.open(map, this);
         });
         this.provideLocationData(this.searchArray, this.marker);
     }
-    provideLocationData(searchArray) {
-        searchArray.map(function(item, marker) {
+    provideLocationData(searchArray, marker /*businesses array*/) {
+        searchArray.map(function(item) {
             this.locationDiv = $("<div>").addClass("locationDiv");
             this.locationName = $("<p>").text(item.name).addClass("locationName");
             this.locationImage = $("<img>").attr("src", item.image_url).addClass("locationImage");
