@@ -445,9 +445,13 @@ class EventRenderer{
 
     parseData(infoToParse, odd){
         let eventContainer = $("<div>",{
-            'class':'event col-xs-12 col-md-3',
+            'class':'event col-lg-3 col-xs-12',
             on:{
                 // 'click': this.handlePopOutAnimation.bind(this),
+            },
+            css:{
+                'background-image': `url("${infoToParse.imageLargeUrl}")`,
+
             },
         });
 
@@ -455,10 +459,10 @@ class EventRenderer{
             infoToParse.imageLargeUrl= 'includes/images/testPartyImg.jpeg'
         }
 
-        let pictureEl = $("<img>",{
-            'class':'eventImg eventContent col-xs-3 col-md-12',
-            src:`${infoToParse.imageLargeUrl}`,
-        });
+        // let pictureEl = $("<img>",{
+        //     'class':'eventImg eventContent col-xs-3 col-md-12',
+        //     src:`${infoToParse.imageLargeUrl}`,
+        // });
         let nameEl = $("<div>",{
             'class':'eventName eventContent row col-xs-8 col-md-6',
             text: infoToParse.title,
@@ -502,7 +506,9 @@ class EventRenderer{
 
         // this.bootstrapClassAdder(arrayOfElements);
 
-        return eventContainer.append(pictureEl, nameEl, dateEl, locationEl, extraEl);
+        // return eventContainer.append(pictureEl, nameEl, dateEl, locationEl, extraEl);
+        return eventContainer.append(nameEl, dateEl, extraEl);
+
     }
 
     handlePopOutAnimation(eventOfClick){

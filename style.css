@@ -123,7 +123,7 @@ button{
 
 /*second page*/
 
-.eventsDropDownCont{
+/*.eventsDropDownCont{
    
 }
 .dropdown-toggle{
@@ -147,16 +147,22 @@ button{
 }
 .dropDownLI:last-child{
     border-bottom: 1px solid white;
-}
+}*/
 
 
 /*event container*/
 .event{
+    display: flex;
+    width: 25%;
+    height: 150px;
     border: 2px solid white;
-    border-radius: 50%;
-    margin: 1% 0;
+    /*border-radius: 50%;*/
+    background-position: center;
+    background-size: cover;
     background-color: gray;
-    opacity: .7;
+    background-repeat: no-repeat;
+    overflow: hidden;
+    opacity: .9;
 }
 .spacer{
     height:100%;
@@ -168,7 +174,7 @@ button{
 
 }
 .eventImg{
-    width: 50%;
+    /*width: 50%;*/
     border: none;
     transition-duration: 0.5s;
 }
@@ -197,6 +203,17 @@ button{
     text-align: center;
 }
 
+
+
+
+
+
+
+
+
+
+
+
 /*page 3*/
 
 /*#pageContainerbackground{
@@ -212,12 +229,6 @@ button{
 /*******do not touch *******/
 
 
-
-
-
-
-
-
 /*working from here*/
 .eventDetailPageContainer{
     width: 100%;
@@ -226,20 +237,14 @@ button{
 
 
 #pageContainer{
-    /*height: 100%;
-    position: relative;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);*/
-    /*border-radius: 15px;
+
+    border-radius: 15px;
     border: 1px solid gray;
-    box-shadow: 10px 10px 20px gray;
-    padding: 10px;*/
-  
+
 }
 /*******do not touch *******/
 
-/*eventInfoArea under the line 80*/
+/* eventInfoArea under the line 94*/
 
 
 #eventInfoArea{
@@ -248,57 +253,64 @@ button{
     /*height: auto;*/
     text-align: center;
     color: white;
-    font-size: 2em;
-    display: block;
+    font-size: 1.3em;
     border: 10px double pink;
-    box-shadow: 10px 10px 20px gray;
-    padding: 15px;
+    padding: 20px;
     border-radius: 10px;
+    margin-top: 10px;
 }
 
 
 
 #imageArea{
-    width: 80%;
-    height: 15%;
+    width: 50%;
+    height: 10%;
 
 }
 #evnetDetailBox{
     position: relative;
     overflow-wrap: break-word;
+    border: 3px double pink;
+    border-radius: 10px;
+    background-color: gray;
+    opacity: 0.7;
+}
+
+.closePage3{
+    position: absolute;
+    left: 90%;
+    font-size: 3em;
+    color: grey;
+    font-weight: bold;
+    cursor: pointer;
+    color: pink;
+    z-index: 1;
+}
+
+.closePage3:hover{
+    color:white;
+    text-shadow: 1px 1px 10px pink;
 }
 
 
-
-/*.containerSize{
+.containerSize{
     height: 90%;
     border: 1px solid red;
     box-sizing: border-box;
     position: relative;
     top: 5%;
     margin: 1px;
-}*/
-
-
-
-
-#evnetDetailBox{
-    border: 5px double pink;
-    border-radius: 3%;
 }
 
-
-
+/********************don't touch below******************************/
 
 .pageHidden{
     display: none;
 }
-.closePage3{
-    position: absolute;
-    left: 97%;
 
-    font-size: 2em;
-    color: grey;
-    font-weight: bold;
-    cursor: pointer;
-}
+
+
+
+
+
+
