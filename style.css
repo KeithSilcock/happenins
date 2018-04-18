@@ -164,7 +164,7 @@ button{
 
 }
 .event, .eventImg{
-   flex: 
+   flex: 0;
 }
 .eventImg{
     width: 50%;
