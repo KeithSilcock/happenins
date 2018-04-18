@@ -126,7 +126,8 @@ console.log(newYelpCall);
 //function eventfulEventRequest(startDate, endDate, category){
 class eventfulEventRequester {
     constructor() {
-
+        this.latitude = null;
+        this.longitude = null;
     }
 
     formatDate(date){
@@ -197,6 +198,8 @@ class eventfulEventRequester {
 
                 renderCallback(eventSearchResultArray)
 
+                this.latitude = eventSearchResultObject.latitude;
+                this.longitude = eventSearchResultObject.longitude;
             },
             error: function (error) {
                 console.log(error)
