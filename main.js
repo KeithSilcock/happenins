@@ -73,7 +73,7 @@ function addClickHandlers() {
  * @returns: {object} data from Yelp
  * Sends request to Yelp API to pull data based off search input from User
  */
-
+var testData = null;
 class yelpData {
     constructor(searchObj) {
         this.searchObject = searchObj;
@@ -95,6 +95,7 @@ class yelpData {
     }
     pullBusinessData(data) {
         console.log(data);
+        testData = data.businesses;
         yelpBusinessResultsArray.length = 0;
         data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
         console.log(yelpBusinessResultsArray);
@@ -455,6 +456,7 @@ class createGoogleMap {
     constructor(searchObj) {
         this.latitude = searchObj.latitude;
         this.longitude = searchObj.longitude;
+        this.searchArray = searchObj.businesses;
         this.map = new google.maps.Map(document.getElementById('map'), {
             center: losAngeles,
             zoom: 20
@@ -484,8 +486,25 @@ class createGoogleMap {
         google.maps.event.addListener(marker, 'click', function() {
             infowindow.setContent(place.name);
             infowindow.open(map, this);
-            // maybe open modal with restaurant information instead?
         });
+        this.provideLocationData(this.searchArray, this.marker);
+    }
+    provideLocationData(searchArray) {
+        searchArray.map(function(item, marker) {
+            this.locationDiv = $("<div>").addClass("locationDiv");
+            this.locationName = $("<p>").text(item.name).addClass("locationName");
+            this.locationImage = $("<img>").attr("src", item.image_url).addClass("locationImage");
+            this.locationCategories = $("<p>").text(item.categories.map( category => "" + category + ", " + category)).addClass("locationCategories");
+            this.locationLocation = $("<p>").text(item.location["display_address"].map( address => "" + address + ", " + address)).addClass("locationLocation");
+            this.locationPhoneNumber = $("<p>").text(item.phone).addClass("locationPhoneNumber");
+            this.locationPrice = $("<p>").text(item.price).addClass("locationPrice");
+            this.locationRating = $("<p>").text(item.rating).addClass("locationRating");
+            this.locationReviewCount = $("<p>").text(item.review_count).addClass("locationReviewCount");
+            this.locationURL = $("<p>").text(item.url).addClass("locationURL");
+
+            this.locationDiv.append(this.locationName, this.locationImage, this.locationPrice, this.locationRating, this.locationReviewCount, this.locationCategories, this.locationLocation, this.locationPhoneNumber, this.locationURL);
+            marker.append(this.locationDiv);
+        })
     }
 }
 
