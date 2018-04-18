@@ -10,14 +10,18 @@ body{
     background-color: lavender;
 }
 
-#headerArea{
+.pageHidden{
+    display: none;
+}
+
+#headerArea, #headerArea2{
     height: 10vh;
     background-color:lightpink;
     padding-right: 0;
     /*border: 1px solid black;*/
 }
 
-#logo{
+#logo, #logo2{
     width:  80px;
     height: 100%;
 
@@ -120,7 +124,7 @@ body{
     padding:0;
 }
 .eventImg{
-    width: 40%;
+    width: 50%;
     border: none;
     transition-duration: 0.5s;
 }

@@ -60,8 +60,8 @@ function addHoverHandler() {
 
 function addClickHandlers() {
     $('#searchButton').click(function(){
-        let data = eventfulEventRequest();
-        console.log(data)
+        $(".firstPageContainer").addClass('pageHidden')
+        $(".secondPageContainer").removeClass('pageHidden')
     });
 
     //var eventSearch = $('#searchButten').click(eventfulEventRequest(startDate, endDate, category));
@@ -291,7 +291,7 @@ class EventRenderer{
             let thisLI= $("<li>",{
                 'class': `dropDownLI dropDown${liName}`,
                 text: liName
-            })
+            });
             dropDownMenuUL.append(thisLI)
         })
     }
@@ -308,19 +308,19 @@ class EventRenderer{
 
     parseData(infoToParse, odd){
         let eventContainer = $("<div>",{
-            'class':'event col-xs-12 col-md-5',
+            'class':'event col-xs-12 col-md-3',
             on:{
                 // 'click': this.handlePopOutAnimation.bind(this),
             },
         });
 
-        if(infoToParse.imageSmallUrl === undefined){
-            infoToParse.imageSmallUrl= 'includes/images/testPartyImg.jpeg'
+        if(infoToParse.imageLargeUrl === undefined){
+            infoToParse.imageLargeUrl= 'includes/images/testPartyImg.jpeg'
         }
 
         let pictureEl = $("<img>",{
-            'class':'eventImg eventContent col-xs-3 col-md-6',
-            src:`${infoToParse.imageSmallUrl}`,
+            'class':'eventImg eventContent col-xs-3 col-md-12',
+            src:`${infoToParse.imageLargeUrl}`,
         });
         let nameEl = $("<div>",{
             'class':'eventName eventContent row col-xs-8 col-md-6',
