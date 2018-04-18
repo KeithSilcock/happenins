@@ -282,9 +282,6 @@ class HappeninsController{
         this.newEventRenderer.turnDataIntoDomElements(dataArray);
     }
 
-
-
-
     handleEventHandlers(){
         $("#inputEventType").on({
             'keyup': this.onKeyUp.bind(this),
