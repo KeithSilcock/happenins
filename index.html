@@ -9,7 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
 
-  
+
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -39,11 +39,11 @@
                         </span>
                     <input class="form-control" id="search-city" placeholder="Enter a city" type="text" >
                 </div>
-                <div class="input-group form-group">
+                <div id="categoryInput" class="input-group form-group">
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-search"></span>
                         </span>
-                    <input type="text" class="form-control" name="userInputEventType" id="inputEventType" placeholder="Event Type">
+                    <input type="text" class="form-control" name="userInputEventType" id="inputEventType" placeholder="Music, Comedy, Festivals, Food &amp; Wine...">
                 </div>
                 <div class="input-group form-group">
                         <span class="input-group-addon">
@@ -79,16 +79,16 @@
 
 </div>
 
-  <script type="text/javascript">
-      function activePlaceSearch(){
+<script type="text/javascript">
+    function activePlaceSearch(){
         // var input = $('#search-city');
         // var autocomplete = new google.maps.places.Autocomplete(input[0]);
         var input = document.getElementById('search-city');
         var autocomplete = new google.maps.places.Autocomplete(input);
 
     }
-  </script>
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPN4nvPi1zuanO-esg1xO-4UybPxShug0&libraries=places&callback=activePlaceSearch" async defer></script>
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPN4nvPi1zuanO-esg1xO-4UybPxShug0&libraries=places&callback=activePlaceSearch" async defer></script>
 </body>
 
 

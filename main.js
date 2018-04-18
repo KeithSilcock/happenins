@@ -196,7 +196,7 @@ class eventfullEventRequester {
                     eventSearchResultArray.push(eventSearchResultObject);
                 }
                 console.log(eventSearchResultArray);
-              
+
                 renderFunc(eventSearchResultArray)
 
             },
@@ -262,6 +262,13 @@ class HappeninsController{
     constructor(){
         this.newEventfulRequest = new eventfullEventRequester(null, null,null);
         this.newEventRenderer = new EventRenderer();
+
+        this.autoCompleteTimeout=null;
+        this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
+            'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
+            'other'];
+
+        this.handleEventHandlers();
     }
 
     requestEventData(){
@@ -270,6 +277,93 @@ class HappeninsController{
 
     renderEventDataOnSuccess(dataArray){
         this.newEventRenderer.turnDataIntoDomElements(dataArray);
+    }
+
+
+
+
+    handleEventHandlers(){
+        $("#inputEventType").on({
+            'keyup': this.onKeyUp.bind(this),
+            'focusout': this.onFocusOutCloseAutoComplete.bind(this),
+            'focus': function () {
+                console.log('here')
+            }
+        })
+    }
+
+    onKeyUp(event) {
+        if(event.key==='Escape'){
+            this.removeAutoCompleteUL();
+        }else if(!this.autoCompleteTimeout) {
+            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this), 500);
+        }else{
+            clearTimeout(this.autoCompleteTimeout);
+            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this), 500);
+        }
+    }
+    onFocusOutCloseAutoComplete(event){
+        if(!this.focusOutTimeout) {
+            this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
+        }else{
+            clearTimeout(this.focusOutTimeout);
+            this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
+        }
+    }
+    autoCompleteCourse() {
+        this.removeAutoCompleteUL();
+
+        let categoryInput = $('#inputEventType');
+        let lettersSoFar = categoryInput.val().toLowerCase();
+
+        if(lettersSoFar.length===0){
+
+            // this.removeAutoCompleteUL();
+            return;
+        }
+
+        let autoCompleteUL=$("<ul>",{
+            'id':'autoComplete',
+        });
+        autoCompleteUL.on('click', '#autoCompleteLI', autoComplete.bind(this));
+
+        let allAutoCorrectMatches = [];
+
+        for(let categoryIndex=0; categoryIndex<this.arrayOfEventCategories.length; categoryIndex++){
+            let category = this.arrayOfEventCategories[categoryIndex];
+
+            let sliceToCheck = category.toLowerCase().slice(0,lettersSoFar.length);
+            if(category.length === lettersSoFar.length){
+                this.removeAutoCompleteUL();
+                continue;
+            }
+            if(sliceToCheck === lettersSoFar && lettersSoFar.length>0){
+                let autoCompleteLI = $("<li>",{
+                    text:category,
+                    'id':'autoCompleteLI',
+                });
+                allAutoCorrectMatches.push(autoCompleteLI);
+            }
+        }
+
+        if(allAutoCorrectMatches.length>0){
+            for(let index in allAutoCorrectMatches){
+                autoCompleteUL.append(allAutoCorrectMatches[index]);
+            }
+            $("#categoryInput").append(autoCompleteUL);
+        }
+
+        function autoComplete(event) {
+            var clickedObj=event.target;
+            categoryInput.val(clickedObj.outerText);
+            this.removeAutoCompleteUL();
+        }
+    }
+    removeAutoCompleteUL(event){
+        $("#autoComplete").remove();
+    }
+    autocompleteAllChoices(){
+
     }
 }
 
