@@ -467,6 +467,7 @@ class CircleController {
 
             'focusout': this.onFocusOutCloseAutoComplete.bind(this),
             'focus': () => this.autocompleteAllChoices()
+
         });
 
         $('#searchButton, .searchCategory').on({
