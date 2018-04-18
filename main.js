@@ -490,8 +490,11 @@ class CircleController {
     }
 
     parseData(infoToParse, odd){
+        let outerContainer = $("<div>",{
+            'class': 'outerEventContainer col-xs-12 col-md-3'
+        });
         let eventContainer = $("<div>",{
-            'class':'event col-xs-12 col-md-3',
+            'class':'event innerEventContainer',
             css:{
                 'background-image': `url("${infoToParse.imageLargeUrl}")`
             },
@@ -551,7 +554,10 @@ class CircleController {
 
         // this.bootstrapClassAdder(arrayOfElements);
 
-        return eventContainer.append(nameEl, dateEl, locationEl, extraEl);
+        eventContainer.append(nameEl, dateEl, locationEl, extraEl);
+        outerContainer.append(eventContainer)
+
+        $(".eventsContainer").append(outerContainer);
     }
 
     handlePopOutAnimation(eventOfClick){
@@ -590,7 +596,7 @@ class CircleController {
 
 
         thisObj.changeStateCallback(3);
-
+        let image =  $("#imageArea").attr('src', info.imageLargeUrl);
         let street= $("#eventStreet").text(info.venue_address);
         let city= $("#eventCity").text(info.cityName);
         let state= $("#eventState").text(info.venueState);
@@ -612,7 +618,7 @@ class CircleController {
     }
 
     renderOnScreen(domElement){
-        $(".eventsContainer").append(domElement);
+
     }
 }
 
