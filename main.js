@@ -126,7 +126,8 @@ console.log(newYelpCall);
 //function eventfulEventRequest(startDate, endDate, category){
 class eventfulEventRequester {
     constructor() {
-
+        this.latitude = null;
+        this.longitude = null;
     }
 
     formatDate(date){
@@ -193,8 +194,11 @@ class eventfulEventRequester {
                         description: description,
                         startTime:startTime,
                         venueURL: venueURL,
+                     
                         venueZip: venueZip,
                         venueState:venueState,
+                        latitude: 34.0522,
+                        longitude: -118.2437
                     }
 
                     eventSearchResultArray.push(eventSearchResultObject);
@@ -203,6 +207,8 @@ class eventfulEventRequester {
 
                 renderCallback(eventSearchResultArray)
 
+                this.latitude = eventSearchResultObject.latitude;
+                this.longitude = eventSearchResultObject.longitude;
             },
             error: function (error) {
                 console.log(error)
@@ -641,7 +647,7 @@ function submitYelpButtonClicked() {
         location : "Los Angeles",
         radius : 800,
         categories: "American (New)",
-        price : "1,2,3,4",
+        priceRange : "1,2,3,4",
         open_now: false,
         sort_by: "best_match"
     };
@@ -652,7 +658,7 @@ function submitYelpButtonClicked() {
     searchObj.location = $(/*#location*/).val() || searchObjDefault.location;
     searchObj.radius = parseInt($("#radius").val())*milesToMeters || searchObjDefault.radius;
     searchObj.categories = $(/*#categories*/).val() || searchObjDefault.categories;
-    searchObj.price = $(/*#price*/).val() || searchObjDefault.price;
+    searchObj.priceRange = $(/*"#priceRange"*/).val() || searchObjDefault.price;
     searchObj.open_now = $(/*#open_now*/).val() || searchObjDefault.open_now;
     searchObj.sort_by = $(/*#sort_by*/).val() || searchObjDefault.sort_by;
 
