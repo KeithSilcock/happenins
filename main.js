@@ -594,7 +594,6 @@ class createGoogleMap {
             this.locationDiv = $("<div>").addClass("locationDiv");
             this.locationName = $("<p>").text(item.name).addClass("locationName");
             this.locationImage = $("<img>").attr("src", item.image_url).addClass("locationImage");
-            this.locationCategories = $("<p>").text(item.categories.map( category => "" + category + ", " + category)).addClass("locationCategories");
             this.locationLocation = $("<p>").text(item.location["display_address"].map( address => "" + address + ", " + address)).addClass("locationLocation");
             this.locationPhoneNumber = $("<p>").text(item.phone).addClass("locationPhoneNumber");
             this.locationPrice = $("<p>").text(item.price).addClass("locationPrice");
@@ -602,7 +601,7 @@ class createGoogleMap {
             this.locationReviewCount = $("<p>").text(item.review_count).addClass("locationReviewCount");
             this.locationURL = $("<p>").text(item.url).addClass("locationURL");
 
-            this.locationDiv.append(this.locationName, this.locationImage, this.locationPrice, this.locationRating, this.locationReviewCount, this.locationCategories, this.locationLocation, this.locationPhoneNumber, this.locationURL);
+            this.locationDiv.append(this.locationName, this.locationImage, this.locationPrice, this.locationRating, this.locationReviewCount, this.locationLocation, this.locationPhoneNumber, this.locationURL);
             marker.append(this.locationDiv);
         })
     }
