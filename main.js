@@ -202,11 +202,23 @@ class eventfullEventRequester {
 
                 renderFunc(eventSearchResultArray)
 
+
+                eventSearchResultArray.push(eventSearchResultObject);
+            }
+
+            return eventSearchResultArray;
+
+        },
+        error: function (error) { console.log(error) },
+    });
+
+
             },
             error: function (error) {
                 console.log(error)
             },
         });
+
 
 
     }
