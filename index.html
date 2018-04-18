@@ -29,7 +29,7 @@
 
     <header id="headerArea" class="container-fluid col-sm-12 col-lg-12">
         <div id="logo">logoArea</div>
-        <div class="eventsDropDownCont dropdown col-xs-offset-7 col-xs-2 col-md-offset-10 col-md-1 clearfix pageHidden">
+        <div class="page2 eventsDropDownCont dropdown col-xs-offset-7 col-xs-2 col-md-offset-10 col-md-1 clearfix">
             <button data-toggle="dropdown" type="button" class="dropdown-toggle btn btn-primary">&#8801;<span class="caret"></span></button>
             <ul class="dropdown-menu dropDownUL">
 
@@ -40,43 +40,49 @@
     <!-- input page -->
     <div class="mainBody col-lg-12">
         <!-- input module-->
-        <div id="inputrContianer" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10 " ></div>
+        <div class="page1">
+            <div id="inputContianer" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10 " ></div>
 
-        <div id="inputrContianer-wraper" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10 ">
+            <div id="inputContianer-wraper" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10 ">
 
-            <div class="search-form  col-lg-7 col-md-7 col-sm-12 col-xs-12">
-                <h4>Find Event by: </h4>
+                <div class="search-form  col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                    <h4>Find Event by: </h4>
 
-                <div class="input-group form-group">
+                    <div class="input-group form-group">
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-map-marker"></span>
                                         </span>
-                    <input class="form-control" id="search-city" placeholder="Enter a city" type="text" >
-                </div>
-                <div class="input-group form-group">
+                        <input class="form-control" id="search-city" placeholder="Enter a city" type="text" >
+                    </div>
+                    <div class="input-group form-group">
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-search"></span>
                                         </span>
-                    <input type="text" class="form-control" name="userInputEventType" id="inputEventType" placeholder="Event Type">
-                </div>
-                <div class="input-group form-group">
+                        <input type="text" class="form-control" name="userInputEventType" id="inputEventType" placeholder="Event Type">
+                    </div>
+                    <div class="input-group form-group">
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
                                         </span>
-                    <input type="date" class="form-control" name="userInputDate" id="inputDate">
+                        <input type="date" class="form-control" name="userInputDate" id="inputDate">
+                    </div>
+                    <button type="button" class="btn btn-warning btn-md" id="searchButton">Search</button>
                 </div>
-                <button type="button" class="btn btn-warning btn-md" id="searchButton">Search</button>
             </div>
         </div>
-        <!-- events module -->
-        <div class="eventPageContainer pageHidden">
-            <div class="eventsContainer col-xs-12"></div>
+        <!-- events page -->
+        <div class="page2 eventPageContainer">
+
+            <div class="eventsContainer col-xs-12">
+
+
+            </div>
         </div>
+
         <!-- detail module -->
-        <div class="eventDetailPageContainer">
+        <div class="page3 eventDetailPageContainer">
             <div id="pageContainerbackground" class="container-fluid"></div>
             <div id="pageContainer" class="container-fluid">
-
                 <div id="eventInfoArea" class="containerSize col-lg-3 col-md-3 col-sm-10 col-xs-12">
                     <div id="imageArea">
                         <!--  <img src="includes/images/testPartyImg.jpeg"> -->
@@ -104,26 +110,11 @@
                     </div>
                     </span>
                 </div>
-
-
-                <!-- events page -->
-                <div class="secondPageContainer pageHidden">
-
-                    <div class="eventsContainer col-xs-12">
-
-
-                    </div>
-
-                </div>
                 <div id="mapArea" class="containerSize col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
                 <div id="surroundingAreaInfo" class="containerSize col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
-
-
-
-
+                <span class="closePage3">&times;</span>
             </div>
         </div>
-
     </div>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPN4nvPi1zuanO-esg1xO-4UybPxShug0&libraries=places&callback=activePlaceSearch" async defer></script>
 </div>

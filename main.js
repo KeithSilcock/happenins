@@ -33,11 +33,6 @@ const yelpBusinessResultsArray = [];
 
 function initializeApp() {
 
-
-
-
-    addClickHandlers();
-    //eventfulEventRequest(startDate, endDate, category)
 }
 
 /*************************************************************************x**************************
@@ -58,21 +53,7 @@ function addHoverHandler() {
  * adds events for when DOM element is clicked
  */
 
-function addClickHandlers() {
-    $('#searchButton').click(function(){
-        $(".inputContainerToHide").addClass('pageHidden');
-        //**** katy add this, do not remove ***////
-        $(".eventsDropDownCont").removeClass('pageHidden');
-        //***** katy edited ends ****////
-        $(".eventPageContainer").removeClass('pageHidden');
 
-    });
-    
-
-    //var eventSearch = $('#searchButten').click(eventfulEventRequest(startDate, endDate, category));
-
-    // $("#yelpSearchButton").click(submitYelpButtonClicked);
-}
 
 /***************************************************************************************************
  * callYelpData
@@ -265,14 +246,37 @@ $(window).on('load', function () {
 class HappeninsController{
     constructor(){
         this.newEventfulRequest = new eventfullEventRequester(null, null,null);
-        this.newEventRenderer = new EventRenderer();
+        this.newEventRenderer = new EventRenderer(this.changePageState.bind(this));
 
         this.autoCompleteTimeout=null;
         this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
             'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
             'other'];
 
+        this.changePageState(1);
+
         this.handleEventHandlers();
+    }
+
+    changePageState(state){
+        this.pageState=state;
+        this[`pageState${state}`]();
+    }
+
+    pageState1(){
+        $('.page1').removeClass('pageHidden');
+        $('.page2').addClass('pageHidden');
+        $('.page3').addClass('pageHidden');
+    }
+    pageState2(){
+        $('.page1').addClass('pageHidden');
+        $('.page2').removeClass('pageHidden');
+        $('.page3').addClass('pageHidden');
+    }
+    pageState3(){
+        $('.page1').addClass('pageHidden');
+        $('.page2').removeClass('pageHidden');
+        $('.page3').removeClass('pageHidden');
     }
 
     requestEventData(){
@@ -290,8 +294,20 @@ class HappeninsController{
             'focus': function () {
                 console.log('here')
             }
+        });
+
+        $('#searchButton').click( () => {
+           this.changePageState(2);
+        });
+        $("#logo").on({
+            'click': () => this.changePageState(1),
         })
+        $(".closePage3").on({
+            'click': () => this.changePageState(2),
+        })
+
     }
+
 
     onKeyUp(event) {
         if(event.key==='Escape'){
@@ -369,12 +385,13 @@ class HappeninsController{
 }
 
 class EventRenderer{
-    constructor(){
+    constructor(changeStateCallback){
         // this.arrayOfData = arrayOfData;
         this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
             'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
             'other'];
 
+        this.changeStateCallback=changeStateCallback;
         this.renderDropDownMenu(this.arrayOfEventCategories);
         // this.turnDataIntoDomElements(this.arrayOfData)
     }
@@ -441,20 +458,20 @@ class EventRenderer{
             text: `${infoToParse.description}`,
 
         });
-        let addButton = $("<button>", {
-            'type':'button',
-            'class': 'addEventButton col-xs-offset-4 col-xs-4',
-            'text':'add to list',
-        });
+        // let addButton = $("<button>", {
+        //     'type':'button',
+        //     'class': 'addEventButton col-xs-offset-4 col-xs-4',
+        //     'text':'add to list',
+        // });
 
         //closure to get added data
         (function (that) {
-            addButton.on({
+            eventContainer.on({
                 'click':that.handleAddToListButtonClick.bind(this, that, infoToParse),
             })
         })(this);
 
-        extraEl.append(extraInfoText, addButton);
+        // extraEl.append(extraInfoText, addButton);
 
         // let arrayOfElements = [pictureEl, nameEl, dateEl, locationEl];
 
@@ -478,7 +495,6 @@ class EventRenderer{
                 expandedDivs.removeClass('expand').addClass('shrink')
         }
     }
-
     popOutAnimation(extraInfoDiv){
         if(extraInfoDiv.hasClass('expand')) {
             extraInfoDiv.removeClass('expand').addClass('shrink');
@@ -486,10 +502,11 @@ class EventRenderer{
             extraInfoDiv.removeClass('shrink').addClass('expand');
         }
     }
-
     handleAddToListButtonClick(thisObj, info, event){
-        thisObj.handlePopOutAnimation(event);
+        // thisObj.handlePopOutAnimation(event);
         // ^^^ keeps expanded list from closing, but need to fix in later edition
+
+        thisObj.changeStateCallback(3);
 
         console.log(info)
 
@@ -614,10 +631,10 @@ class createGoogleMap {
  */
 
 function activePlaceSearch(){
-        // var input = $('#search-city');
-        // var autocomplete = new google.maps.places.Autocomplete(input[0]);
-        var input = document.getElementById('search-city');
-        var autocomplete = new google.maps.places.Autocomplete(input);
+    // var input = $('#search-city');
+    // var autocomplete = new google.maps.places.Autocomplete(input[0]);
+    var input = document.getElementById('search-city');
+    var autocomplete = new google.maps.places.Autocomplete(input);
 
 }
 
