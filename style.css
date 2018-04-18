@@ -108,7 +108,7 @@ body{
 
 .event{
     border: 2px solid black;
-    margin: 1% 4%;
+    margin: 1% 0;
 }
 .spacer{
     height:100%;
