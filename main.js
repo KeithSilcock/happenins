@@ -132,22 +132,32 @@ console.log(newYelpCall);
  * Sends request to PredictHQ API to pull data based off search input from User
  */
 //function eventfulEventRequest(startDate, endDate, category){
-class eventfullEventRequester {
-
+class eventfulEventRequester {
     constructor() {
 
     }
 
-    eventfulEventRequest(renderFunc, date, numOfEntries, category){
+    formatDate(date){
+        date = date.replace(/-/g,'')
+        return date
+    }
 
+    eventfulEventRequest(renderCallback, date='2018042000', numOfEntries=20, category='music'){
         let eventSearchResultObject = {};
+
+        date = this.formatDate(date);
+        let dateEnd=(Number(date) + 3).toString();
+
+        let url=`https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=${date}00-${dateEnd}00&category=${category}&image_sizes=blackborder250,block100&page_size=${numOfEntries}&category=new`
 
         $.ajax({
             //url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date="+  startDate +"00-" + endDate + "00&category=" +  category + "&image_sizes=blackborder250,block100&page_size=10&category=new",
-            url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=2018042000-2018042000&category=music&image_sizes=blackborder250,block100&page_size=20&category=new",
+            //"https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=2018042000-2018042000&category=music&image_sizes=blackborder250,block100&page_size=20&category=new",
+            url: url,
             dataType: 'jsonp',
             data: {},
             success: function (rawData) {
+                console.log(rawData)
                 for (var event = 0; event < rawData.events.event.length; event++) {
                     if (rawData.events.event[event].title !== null) {
                         var title = rawData.events.event[event].title;
@@ -168,6 +178,12 @@ class eventfullEventRequester {
                     if (rawData.events.event[event].description !== null) {
                         var description = rawData.events.event[event].description;
                     }
+                    if (rawData.events.event[event].description !== null) {
+                        var startTime = rawData.events.event[event].start_time;
+                    }
+                    if (rawData.events.event[event].description !== null) {
+                        var venueURL = rawData.events.event[event].venue_url;
+                    }
 
                     eventSearchResultObject = {
                         title: title,
@@ -176,14 +192,16 @@ class eventfullEventRequester {
                         imageLargeUrl: imageLargeUrl,
                         venue_address: venue_address,
                         venue_name: venue_name,
-                        description: description
+                        description: description,
+                        startTime:startTime,
+                        venueURL: venueURL,
                     }
 
                     eventSearchResultArray.push(eventSearchResultObject);
                 }
                 console.log(eventSearchResultArray);
 
-                renderFunc(eventSearchResultArray)
+                renderCallback(eventSearchResultArray)
 
             },
             error: function (error) {
@@ -213,39 +231,12 @@ class eventfullEventRequester {
 
 $(window).on('load', function () {
     let controller = new CircleController();
-    controller.requestEventData();
-    // let arrayOfDummyData = [
-    //     {
-    //         location: '24576 villa tonda',
-    //         'eventName': 'Huge Great Party',
-    //         'time': "14:30",
-    //         'date': "05-04-18",
-    //     },
-    //     {
-    //         location: '24576 villa tonda',
-    //         'eventName': 'Huge Great Party',
-    //         'time': "14:30",
-    //         'date': "05-04-18",
-    //     },
-    //     {
-    //         location: '24576 villa tonda',
-    //         'eventName': 'Huge Great Party',
-    //         'time': "14:30",
-    //         'date': "05-04-18",
-    //     },
-    //     {
-    //         location: '24576 villa tonda',
-    //         'eventName': 'Huge Great Party',
-    //         'time': "14:30",
-    //         'date': "05-04-18",
-    //     }];
-
-})
+});
 
 
 class CircleController{
     constructor(){
-        this.newEventfulRequest = new eventfullEventRequester(null, null,null);
+        this.newEventfulRequest = new eventfulEventRequester(null, null,null);
         this.newEventRenderer = new EventRenderer(this.changePageState.bind(this));
 
         this.autoCompleteTimeout=null;
@@ -300,8 +291,8 @@ class CircleController{
         $('.page3').removeClass('pageHidden');
     }
 
-    requestEventData(){
-        this.newEventfulRequest.eventfulEventRequest(this.renderEventDataOnSuccess.bind(this), null, null, null)
+    requestEventData(date, numOfEntries, category){
+        this.newEventfulRequest.eventfulEventRequest(this.renderEventDataOnSuccess.bind(this), date, numOfEntries, category)
     }
 
     renderEventDataOnSuccess(dataArray){
@@ -319,15 +310,38 @@ class CircleController{
 
         $('#searchButton, .closePage3').on({
             'click':() => {
+                this.handleRequestEvents();
                 this.changePageState(2);
             }
         });
+        $('.closePage3').on({
+            'click':() => {
+                this.changePageState(2);
+            }
+        });
+
         $("#logo").on({
             'click': () => this.changePageState(1),
         });
 
     }
 
+    handleRequestEvents(){
+        let categoryInputs = $(".categoryInput");
+        let eventCategory = '';
+
+        for(let categoryIndex=0; categoryIndex<categoryInputs.length; categoryIndex++){
+            if(categoryInputs[categoryIndex].value !== ''){
+                eventCategory=categoryInputs[categoryIndex].value;
+            }
+            categoryInputs[categoryIndex].value = '';
+        }
+
+        let category = this.categoryKeys[eventCategory];
+        let date = $('#inputDate').val();
+
+        this.requestEventData(date, 20, category);
+    }
 
     onKeyUp(event) {
         if(event.key==='Escape'){
