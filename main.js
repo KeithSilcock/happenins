@@ -118,9 +118,10 @@ class YelpData {
 
         testData = data.businesses;
         yelpBusinessResultsArray.length = 0;
+        submitYelpButtonClicked(this.eventCoord, this.searchObject);
         data.businesses.map( item => this.yelpBusinessResultsArray.push( item ) );
         var {latitude, longitude} = data.region.center;
-
+        console.log(this.yelpBusinessResultsArray);
         initMap(34.0522, -118.2437);
     }
 }
@@ -158,38 +159,23 @@ function initMap(lat,lng) {
         }
 }
 
-var newYelpCall = new YelpData({latitude: 50.0522, longitude: -60.2437},searchObjDefault);
 
 
+var testSearchObject = {
+    access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
+    term: "restaurants",
+    latitude: 47.6062,
+    longitude: -122.3321,
+    location : "Seattle",
+    radius : 800,
+    categories: "American (New)",
+    priceRange : "1,2,3,4",
+    open_now: false,
+    sort_by: "best_match"
+}
+var newYelpCall = new YelpData({latitude: 47.6062, longitude: -122.3321}, testSearchObject);
+console.log(testData);
 
-
-
-// var yelpAjaxCall = {
-//     dataType: "JSON",
-//     method: 'POST',
-//     url: "http://yelp.ongandy.com/businesses",
-//     data : {
-//         "access_token" : "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-//         "term" : "bbq",
-//         "latitude" : 34.0522,
-//         "longitude" : -118.2437,
-//     },
-//     success : function(results) {
-//         ////console.log("success : " , results);
-//         results.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-//         ////console.log(yelpBusinessResultsArray);
-//         var {latitude, longitude} = results.region.center;
-//         ////console.log(latitude, longitude);
-//     },
-//     error : function(errors) {
-//         ////console.log( "errors : " , errors );
-//     }
-// };
-//
-// $.ajax(yelpAjaxCall);
-
-
-// $.ajax(yelpAjaxCall);
 
 
 
@@ -226,11 +212,7 @@ class eventfulEventRequester {
             dataType: 'jsonp',
             data: {},
             success: function (rawData) {
-
-
-                ////console.log(rawData);
-
-                console.log(rawData)
+                console.log("eventful" , rawData)
 
                 for (var event = 0; event < rawData.events.event.length; event++) {
                     if (rawData.events.event[event].title !== null) {
@@ -258,6 +240,12 @@ class eventfulEventRequester {
                     if (rawData.events.event[event].venue_url !== null) {
                         var venueURL = rawData.events.event[event].venue_url;
                     }
+                    if (rawData.events.event[event].latitude !== null) {
+                        var venueLatitude = rawData.events.event[event].latitude;
+                    }
+                    if (rawData.events.event[event].longitude !== null) {
+                        var venueLongitude = rawData.events.event[event].longitude;
+                    }
                     if (rawData.events.event[event].postal_code !== null) {
                         var venueZip = rawData.events.event[event].postal_code;
                     }
@@ -274,13 +262,12 @@ class eventfulEventRequester {
                         venue_address: venue_address,
                         venue_name: venue_name,
                         description: description,
-                        startTime:startTime,
+                        startTime: startTime,
                         venueURL: venueURL,
-                     
+                        latitude: venueLatitude,
+                        longitude: venueLongitude
                         venueZip: venueZip,
                         venueState:venueState,
-                        latitude: 34.0522,
-                        longitude: -118.2437
                     };
 
                     var eventCoordinates = {
@@ -292,7 +279,7 @@ class eventfulEventRequester {
 
                     eventSearchResultArray.push(eventSearchResultObject);
                 }
-                ////console.log(eventSearchResultArray);
+                console.log("eventSearchResultArray: ", eventSearchResultArray);
 
                 renderCallback(eventSearchResultArray);
 
