@@ -4,7 +4,8 @@
 
 
 var eventSearchResultArray = [];
-var a = [];
+var yelpArrayLength = [];
+var markersArray = [];
 
 $(document).ready(initializeApp);
 
@@ -23,6 +24,8 @@ const searchObjDefault = {
 };
 const yelpBusinessResultsArray = [];
 
+
+
 /***************************************************************************************************
  * initializing
  * @params {undefined} none
@@ -33,7 +36,13 @@ const yelpBusinessResultsArray = [];
 
 function initializeApp() {
 
+    addClickHandlers();
+    //eventfulEventRequest(startDate, endDate, category)
+    //center: new google.maps.LatLng(34.0522, -118.2437)
+
 }
+
+
 
 /*************************************************************************x**************************
  * addHoverHandler
@@ -62,9 +71,11 @@ function addClickHandlers() {
         //***** katy edited ends ****////
         $(".eventPageContainer").removeClass('pageHidden');
     });
+
     // Dylan's Addition - Search button for yelp
     $("#yelpSearchButton").click(submitYelpButtonClicked);
     
+
 
     //var eventSearch = $('#searchButten').click(eventfulEventRequest(startDate, endDate, category));
 
@@ -78,6 +89,7 @@ function addClickHandlers() {
  * Sends request to Yelp API to pull data based off search input from User
  */
 var testData = null;
+
 class YelpData {
     constructor(eventCoord, searchObj) {
         this.searchObject = searchObj;
@@ -95,26 +107,89 @@ class YelpData {
             data: this.searchObject,
             success: this.pullBusinessData,
             error: function (errors) {
-                console.log("errors : ", errors);
+                ////console.log("errors : ", errors);
             }
         };
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
+
+        ////console.log(data);
+
         testData = data.businesses;
         yelpBusinessResultsArray.length = 0;
         data.businesses.map( item => this.yelpBusinessResultsArray.push( item ) );
         var {latitude, longitude} = data.region.center;
+
+        initMap(34.0522, -118.2437);
+    }
+}
+var newYelpCall = new YelpData(yelpSearchObj);
+
+//console.log(newYelpCall);
+
+
+
+
+function initMap(lat,lng) {
+    console.log(yelpBusinessResultsArray[0].coordinates.latitude)
+    var mapOptions = {
+        zoom: 16,
+        center: new google.maps.LatLng(lat,lng)
+
         console.log(data);
         console.log(this.yelpBusinessResultsArray);
         console.log(latitude, longitude);
         // submitYelpButtonClicked(this.eventCoord, this.searchObject)
+
     }
+    var map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
+    var markerLocation = {lat: 34.0522, lng: -118.2437};
+    var markerLat;
+    var markerLng;
+        for (markerIndex=0; markerIndex<yelpBusinessResultsArray.length; markerIndex++) {
+            markerLat = yelpBusinessResultsArray[markerIndex].coordinates.latitude;
+            markerLng = yelpBusinessResultsArray[markerIndex].coordinates.longitude;
+            var marker = new google.maps.Marker({
+                map: map,
+                position: new google.maps.LatLng(markerLat, markerLng),
+                animation: google.maps.Animation.DROP,
+            });
+        }
 }
 
 var newYelpCall = new YelpData({latitude: 50.0522, longitude: -60.2437},searchObjDefault);
 
-console.log(newYelpCall);
+
+
+
+
+// var yelpAjaxCall = {
+//     dataType: "JSON",
+//     method: 'POST',
+//     url: "http://yelp.ongandy.com/businesses",
+//     data : {
+//         "access_token" : "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
+//         "term" : "bbq",
+//         "latitude" : 34.0522,
+//         "longitude" : -118.2437,
+//     },
+//     success : function(results) {
+//         ////console.log("success : " , results);
+//         results.businesses.map( item => yelpBusinessResultsArray.push( item ) );
+//         ////console.log(yelpBusinessResultsArray);
+//         var {latitude, longitude} = results.region.center;
+//         ////console.log(latitude, longitude);
+//     },
+//     error : function(errors) {
+//         ////console.log( "errors : " , errors );
+//     }
+// };
+//
+// $.ajax(yelpAjaxCall);
+
+
+// $.ajax(yelpAjaxCall);
 
 
 
@@ -151,7 +226,12 @@ class eventfulEventRequester {
             dataType: 'jsonp',
             data: {},
             success: function (rawData) {
+
+
+                ////console.log(rawData);
+
                 console.log(rawData)
+
                 for (var event = 0; event < rawData.events.event.length; event++) {
                     if (rawData.events.event[event].title !== null) {
                         var title = rawData.events.event[event].title;
@@ -185,6 +265,7 @@ class eventfulEventRequester {
                         var venueState = rawData.events.event[event].region_abbr;
                     }
 
+
                     eventSearchResultObject = {
                         title: title,
                         cityName: cityName,
@@ -211,14 +292,14 @@ class eventfulEventRequester {
 
                     eventSearchResultArray.push(eventSearchResultObject);
                 }
-                console.log(eventSearchResultArray);
+                ////console.log(eventSearchResultArray);
 
                 renderCallback(eventSearchResultArray);
 
 
             },
             error: function (error) {
-                console.log(error)
+                ////console.log(error)
             },
         });
 
@@ -321,14 +402,19 @@ class CircleController {
     handleEventHandlers() {
         $("#inputEventType, #inputEventType2").on({
             'keyup': this.onKeyUp.bind(this),
-            // 'focusout': this.onFocusOutCloseAutoComplete.bind(this),
-            'focus': this.autocompleteAllChoices.bind(this)
+
+            'focusout': this.onFocusOutCloseAutoComplete.bind(this),
+            'focus': function () {
+                ////console.log('here')
+
+
         });
 
         $('#searchButton, .searchCategory').on({
             'click': () => {
                 this.handleRequestEvents();
                 this.changePageState(2);
+
             }
         });
         $('.closePage3').on({
@@ -594,6 +680,7 @@ class CircleController {
         // thisObj.handlePopOutAnimation(event);
         // ^^^ keeps expanded list from closing, but need to fix in later edition
 
+
         let infoTime = info.startTime.slice(11,17);
         let infoDate = info.startTime.slice(8,10) +
             info.startTime.slice(4,7) +
@@ -614,6 +701,7 @@ class CircleController {
 
         debugger
         console.log(info)
+
 
         //collect data from event clicked
 
@@ -649,6 +737,21 @@ function eventSubmitButtonClicked() {
  * Creates an object from user search input upon click. Must be able to take all search parameters to filter through Yelp APIs.
  */
 
+
+// function submitYelpButtonClicked() {
+//     var searchObj = {};
+//     //should have default values if no value entered
+//     searchObj.term = $(/*#searchTerm*/).val();
+//     searchObj.latitude = $(/*#latitude*/).val();
+//     searchObj.longitude = $(/*#longitude*/).val();
+//     searchObj.location = $(/*#location*/).val();
+//     searchObj.radius = $(/*#radius*/).val();
+//     searchObj.categories = $(/*#categories*/).val();
+//     searchObj.price = $(/*#price*/).val();
+//     searchObj.open_now = $(/*#open_now*/).val();
+//     searchObj.sort_by = $(/*#sort_by*/).val();
+//     return searchObj;
+
 function submitYelpButtonClicked(eventLocation, searchObjectParameters) {
     // var searchObj = {
     //     access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx"
@@ -669,6 +772,7 @@ function submitYelpButtonClicked(eventLocation, searchObjectParameters) {
     // var newYelpCall = new YelpData(eventLocation, searchObjectParameters);
     // console.log(newYelpCall);
     // var map = new CreateGoogleMap(newYelpCall.yelpBusinessResultsArray);
+
 }
 
 
@@ -679,6 +783,67 @@ function submitYelpButtonClicked(eventLocation, searchObjectParameters) {
  * creates a map to display onto page that will contain makers. Markers will be yelp results
  */
 
+
+// class CreateGoogleMap {
+//     constructor(searchResults) {
+//         this.latitude = searchResults.latitude;
+//         this.longitude = searchResults.longitude;
+//         this.searchCoordinates = {
+//             lat: this.latitude,
+//             lng: this.longitude
+//         };
+//     }
+//
+//         this.searchArray = searchResults.businesses;
+//         this.map = new google.maps.Map(document.getElementById('map'), {
+//             center: this.searchCoordinates,
+//             zoom: 5
+//         });
+//         this.infoWindow = new google.maps.InfoWindow();
+//         this.service = new google.maps.places.PlacesService(map);
+//         this.service.nearbySearch({
+//             location: this.searchCoordinates,
+//             radius: 800,
+//             type: ['restaurant']
+//         }, this.callback);
+//     }
+//     callback(searchResults, status) {
+//         if (status === google.maps.places.PlacesServiceStatus.OK) {
+//             for(let i = 0; i < searchResults.businesses.length; i++) {
+//                 this.createMarker = this.createMarker.bind(this);
+//                 this.createMarker(searchResults.businesses[i]);
+//             }
+//         }
+//     }
+//     createMarker(place) {
+//         this.placeLocation = place.geometry.location;
+//         this.marker = new google.maps.Marker({
+//             map: map,
+//             position: this.placeLocation
+//         });
+//         google.maps.event.addListener(marker, 'click', function() {
+//             infowindow.setContent(/**/);
+//             infowindow.open(map, this);
+//         });
+//         this.provideLocationData(this.searchArray, this.marker);
+//     }
+//     provideLocationData(searchArray, marker /*businesses array*/) {
+//         searchArray.map(function(item) {
+//             this.locationDiv = $("<div>").addClass("locationDiv");
+//             this.locationName = $("<p>").text(item.name).addClass("locationName");
+//             this.locationImage = $("<img>").attr("src", item.image_url).addClass("locationImage");
+//             this.locationLocation = $("<p>").text(item.location["display_address"].map( address => "" + address + ", " + address)).addClass("locationLocation");
+//             this.locationPhoneNumber = $("<p>").text(item.phone).addClass("locationPhoneNumber");
+//             this.locationPrice = $("<p>").text(item.price).addClass("locationPrice");
+//             this.locationRating = $("<p>").text(item.rating).addClass("locationRating");
+//             this.locationReviewCount = $("<p>").text(item.review_count).addClass("locationReviewCount");
+//             this.locationURL = $("<p>").text(item.url).addClass("locationURL");
+//
+//             this.locationDiv.append(this.locationName, this.locationImage, this.locationPrice, this.locationRating, this.locationReviewCount, this.locationLocation, this.locationPhoneNumber, this.locationURL);
+//             marker.append(this.locationDiv);
+//         })
+//     }
+// }
 
 class CreateGoogleMap {
     constructor(searchResults) {
@@ -741,12 +906,22 @@ class CreateGoogleMap {
 
 
 
+
 /***************************************************************************************************
  * autoCompleteLocation
  * @params {undefined}
  * @returns: {object}
  *
  */
+
+
+// function activePlaceSearch(){
+//     // var input = $('#search-city');
+//     // var autocomplete = new google.maps.places.Autocomplete(input[0]);
+//     var input = document.getElementById('search-city');
+//     var autocomplete = new google.maps.places.Autocomplete(input);
+//
+// }
 
 function activePlaceSearch(){
     // var input = $('#search-city');
@@ -755,29 +930,5 @@ function activePlaceSearch(){
     var autocomplete = new google.maps.places.Autocomplete(input);
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
