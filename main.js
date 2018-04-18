@@ -81,7 +81,7 @@ function addClickHandlers() {
  * Sends request to Yelp API to pull data based off search input from User
  */
 var testData = null;
-class yelpData {
+class YelpData {
     constructor(searchObj) {
         this.searchObject = searchObj;
         this.pullBusinessData = this.pullBusinessData.bind(this);
@@ -101,46 +101,20 @@ class yelpData {
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
-        console.log(data);
         testData = data.businesses;
         yelpBusinessResultsArray.length = 0;
         data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-        console.log(yelpBusinessResultsArray);
         var {latitude, longitude} = data.region.center;
+        console.log(data);
+        console.log(yelpBusinessResultsArray);
         console.log(latitude, longitude);
     }
 }
 
-var newYelpCall = new yelpData(yelpSearchObj);
+var newYelpCall = new YelpData(yelpSearchObj);
 
 console.log(newYelpCall);
 
-// var yelpAjaxCall = {
-//     dataType: "JSON",
-//     method: 'POST',
-//     url: "http://yelp.ongandy.com/businesses",
-//     data : {
-//         "access_token" : "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-//         "term" : "bbq",
-//         "latitude" : 34.0522,
-//         "longitude" : -118.2437,
-//     },
-//     success : function(results) {
-//         console.log("success : " , results);
-//         results.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-//         console.log(yelpBusinessResultsArray);
-//         var {latitude, longitude} = results.region.center;
-//         console.log(latitude, longitude);
-//     },
-//     error : function(errors) {
-//         console.log( "errors : " , errors );
-//     }
-// };
-//
-// $.ajax(yelpAjaxCall);
-
-
-// $.ajax(yelpAjaxCall);
 
 
 
@@ -551,15 +525,15 @@ function submitYelpButtonClicked() {
  */
 
 
-class createGoogleMap {
-    constructor(searchObj) {
-        this.latitude = searchObj.latitude;
-        this.longitude = searchObj.longitude;
+class CreateGoogleMap {
+    constructor(searchResults) {
+        this.latitude = searchResults.latitude;
+        this.longitude = searchResults.longitude;
         this.searchCoordinates = {
             lat : this.latitude,
             lng : this.longitude
         };
-        this.searchArray = searchObj.businesses;
+        this.searchArray = searchResults.businesses;
         this.map = new google.maps.Map(document.getElementById('map'), {
             center: this.searchCoordinates,
             zoom: 5
@@ -572,11 +546,11 @@ class createGoogleMap {
             type: ['restaurant']
         }, this.callback);
     }
-    callback(results, status) {
+    callback(searchResults, status) {
         if (status === google.maps.places.PlacesServiceStatus.OK) {
-            for(let i = 0; i < results.length; i++) {
+            for(let i = 0; i < searchResults.businesses.length; i++) {
                 this.createMarker = this.createMarker.bind(this);
-                this.createMarker(results[i]);
+                this.createMarker(searchResults.businesses[i]);
             }
         }
     }
@@ -592,8 +566,8 @@ class createGoogleMap {
         });
         this.provideLocationData(this.searchArray, this.marker);
     }
-    provideLocationData(searchArray) {
-        searchArray.map(function(item, marker) {
+    provideLocationData(searchArray, marker /*businesses array*/) {
+        searchArray.map(function(item) {
             this.locationDiv = $("<div>").addClass("locationDiv");
             this.locationName = $("<p>").text(item.name).addClass("locationName");
             this.locationImage = $("<img>").attr("src", item.image_url).addClass("locationImage");
