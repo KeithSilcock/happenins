@@ -170,11 +170,17 @@ class eventfulEventRequester {
                     if (rawData.events.event[event].description !== null) {
                         var description = rawData.events.event[event].description;
                     }
-                    if (rawData.events.event[event].description !== null) {
+                    if (rawData.events.event[event].start_time !== null) {
                         var startTime = rawData.events.event[event].start_time;
                     }
-                    if (rawData.events.event[event].description !== null) {
+                    if (rawData.events.event[event].venue_url !== null) {
                         var venueURL = rawData.events.event[event].venue_url;
+                    }
+                    if (rawData.events.event[event].postal_code !== null) {
+                        var venueZip = rawData.events.event[event].postal_code;
+                    }
+                    if (rawData.events.event[event].region_abbr !== null) {
+                        var venueState = rawData.events.event[event].region_abbr;
                     }
 
                     eventSearchResultObject = {
@@ -187,6 +193,8 @@ class eventfulEventRequester {
                         description: description,
                         startTime:startTime,
                         venueURL: venueURL,
+                        venueZip: venueZip,
+                        venueState:venueState,
                     }
 
                     eventSearchResultArray.push(eventSearchResultObject);
@@ -255,7 +263,7 @@ class CircleController {
             'Sports': 'sports',
             'Technology': 'technology',
             'Other': 'other',
-        }
+        };
 
         this.changePageState(1);
 
@@ -300,7 +308,7 @@ class CircleController {
     handleEventHandlers() {
         $("#inputEventType, #inputEventType2").on({
             'keyup': this.onKeyUp.bind(this),
-            'focusout': this.onFocusOutCloseAutoComplete.bind(this),
+            // 'focusout': this.onFocusOutCloseAutoComplete.bind(this),
             'focus': this.autocompleteAllChoices.bind(this)
         });
 
@@ -367,18 +375,19 @@ class CircleController {
         let lettersSoFar = categoryInput.val().toLowerCase();
 
         if (lettersSoFar.length === 0) {
-
             // this.removeAutoCompleteUL();
             return;
         }
 
         let autoCompleteUL = $("<ul>", {
             'id': 'autoComplete',
+            on: {
+                'click': autoComplete.bind(this),
+            },
         });
-        autoCompleteUL.on('click', '#autoCompleteLI', autoComplete.bind(this));
+        //autoCompleteUL.on('click', '#autoCompleteLI', autoComplete.bind(this));
 
         let allAutoCorrectMatches = [];
-
         for (let category in this.categoryKeys) {
             let sliceToCheck = category.toLowerCase().slice(0, lettersSoFar.length);
             if (category.length === lettersSoFar.length) {
@@ -388,8 +397,7 @@ class CircleController {
             if (sliceToCheck === lettersSoFar && lettersSoFar.length > 0) {
                 let autoCompleteLI = $("<li>", {
                     text: category,
-                    'id': 'autoCompleteLI',
-                    'class':'form-control'
+                    'class':'form-control autoCompleteLI',
                 });
                 allAutoCorrectMatches.push(autoCompleteLI);
             }
@@ -414,7 +422,7 @@ class CircleController {
     }
 
     autocompleteAllChoices(event) {
-
+        this.removeAutoCompleteUL();
         let appendParent = $(event.target).closest('.input-group')
 
         let autoCompleteUL = $("<ul>", {
@@ -427,12 +435,10 @@ class CircleController {
         for (let category in this.categoryKeys) {
             let autoCompleteLI = $("<li>", {
                 text: category,
-                'id': 'autoCompleteLI',
-                'class':'form-control'
+                'class':'form-control autoCompleteLI'
             });
             autoCompleteUL.append(autoCompleteLI);
         }
-
         appendParent.append(autoCompleteUL);
 
         function autoComplete(clickedCategoryEvent) {
@@ -480,6 +486,9 @@ class CircleController {
     parseData(infoToParse, odd){
         let eventContainer = $("<div>",{
             'class':'event col-xs-12 col-md-3',
+            css:{
+                'background-image': `url("${infoToParse.imageLargeUrl}")`
+            },
             on:{
                 // 'click': this.handlePopOutAnimation.bind(this),
             },
@@ -489,10 +498,10 @@ class CircleController {
             infoToParse.imageLargeUrl= 'includes/images/testPartyImg.jpeg'
         }
 
-        let pictureEl = $("<img>",{
-            'class':'eventImg eventContent col-xs-3 col-md-12',
-            src:`${infoToParse.imageLargeUrl}`,
-        });
+        // let pictureEl = $("<img>",{
+        //     'class':'eventImg eventContent col-xs-3 col-md-12',
+        //     src:`${infoToParse.imageLargeUrl}`,
+        // });
         let nameEl = $("<div>",{
             'class':'eventName eventContent row col-xs-8 col-md-6',
             text: infoToParse.title,
@@ -526,7 +535,7 @@ class CircleController {
         //closure to get added data
         (function (that) {
             eventContainer.on({
-                'click':that.handleAddToListButtonClick.bind(this, that, infoToParse),
+                'click':that.openThirdPageInformation.bind(this, that, infoToParse),
             })
         })(this);
 
@@ -536,7 +545,7 @@ class CircleController {
 
         // this.bootstrapClassAdder(arrayOfElements);
 
-        return eventContainer.append(pictureEl, nameEl, dateEl, locationEl, extraEl);
+        return eventContainer.append(nameEl, dateEl, locationEl, extraEl);
     }
 
     handlePopOutAnimation(eventOfClick){
@@ -561,11 +570,28 @@ class CircleController {
             extraInfoDiv.removeClass('shrink').addClass('expand');
         }
     }
-    handleAddToListButtonClick(thisObj, info, event){
+    openThirdPageInformation(thisObj, info, event){
+
         // thisObj.handlePopOutAnimation(event);
         // ^^^ keeps expanded list from closing, but need to fix in later edition
 
+        let infoTime = info.startTime.slice(11,17);
+        let infoDate = info.startTime.slice(8,10) +
+            info.startTime.slice(4,7) +
+            info.startTime.slice(0, 4);
+
+        // let address = `${info.venue_address} ${info.cityName}, ${info.venueState} ${info.venueZip} `
+
+
         thisObj.changeStateCallback(3);
+
+        let street= $("#eventStreet").text(info.venue_address);
+        let city= $("#eventCity").text(info.cityName);
+        let state= $("#eventState").text(info.venueState);
+        let zip= $("#eventZip").text(info.venueZip);
+        let date= $("#eventDate").text(infoDate);
+        let time= $("#eventTime").text(infoTime);
+        let infoDetails= $("#eventDetail").text(info.description);
 
         console.log(info)
 
