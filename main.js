@@ -54,6 +54,22 @@ function addHoverHandler() {
  */
 
 
+function addClickHandlers() {
+    $('#searchButton').click(function(){
+        $(".inputContainerToHide").addClass('pageHidden');
+        //**** katy add this, do not remove ***////
+        $(".eventsDropDownCont").removeClass('pageHidden');
+        //***** katy edited ends ****////
+        $(".eventPageContainer").removeClass('pageHidden');
+    });
+    // Dylan's Addition - Search button for yelp
+    $("#yelpSearchButton").click(submitYelpButtonClicked);
+    
+
+    //var eventSearch = $('#searchButten').click(eventfulEventRequest(startDate, endDate, category));
+
+    // $("#yelpSearchButton").click(submitYelpButtonClicked);
+}
 
 /***************************************************************************************************
  * callYelpData
@@ -66,7 +82,9 @@ class YelpData {
     constructor(searchObj) {
         this.searchObject = searchObj;
         this.pullBusinessData = this.pullBusinessData.bind(this);
+        this.ajaxCall = this.ajaxCall.bind(this);
         this.ajaxCall();
+        this.yelpBusinessResultsArray = [];
     }
     ajaxCall() {
         var yelpAjaxCall = {
@@ -84,10 +102,10 @@ class YelpData {
     pullBusinessData(data) {
         testData = data.businesses;
         yelpBusinessResultsArray.length = 0;
-        data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
+        data.businesses.map( item => this.yelpBusinessResultsArray.push( item ) );
         var {latitude, longitude} = data.region.center;
         console.log(data);
-        console.log(yelpBusinessResultsArray);
+        console.log(this.yelpBusinessResultsArray);
         console.log(latitude, longitude);
     }
 }
@@ -553,6 +571,10 @@ function eventSubmitButtonClicked() {
 
 function submitYelpButtonClicked() {
     var searchObj = {
+        access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx"
+    };
+    var searchObjDefault = {
+        access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
         term: "restaurants",
         latitude: 34.0522, // current number is for LA  /*DOM element search item - a number, can have decimals*/,
         longitude: -118.2437, // current number is for LA   /*DOM element search item - a number, can have decimals*/,
@@ -563,17 +585,21 @@ function submitYelpButtonClicked() {
         open_now: false,
         sort_by: "best_match"
     };
-    //should have default values if no value entered
-    searchObj.term = $(/*#searchTerm*/).val();
-    searchObj.latitude = $(/*#latitude*/).val();
-    searchObj.longitude = $(/*#longitude*/).val();
-    searchObj.location = $(/*#location*/).val();
-    searchObj.radius = $(/*#radius*/).val();
-    searchObj.categories = $(/*#categories*/).val();
-    searchObj.price = $(/*#price*/).val();
-    searchObj.open_now = $(/*#open_now*/).val();
-    searchObj.sort_by = $(/*#sort_by*/).val();
-    var map = new CreateGoogleMap(searchObj);
+    var milesToMeters = 1609.34/1; //1609.34m per 1 mile
+    searchObj.term = $("#term").val() || searchObjDefault.term;
+    searchObj.latitude = $(/*#latitude*/).val() || searchObjDefault.latitude;
+    searchObj.longitude = $(/*#longitude*/).val() || searchObjDefault.longitude;
+    searchObj.location = $(/*#location*/).val() || searchObjDefault.location;
+    searchObj.radius = parseInt($("#radius").val())*milesToMeters || searchObjDefault.radius;
+    searchObj.categories = $(/*#categories*/).val() || searchObjDefault.categories;
+    searchObj.price = $(/*#price*/).val() || searchObjDefault.price;
+    searchObj.open_now = $(/*#open_now*/).val() || searchObjDefault.open_now;
+    searchObj.sort_by = $(/*#sort_by*/).val() || searchObjDefault.sort_by;
+
+
+    var newYelpCall = new YelpData(searchObj);
+    console.log(newYelpCall);
+    // var map = new CreateGoogleMap(newYelpCall.yelpBusinessResultsArray);
 }
 
 
