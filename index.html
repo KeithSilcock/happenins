@@ -29,57 +29,73 @@
 
     <header id="headerArea" class="container-fluid col-sm-12 col-lg-12">
         <div id="logo">logoArea</div>
-        <div class="eventsDropDownCont dropdown col-xs-offset-7 col-xs-2 col-md-offset-10 col-md-1 clearfix pageHidden">
-            <button data-toggle="dropdown" type="button" class="dropdown-toggle btn btn-primary">&#8801;<span class="caret"></span></button>
-            <ul class="dropdown-menu dropDownUL">
+        <!--<div class="eventsDropDownCont dropdown col-xs-offset-7 col-xs-2 col-md-offset-10 col-md-1 clearfix">-->
+        <!--<button data-toggle="dropdown" type="button" class="page2 dropdown-toggle btn btn-primary">&#8801;<span class="caret"></span></button>-->
+        <!--<ul class="dropdown-menu dropDownUL">-->
 
-
-            </ul>
+        <!--</ul>-->
+        <!--</div>-->
+        <div class="page2 col-md-offset-3 col-md-5 input-group form-group">
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search"></span>
+            </span>
+            <input type="text" class="form-control categoryInput" name="userInputEventType" id="inputEventType2" placeholder="Event Type">
         </div>
     </header>
+
     <!-- input page -->
     <div class="mainBody col-lg-12">
         <!-- input module-->
-        <div id="inputrContianer" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10 " ></div>
+        <div class="page1">
+            <div id="inputContainer" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10" ></div>
 
-        <div id="inputrContianer-wraper" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10 ">
+            <div id="inputContainer-wraper" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10 ">
 
-            <div class="search-form  col-lg-7 col-md-7 col-sm-12 col-xs-12">
-                <h4>Find Event by: </h4>
-
-                <div class="input-group form-group">
-                                        <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-map-marker"></span>
-                                        </span>
-                    <input class="form-control" id="search-city" placeholder="Enter a city" type="text" >
-                </div>
-                <div class="input-group form-group">
+                <div class="search-form  col-lg-7 col-md-7 col-sm-12 col-xs-12">
+                    <h4>Find Event by: </h4>
+                    <div class="input-group form-group">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-map-marker"></span>
+                                    </span>
+                        <input class="form-control" id="search-city" value="Los Angeles, CA" placeholder="Enter a city" type="text" >
+                    </div>
+                    <div class="input-group form-group page2CategorySearch">
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-search"></span>
                                         </span>
-                    <input type="text" class="form-control" name="userInputEventType" id="inputEventType" placeholder="Event Type">
+                        <input type="text" class="form-control categoryInput" name="userInputEventType" id="inputEventType" placeholder="Music, Comedy, Festivals, Film, Food & Wine...">
+                    </div>
+                    <div class="input-group form-group">
+                                    <span class="input-group-addon">
+                                        <span class="glyphicon glyphicon-calendar"></span>
+                                    </span>
+                        <input type="date" class="form-control" name="userInputDate" id="inputDate">
+                    </div>
+                    <button type="button" class="btn btn-warning btn-md" id="searchButton">Search</button>
                 </div>
-                <div class="input-group form-group">
-                                        <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-calendar"></span>
-                                        </span>
-                    <input type="date" class="form-control" name="userInputDate" id="inputDate">
-                </div>
-                <button type="button" class="btn btn-warning btn-md" id="searchButton">Search</button>
             </div>
         </div>
-        <!-- events module -->
-        <div class="eventPageContainer pageHidden">
+
+        <!-- events page -->
+        <div class="page2 eventPageContainer">
             <div class="eventsContainer col-xs-12"></div>
         </div>
-        <!-- detial module -->
-        <div class="eventDetailPageContainer">
-            <div id="pageContainerbackground" class="container-fluid"></div>
+        <!-- detail module -->
+
+        <div class="eventDetailPageContainer page3">
+            <span class="closePage3">&times;</span>
+
+            <!--                     <div id="pageContainerbackground" class="container-fluid"></div>
+             -->                    <!--abow is the back layer -->
+
             <div id="pageContainer" class="container-fluid">
+                <!-- all detail elemnt inside here  -->
 
                 <div id="eventInfoArea" class="containerSize col-lg-3 col-md-3 col-sm-10 col-xs-12">
-                    <div id="imageArea">
-                        <!--  <img src="includes/images/testPartyImg.jpeg"> -->
+                    <!-- <divn id = 'mainEventContainer'> -->
+
+                    <div>
+                        <img id="imageArea" src="includes/images/testPartyImg.jpeg">
                     </div>
 
                     <div>
@@ -89,28 +105,25 @@
                         <span id="eventState">CA</span>
                         <span id="eventZip">92620</span>
                     </div>
-                    <div>
 
+                    <div>
                         <span class="glyphicon glyphicon-calendar"></span>
                         <span class="eventDate">April 18 2018</span>
                     </div>
+
                     <div>
                         <span class="glyphicon glyphicon-time"></span>
                         <span class="eventTime"> 8:30 PM</span>
                     </div>
-                    <div>
-                        <span class="glyphicon glyphicon-time"></span>
-                        <span class="eventTime"> 8:30 PM</span>
-                    </div>
-                    </span>
-                </div>
+                    <div id="evnetDetailBox">
+                        <!-- <div id="iconForEvent"> -->
+                        <span id="iconForEvent" class="icon glyphicon glyphicon-info-sign"></span>
+                        <!--  </div> -->
+                        <span id="eventdetail">soafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisj
+                                    eoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisj
+                                    eoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisjsoafoaiejoincoijaoeijofinocijvoaijeoiajfeoioiodijvoisj
 
-
-                <!-- events page -->
-                <div class="secondPageContainer pageHidden">
-
-                    <div class="eventsContainer col-xs-12">
-
+                                    </span>
 
                     </div>
 
@@ -131,11 +144,18 @@
                     </div>
                     <button type="button" class="btn btn-danger btn-md" id="yelpSearchButton">Go!</button>
                 </div>
-        </div>
 
+        </div>
     </div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPN4nvPi1zuanO-esg1xO-4UybPxShug0&libraries=places&callback=activePlaceSearch" async defer></script>
+    <!-- the main body area -->
+
 </div>
+</div>
+</div>
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPN4nvPi1zuanO-esg1xO-4UybPxShug0&libraries=places&callback=activePlaceSearch" async defer></script>
+
+</div>
+
 </body>
 
 

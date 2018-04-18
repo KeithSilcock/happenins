@@ -33,11 +33,6 @@ const yelpBusinessResultsArray = [];
 
 function initializeApp() {
 
-
-
-
-    addClickHandlers();
-    //eventfulEventRequest(startDate, endDate, category)
 }
 
 /*************************************************************************x**************************
@@ -57,6 +52,7 @@ function addHoverHandler() {
  * @returns: {undefined}
  * adds events for when DOM element is clicked
  */
+
 
 function addClickHandlers() {
     $('#searchButton').click(function(){
@@ -128,22 +124,32 @@ console.log(newYelpCall);
  * Sends request to PredictHQ API to pull data based off search input from User
  */
 //function eventfulEventRequest(startDate, endDate, category){
-class eventfullEventRequester {
-
+class eventfulEventRequester {
     constructor() {
 
     }
 
-    eventfulEventRequest(renderFunc, date, numOfEntries, category){
+    formatDate(date){
+        date = date.replace(/-/g,'')
+        return date
+    }
 
+    eventfulEventRequest(renderCallback, date='2018042000', numOfEntries=20, category='music'){
         let eventSearchResultObject = {};
+
+        date = this.formatDate(date);
+        let dateEnd=(Number(date) + 3).toString();
+
+        let url=`https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=${date}00-${dateEnd}00&category=${category}&image_sizes=blackborder250,block100&page_size=${numOfEntries}&category=new`
 
         $.ajax({
             //url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date="+  startDate +"00-" + endDate + "00&category=" +  category + "&image_sizes=blackborder250,block100&page_size=10&category=new",
-            url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=2018042000-2018042000&category=music&image_sizes=blackborder250,block100&page_size=20&category=new",
+            //"https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=2018042000-2018042000&category=music&image_sizes=blackborder250,block100&page_size=20&category=new",
+            url: url,
             dataType: 'jsonp',
             data: {},
             success: function (rawData) {
+                console.log(rawData)
                 for (var event = 0; event < rawData.events.event.length; event++) {
                     if (rawData.events.event[event].title !== null) {
                         var title = rawData.events.event[event].title;
@@ -164,6 +170,12 @@ class eventfullEventRequester {
                     if (rawData.events.event[event].description !== null) {
                         var description = rawData.events.event[event].description;
                     }
+                    if (rawData.events.event[event].description !== null) {
+                        var startTime = rawData.events.event[event].start_time;
+                    }
+                    if (rawData.events.event[event].description !== null) {
+                        var venueURL = rawData.events.event[event].venue_url;
+                    }
 
                     eventSearchResultObject = {
                         title: title,
@@ -172,14 +184,16 @@ class eventfullEventRequester {
                         imageLargeUrl: imageLargeUrl,
                         venue_address: venue_address,
                         venue_name: venue_name,
-                        description: description
+                        description: description,
+                        startTime:startTime,
+                        venueURL: venueURL,
                     }
 
                     eventSearchResultArray.push(eventSearchResultObject);
                 }
                 console.log(eventSearchResultArray);
 
-                renderFunc(eventSearchResultArray)
+                renderCallback(eventSearchResultArray)
 
             },
             error: function (error) {
@@ -208,52 +222,69 @@ class eventfullEventRequester {
  */
 
 $(window).on('load', function () {
-    let controller = new HappeninsController();
-    controller.requestEventData();
-    // let arrayOfDummyData = [
-    //     {
-    //         location: '24576 villa tonda',
-    //         'eventName': 'Huge Great Party',
-    //         'time': "14:30",
-    //         'date': "05-04-18",
-    //     },
-    //     {
-    //         location: '24576 villa tonda',
-    //         'eventName': 'Huge Great Party',
-    //         'time': "14:30",
-    //         'date': "05-04-18",
-    //     },
-    //     {
-    //         location: '24576 villa tonda',
-    //         'eventName': 'Huge Great Party',
-    //         'time': "14:30",
-    //         'date': "05-04-18",
-    //     },
-    //     {
-    //         location: '24576 villa tonda',
-    //         'eventName': 'Huge Great Party',
-    //         'time': "14:30",
-    //         'date': "05-04-18",
-    //     }];
-
-})
+    let controller = new CircleController();
+});
 
 
-class HappeninsController{
+class CircleController{
     constructor(){
-        this.newEventfulRequest = new eventfullEventRequester(null, null,null);
-        this.newEventRenderer = new EventRenderer();
+        this.newEventfulRequest = new eventfulEventRequester(null, null,null);
+        this.newEventRenderer = new EventRenderer(this.changePageState.bind(this));
 
         this.autoCompleteTimeout=null;
         this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
             'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
             'other'];
+        this.categoryKeys={
+            'Music':'music',
+            'Comedy':'comedy',
+            'Kids/Family Fun':'family_fun_kids',
+            'Festivals':'festivals',
+            'Film':'film',
+            'Food & Wine':'food &amp; Wine',
+            'Art':'art',
+            'Holiday':'holiday',
+            'Museums':'museums',
+            'Buisiness':'business',
+            'Nightlife':'nightlife',
+            'Clubs':'clubs',
+            'Outdoors':'outdoors',
+            'Animals':'animals',
+            'Sales':'sales',
+            'Science':'science',
+            'Sports':'sports',
+            'Technology':'technology',
+            'Other':'other',
+        }
+
+        this.changePageState(1);
 
         this.handleEventHandlers();
     }
 
-    requestEventData(){
-        this.newEventfulRequest.eventfulEventRequest(this.renderEventDataOnSuccess.bind(this), null, null, null)
+    changePageState(state){
+        this.pageState=state;
+        this[`pageState${state}`]();
+    }
+
+    pageState1(){
+        $('.page1').removeClass('pageHidden');
+        $('.page2').addClass('pageHidden');
+        $('.page3').addClass('pageHidden');
+    }
+    pageState2(){
+        $('.page1').addClass('pageHidden');
+        $('.page2').removeClass('pageHidden');
+        $('.page3').addClass('pageHidden');
+    }
+    pageState3(){
+        $('.page1').addClass('pageHidden');
+        $('.page2').addClass('pageHidden');
+        $('.page3').removeClass('pageHidden');
+    }
+
+    requestEventData(date, numOfEntries, category){
+        this.newEventfulRequest.eventfulEventRequest(this.renderEventDataOnSuccess.bind(this), date, numOfEntries, category)
     }
 
     renderEventDataOnSuccess(dataArray){
@@ -261,23 +292,57 @@ class HappeninsController{
     }
 
     handleEventHandlers(){
-        $("#inputEventType").on({
+        $("#inputEventType, #inputEventType2").on({
             'keyup': this.onKeyUp.bind(this),
             'focusout': this.onFocusOutCloseAutoComplete.bind(this),
             'focus': function () {
                 console.log('here')
             }
-        })
+        });
+
+        $('#searchButton, .closePage3').on({
+            'click':() => {
+                this.handleRequestEvents();
+                this.changePageState(2);
+            }
+        });
+        $('.closePage3').on({
+            'click':() => {
+                this.changePageState(2);
+            }
+        });
+
+        $("#logo").on({
+            'click': () => this.changePageState(1),
+        });
+
+    }
+
+    handleRequestEvents(){
+        let categoryInputs = $(".categoryInput");
+        let eventCategory = '';
+
+        for(let categoryIndex=0; categoryIndex<categoryInputs.length; categoryIndex++){
+            if(categoryInputs[categoryIndex].value !== ''){
+                eventCategory=categoryInputs[categoryIndex].value;
+            }
+            categoryInputs[categoryIndex].value = '';
+        }
+
+        let category = this.categoryKeys[eventCategory];
+        let date = $('#inputDate').val();
+
+        this.requestEventData(date, 20, category);
     }
 
     onKeyUp(event) {
         if(event.key==='Escape'){
             this.removeAutoCompleteUL();
         }else if(!this.autoCompleteTimeout) {
-            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this), 500);
+            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this, event.target), 500);
         }else{
             clearTimeout(this.autoCompleteTimeout);
-            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this), 500);
+            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this, event.target), 500);
         }
     }
     onFocusOutCloseAutoComplete(event){
@@ -288,10 +353,11 @@ class HappeninsController{
             this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
         }
     }
-    autoCompleteCourse() {
+    autoCompleteCourse(inputToComplete) {
         this.removeAutoCompleteUL();
 
-        let categoryInput = $('#inputEventType');
+        let appendParent = $(inputToComplete).closest('.input-group')
+        let categoryInput = $(inputToComplete);
         let lettersSoFar = categoryInput.val().toLowerCase();
 
         if(lettersSoFar.length===0){
@@ -307,9 +373,7 @@ class HappeninsController{
 
         let allAutoCorrectMatches = [];
 
-        for(let categoryIndex=0; categoryIndex<this.arrayOfEventCategories.length; categoryIndex++){
-            let category = this.arrayOfEventCategories[categoryIndex];
-
+        for(let category in this.categoryKeys){
             let sliceToCheck = category.toLowerCase().slice(0,lettersSoFar.length);
             if(category.length === lettersSoFar.length){
                 this.removeAutoCompleteUL();
@@ -328,7 +392,7 @@ class HappeninsController{
             for(let index in allAutoCorrectMatches){
                 autoCompleteUL.append(allAutoCorrectMatches[index]);
             }
-            $("#categoryInput").append(autoCompleteUL);
+            appendParent.append(autoCompleteUL);
         }
 
         function autoComplete(event) {
@@ -346,12 +410,13 @@ class HappeninsController{
 }
 
 class EventRenderer{
-    constructor(){
+    constructor(changeStateCallback){
         // this.arrayOfData = arrayOfData;
         this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
             'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
             'other'];
 
+        this.changeStateCallback=changeStateCallback;
         this.renderDropDownMenu(this.arrayOfEventCategories);
         // this.turnDataIntoDomElements(this.arrayOfData)
     }
@@ -418,20 +483,20 @@ class EventRenderer{
             text: `${infoToParse.description}`,
 
         });
-        let addButton = $("<button>", {
-            'type':'button',
-            'class': 'addEventButton col-xs-offset-4 col-xs-4',
-            'text':'add to list',
-        });
+        // let addButton = $("<button>", {
+        //     'type':'button',
+        //     'class': 'addEventButton col-xs-offset-4 col-xs-4',
+        //     'text':'add to list',
+        // });
 
         //closure to get added data
         (function (that) {
-            addButton.on({
+            eventContainer.on({
                 'click':that.handleAddToListButtonClick.bind(this, that, infoToParse),
             })
         })(this);
 
-        extraEl.append(extraInfoText, addButton);
+        // extraEl.append(extraInfoText, addButton);
 
         // let arrayOfElements = [pictureEl, nameEl, dateEl, locationEl];
 
@@ -455,7 +520,6 @@ class EventRenderer{
                 expandedDivs.removeClass('expand').addClass('shrink')
         }
     }
-
     popOutAnimation(extraInfoDiv){
         if(extraInfoDiv.hasClass('expand')) {
             extraInfoDiv.removeClass('expand').addClass('shrink');
@@ -463,10 +527,11 @@ class EventRenderer{
             extraInfoDiv.removeClass('shrink').addClass('expand');
         }
     }
-
     handleAddToListButtonClick(thisObj, info, event){
-        thisObj.handlePopOutAnimation(event);
+        // thisObj.handlePopOutAnimation(event);
         // ^^^ keeps expanded list from closing, but need to fix in later edition
+
+        thisObj.changeStateCallback(3);
 
         console.log(info)
 
@@ -615,10 +680,10 @@ class CreateGoogleMap {
  */
 
 function activePlaceSearch(){
-        // var input = $('#search-city');
-        // var autocomplete = new google.maps.places.Autocomplete(input[0]);
-        var input = document.getElementById('search-city');
-        var autocomplete = new google.maps.places.Autocomplete(input);
+    // var input = $('#search-city');
+    // var autocomplete = new google.maps.places.Autocomplete(input[0]);
+    var input = document.getElementById('search-city');
+    var autocomplete = new google.maps.places.Autocomplete(input);
 
 }
 
