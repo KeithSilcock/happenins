@@ -261,7 +261,7 @@ class eventfulEventRequester {
                         startTime: startTime,
                         venueURL: venueURL,
                         latitude: venueLatitude,
-                        longitude: venueLongitude
+                        longitude: venueLongitude,
                         venueZip: venueZip,
                         venueState:venueState,
                     };
