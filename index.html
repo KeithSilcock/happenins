@@ -132,19 +132,37 @@
                 <div id="surroundingAreaInfo" class="containerSize col-lg-3 col-md-3 col-sm-12 col-xs-12">
                     <div class="input-group form-group">
                         <span class="input-group-addon">
-                                            <span class="glyphicon glyphicon-search"></span>
+                                            <span class="glyphicon glyphicon-cutlery"></span>
                                         </span>
-                        <input id="term" class="form-control" id="search-city" placeholder="Find.. (ex. American, BBQ)" type="text" >
+                        <input id="yelpSearchBoxterm" class="form-control" id="search-city" placeholder="Find.. (ex. American, BBQ)" type="text" >
                     </div>
                     <div class="input-group form-group">
                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-map-marker"></span>
                                         </span>
-                        <input id="radius" type="text" class="form-control" name="userInputEventType" placeholder="Within..(miles)">
+                        <input id="yelpSearchBox radius" type="text" class="form-control" name="userInputEventType" placeholder="Within..(miles)">
                     </div>
+
+
+
+                    <div class="input-group form-group priceDropDownCont dropdown">
+                        <ul class="dropdown-menu dropDownUL">
+                            <li>$</li>
+                            <li>$$</li>
+                            <li>$$$</li>
+                            <li>$$$$</li>
+                        </ul>
+                        <span class="input-group-addon">
+                                            <span class="glyphicon glyphicon-map-marker"></span>
+                                        </span>
+                        <!--<input id="yelpSearchBox priceRange" type="text" class="form-control" name="userInputEventType" placeholder="Price Range">-->
+                        <button data-toggle="dropdown" type="button" class="page2 dropdown-toggle btn btn-primary">&#8801;<span class="caret"></span></button>
+                    </div>
+
+
+
                     <button type="button" class="btn btn-danger btn-md" id="yelpSearchButton">Go!</button>
                 </div>
-
         </div>
     </div>
     <!-- the main body area -->
