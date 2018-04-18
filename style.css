@@ -59,7 +59,7 @@ header{
 
 }
 
-#inputContianer {
+#inputContainer {
    /*width: 80%;*/
     height: 60%;
     position: absolute;
@@ -71,7 +71,7 @@ header{
     opacity: 0.5;
     border: 10px double white;
 }
-#inputContianer-wraper{
+#inputContainer-wraper{
     height: 60%;
     position: absolute;
     left: 50%;
