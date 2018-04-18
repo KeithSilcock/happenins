@@ -60,11 +60,11 @@ function addHoverHandler() {
 
 function addClickHandlers() {
     $('#searchButton').click(function(){
-        $(".firstPageContainer").addClass('pageHidden');
+        $(".inputContainerToHide").addClass('pageHidden');
         //**** katy add this, do not remove ***////
         $(".eventsDropDownCont").removeClass('pageHidden');
         //***** katy edited ends ****////
-        $(".secondPageContainer").removeClass('pageHidden');
+        $(".eventPageContainer").removeClass('pageHidden');
 
     });
     
