@@ -32,7 +32,6 @@ const yelpBusinessResultsArray = [];
 
 
 function initializeApp() {
-    eventfulEventRequest()
     //addHoverHandlers();
     addClickHandlers();
     //eventfulEventRequest(startDate, endDate, category)
