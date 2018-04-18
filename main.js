@@ -488,9 +488,14 @@ function createGoogleMap(searchObj) {
  *
  */
 
-function autoCompleteLocation() {
+function activePlaceSearch(){
+        // var input = $('#search-city');
+        // var autocomplete = new google.maps.places.Autocomplete(input[0]);
+        var input = document.getElementById('search-city');
+        var autocomplete = new google.maps.places.Autocomplete(input);
 
 }
+
 
 
 
