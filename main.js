@@ -9,17 +9,17 @@ var a = [];
 $(document).ready(initializeApp);
 
 // variables to pull data from DOM
-var yelpSearchObj = {
+const searchObjDefault = {
     access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-    term: "bbq"/*DOM element search item - a string*/,
+    term: "restaurants",
     latitude: 34.0522, // current number is for LA  /*DOM element search item - a number, can have decimals*/,
     longitude: -118.2437, // current number is for LA   /*DOM element search item - a number, can have decimals*/,
-    location: "Los Angeles"/*DOM element search item - a string*/,
-    radius: 1000/*DOM element search item in METERS - a number*/,
-    categories: "bbq"/*DOM element search item - a string*/,
-    price: "1,2,3,4"/*DOM element search item - strings that will correlate with $, such as 2 will be the same as $$*/,
-    open_now: false /*DOM element search item - boolean*/,
-    sort_by: "review_count"/*DOM element search item - string of one of the following: best_match, rating, review_count or distance*/,
+    location : "Los Angeles",
+    radius : 800,
+    categories: "American (New)",
+    priceRange : "1,2,3,4",
+    open_now: false,
+    sort_by: "best_match"
 };
 const yelpBusinessResultsArray = [];
 
@@ -79,8 +79,9 @@ function addClickHandlers() {
  */
 var testData = null;
 class YelpData {
-    constructor(searchObj) {
+    constructor(eventCoord, searchObj) {
         this.searchObject = searchObj;
+        this.eventCoord = eventCoord;
         this.pullBusinessData = this.pullBusinessData.bind(this);
         this.ajaxCall = this.ajaxCall.bind(this);
         this.ajaxCall();
@@ -107,10 +108,11 @@ class YelpData {
         console.log(data);
         console.log(this.yelpBusinessResultsArray);
         console.log(latitude, longitude);
+        // submitYelpButtonClicked(this.eventCoord, this.searchObject)
     }
 }
 
-var newYelpCall = new YelpData(yelpSearchObj);
+var newYelpCall = new YelpData({latitude: 50.0522, longitude: -60.2437},searchObjDefault);
 
 console.log(newYelpCall);
 
@@ -126,8 +128,7 @@ console.log(newYelpCall);
 //function eventfulEventRequest(startDate, endDate, category){
 class eventfulEventRequester {
     constructor() {
-        this.latitude = null;
-        this.longitude = null;
+
     }
 
     formatDate(date){
@@ -190,16 +191,22 @@ class eventfulEventRequester {
                         venueURL: venueURL,
                         latitude: 34.0522,
                         longitude: -118.2437
-                    }
+                    };
+
+                    var eventCoordinates = {
+                        latitude: eventSearchResultObject.latitude,
+                        longitude: eventSearchResultObject.longitude
+                    };
+
+                    var yelpData = new YelpData(eventCoordinates,searchObjDefault);
 
                     eventSearchResultArray.push(eventSearchResultObject);
                 }
                 console.log(eventSearchResultArray);
 
-                renderCallback(eventSearchResultArray)
+                renderCallback(eventSearchResultArray);
 
-                this.latitude = eventSearchResultObject.latitude;
-                this.longitude = eventSearchResultObject.longitude;
+
             },
             error: function (error) {
                 console.log(error)
@@ -574,36 +581,25 @@ function eventSubmitButtonClicked() {
  * Creates an object from user search input upon click. Must be able to take all search parameters to filter through Yelp APIs.
  */
 
-function submitYelpButtonClicked() {
-    var searchObj = {
-        access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx"
-    };
-    var searchObjDefault = {
-        access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-        term: "restaurants",
-        latitude: 34.0522, // current number is for LA  /*DOM element search item - a number, can have decimals*/,
-        longitude: -118.2437, // current number is for LA   /*DOM element search item - a number, can have decimals*/,
-        location : "Los Angeles",
-        radius : 800,
-        categories: "American (New)",
-        priceRange : "1,2,3,4",
-        open_now: false,
-        sort_by: "best_match"
-    };
+function submitYelpButtonClicked(eventLocation, searchObjectParameters) {
+    // var searchObj = {
+    //     access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx"
+    // };
     var milesToMeters = 1609.34/1; //1609.34m per 1 mile
-    searchObj.term = $("#term").val() || searchObjDefault.term;
-    searchObj.latitude = $(/*#latitude*/).val() || searchObjDefault.latitude;
-    searchObj.longitude = $(/*#longitude*/).val() || searchObjDefault.longitude;
-    searchObj.location = $(/*#location*/).val() || searchObjDefault.location;
-    searchObj.radius = parseInt($("#radius").val())*milesToMeters || searchObjDefault.radius;
-    searchObj.categories = $(/*#categories*/).val() || searchObjDefault.categories;
-    searchObj.priceRange = $(/*"#priceRange"*/).val() || searchObjDefault.price;
-    searchObj.open_now = $(/*#open_now*/).val() || searchObjDefault.open_now;
-    searchObj.sort_by = $(/*#sort_by*/).val() || searchObjDefault.sort_by;
+    searchObjectParameters.term = $("#term").val() || searchObjDefault.term;
+    searchObjectParameters.latitude = eventLocation.latitude || searchObjDefault.latitude;
+    searchObjectParameters.longitude = eventLocation.longitude || searchObjDefault.longitude;
+    searchObjectParameters.location = $(/*#location*/).val() || searchObjDefault.location;
+    searchObjectParameters.radius = parseInt($("#radius").val())*milesToMeters || searchObjDefault.radius;
+    searchObjectParameters.categories = $(/*#categories*/).val() || searchObjDefault.categories;
+    searchObjectParameters.priceRange = $(/*"#priceRange"*/).val() || searchObjDefault.price;
+    searchObjectParameters.open_now = $(/*#open_now*/).val() || searchObjDefault.open_now;
+    searchObjectParameters.sort_by = $(/*#sort_by*/).val() || searchObjDefault.sort_by;
 
 
-    var newYelpCall = new YelpData(searchObj);
-    console.log(newYelpCall);
+    return searchObjectParameters;
+    // var newYelpCall = new YelpData(eventLocation, searchObjectParameters);
+    // console.log(newYelpCall);
     // var map = new CreateGoogleMap(newYelpCall.yelpBusinessResultsArray);
 }
 
