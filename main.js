@@ -4,7 +4,8 @@
 
 
 var eventSearchResultArray = [];
-var a = [];
+var yelpArrayLength = [];
+var markersArray = [];
 
 $(document).ready(initializeApp);
 
@@ -23,6 +24,8 @@ var yelpSearchObj = {
 };
 const yelpBusinessResultsArray = [];
 
+
+
 /***************************************************************************************************
  * initializing
  * @params {undefined} none
@@ -32,13 +35,13 @@ const yelpBusinessResultsArray = [];
 
 
 function initializeApp() {
-
-
-
-
     addClickHandlers();
     //eventfulEventRequest(startDate, endDate, category)
+    //center: new google.maps.LatLng(34.0522, -118.2437)
+
 }
+
+
 
 /*************************************************************************x**************************
  * addHoverHandler
@@ -65,9 +68,10 @@ function addClickHandlers() {
         $(".eventsDropDownCont").removeClass('pageHidden');
         //***** katy edited ends ****////
         $(".eventPageContainer").removeClass('pageHidden');
-
     });
-    
+
+
+
 
     //var eventSearch = $('#searchButten').click(eventfulEventRequest(startDate, endDate, category));
 
@@ -81,7 +85,8 @@ function addClickHandlers() {
  * Sends request to Yelp API to pull data based off search input from User
  */
 var testData = null;
-class yelpData {
+
+class YelpData {
     constructor(searchObj) {
         this.searchObject = searchObj;
         this.pullBusinessData = this.pullBusinessData.bind(this);
@@ -95,25 +100,51 @@ class yelpData {
             data: this.searchObject,
             success: this.pullBusinessData,
             error: function (errors) {
-                console.log("errors : ", errors);
+                ////console.log("errors : ", errors);
             }
         };
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
-        console.log(data);
+        ////console.log(data);
         testData = data.businesses;
         yelpBusinessResultsArray.length = 0;
         data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
         console.log(yelpBusinessResultsArray);
         var {latitude, longitude} = data.region.center;
-        console.log(latitude, longitude);
+        initMap(34.0522, -118.2437);
     }
 }
+var newYelpCall = new YelpData(yelpSearchObj);
 
-var newYelpCall = new yelpData(yelpSearchObj);
+//console.log(newYelpCall);
 
-console.log(newYelpCall);
+
+
+
+function initMap(lat,lng) {
+    console.log(yelpBusinessResultsArray[0].coordinates.latitude)
+    var mapOptions = {
+        zoom: 16,
+        center: new google.maps.LatLng(lat,lng)
+    }
+    var map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
+    var markerLocation = {lat: 34.0522, lng: -118.2437};
+    var markerLat;
+    var markerLng;
+        for (markerIndex=0; markerIndex<yelpBusinessResultsArray.length; markerIndex++) {
+            markerLat = yelpBusinessResultsArray[markerIndex].coordinates.latitude;
+            markerLng = yelpBusinessResultsArray[markerIndex].coordinates.longitude;
+            var marker = new google.maps.Marker({
+                map: map,
+                position: new google.maps.LatLng(markerLat, markerLng),
+                animation: google.maps.Animation.DROP,
+            });
+        }
+}
+
+
+
 
 // var yelpAjaxCall = {
 //     dataType: "JSON",
@@ -126,14 +157,14 @@ console.log(newYelpCall);
 //         "longitude" : -118.2437,
 //     },
 //     success : function(results) {
-//         console.log("success : " , results);
+//         ////console.log("success : " , results);
 //         results.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-//         console.log(yelpBusinessResultsArray);
+//         ////console.log(yelpBusinessResultsArray);
 //         var {latitude, longitude} = results.region.center;
-//         console.log(latitude, longitude);
+//         ////console.log(latitude, longitude);
 //     },
 //     error : function(errors) {
-//         console.log( "errors : " , errors );
+//         ////console.log( "errors : " , errors );
 //     }
 // };
 //
@@ -167,6 +198,8 @@ class eventfullEventRequester {
             dataType: 'jsonp',
             data: {},
             success: function (rawData) {
+
+                ////console.log(rawData);
                 for (var event = 0; event < rawData.events.event.length; event++) {
                     if (rawData.events.event[event].title !== null) {
                         var title = rawData.events.event[event].title;
@@ -188,6 +221,7 @@ class eventfullEventRequester {
                         var description = rawData.events.event[event].description;
                     }
 
+
                     eventSearchResultObject = {
                         title: title,
                         cityName: cityName,
@@ -200,13 +234,13 @@ class eventfullEventRequester {
 
                     eventSearchResultArray.push(eventSearchResultObject);
                 }
-                console.log(eventSearchResultArray);
+                ////console.log(eventSearchResultArray);
 
                 renderFunc(eventSearchResultArray)
 
             },
             error: function (error) {
-                console.log(error)
+                ////console.log(error)
             },
         });
 
@@ -288,7 +322,7 @@ class HappeninsController{
             'keyup': this.onKeyUp.bind(this),
             'focusout': this.onFocusOutCloseAutoComplete.bind(this),
             'focus': function () {
-                console.log('here')
+                ////console.log('here')
             }
         })
     }
@@ -491,7 +525,7 @@ class EventRenderer{
         thisObj.handlePopOutAnimation(event);
         // ^^^ keeps expanded list from closing, but need to fix in later edition
 
-        console.log(info)
+        ////console.log(info)
 
         //collect data from event clicked
 
@@ -529,6 +563,7 @@ function eventSubmitButtonClicked() {
 
 function submitYelpButtonClicked() {
     var searchObj = {};
+    //should have default values if no value entered
     searchObj.term = $(/*#searchTerm*/).val();
     searchObj.latitude = $(/*#latitude*/).val();
     searchObj.longitude = $(/*#longitude*/).val();
@@ -549,60 +584,68 @@ function submitYelpButtonClicked() {
  * creates a map to display onto page that will contain makers. Markers will be yelp results
  */
 
-class createGoogleMap {
-    constructor(searchObj) {
-        this.latitude = searchObj.latitude;
-        this.longitude = searchObj.longitude;
-        this.searchArray = searchObj.businesses;
-        this.map = new google.maps.Map(document.getElementById('map'), {
-            center: losAngeles,
-            zoom: 20
-        });
-        this.infoWindow = new google.maps.InfoWindow();
-        this.service = new google.maps.places.PlacesService(map);
-        service.nearbySearch({
-            location: {latitude: this.latitude, longitude: this.longitude},
-            radius: 800,
-            type: ['restaurant']
-        }, this.callback);
-    }
-    callback(results, status) {
-        if (status === google.maps.pleaces.PlacesServiceStatus.OK) {
-            for(let i = 0; i < results.length; i++) {
-                this.createMarker = this.createMarker.bind(this);
-                this.createMarker(results[i]);
-            }
-        }
-    }
-    createMarker(place) {
-        this.placeLocation = place.geometry.location;
-        this.marker = new google.maps.Marker({
-            map: map,
-            position: placeLocation
-        });
-        google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent(place.name);
-            infowindow.open(map, this);
-        });
-        this.provideLocationData(this.searchArray, this.marker);
-    }
-    provideLocationData(searchArray) {
-        searchArray.map(function(item, marker) {
-            this.locationDiv = $("<div>").addClass("locationDiv");
-            this.locationName = $("<p>").text(item.name).addClass("locationName");
-            this.locationImage = $("<img>").attr("src", item.image_url).addClass("locationImage");
-            this.locationLocation = $("<p>").text(item.location["display_address"].map( address => "" + address + ", " + address)).addClass("locationLocation");
-            this.locationPhoneNumber = $("<p>").text(item.phone).addClass("locationPhoneNumber");
-            this.locationPrice = $("<p>").text(item.price).addClass("locationPrice");
-            this.locationRating = $("<p>").text(item.rating).addClass("locationRating");
-            this.locationReviewCount = $("<p>").text(item.review_count).addClass("locationReviewCount");
-            this.locationURL = $("<p>").text(item.url).addClass("locationURL");
 
-            this.locationDiv.append(this.locationName, this.locationImage, this.locationPrice, this.locationRating, this.locationReviewCount, this.locationLocation, this.locationPhoneNumber, this.locationURL);
-            marker.append(this.locationDiv);
-        })
-    }
-}
+
+// class CreateGoogleMap {
+//     constructor(searchResults) {
+//         this.latitude = searchResults.latitude;
+//         this.longitude = searchResults.longitude;
+//         this.searchCoordinates = {
+//             lat: this.latitude,
+//             lng: this.longitude
+//         };
+//     }
+//
+//         this.searchArray = searchResults.businesses;
+//         this.map = new google.maps.Map(document.getElementById('map'), {
+//             center: this.searchCoordinates,
+//             zoom: 5
+//         });
+//         this.infoWindow = new google.maps.InfoWindow();
+//         this.service = new google.maps.places.PlacesService(map);
+//         this.service.nearbySearch({
+//             location: this.searchCoordinates,
+//             radius: 800,
+//             type: ['restaurant']
+//         }, this.callback);
+//     }
+//     callback(searchResults, status) {
+//         if (status === google.maps.places.PlacesServiceStatus.OK) {
+//             for(let i = 0; i < searchResults.businesses.length; i++) {
+//                 this.createMarker = this.createMarker.bind(this);
+//                 this.createMarker(searchResults.businesses[i]);
+//             }
+//         }
+//     }
+//     createMarker(place) {
+//         this.placeLocation = place.geometry.location;
+//         this.marker = new google.maps.Marker({
+//             map: map,
+//             position: this.placeLocation
+//         });
+//         google.maps.event.addListener(marker, 'click', function() {
+//             infowindow.setContent(/**/);
+//             infowindow.open(map, this);
+//         });
+//         this.provideLocationData(this.searchArray, this.marker);
+//     }
+//     provideLocationData(searchArray, marker /*businesses array*/) {
+//         searchArray.map(function(item) {
+//             this.locationDiv = $("<div>").addClass("locationDiv");
+//             this.locationName = $("<p>").text(item.name).addClass("locationName");
+//             this.locationImage = $("<img>").attr("src", item.image_url).addClass("locationImage");
+//             this.locationLocation = $("<p>").text(item.location["display_address"].map( address => "" + address + ", " + address)).addClass("locationLocation");
+//             this.locationPhoneNumber = $("<p>").text(item.phone).addClass("locationPhoneNumber");
+//             this.locationPrice = $("<p>").text(item.price).addClass("locationPrice");
+//             this.locationRating = $("<p>").text(item.rating).addClass("locationRating");
+//             this.locationReviewCount = $("<p>").text(item.review_count).addClass("locationReviewCount");
+//             this.locationURL = $("<p>").text(item.url).addClass("locationURL");
+//
+//             this.locationDiv.append(this.locationName, this.locationImage, this.locationPrice, this.locationRating, this.locationReviewCount, this.locationLocation, this.locationPhoneNumber, this.locationURL);
+//             marker.append(this.locationDiv);
+//         })
+//     }
+// }
 
 
 
@@ -613,36 +656,10 @@ class createGoogleMap {
  *
  */
 
-function activePlaceSearch(){
-        // var input = $('#search-city');
-        // var autocomplete = new google.maps.places.Autocomplete(input[0]);
-        var input = document.getElementById('search-city');
-        var autocomplete = new google.maps.places.Autocomplete(input);
-
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+// function activePlaceSearch(){
+//     // var input = $('#search-city');
+//     // var autocomplete = new google.maps.places.Autocomplete(input[0]);
+//     var input = document.getElementById('search-city');
+//     var autocomplete = new google.maps.places.Autocomplete(input);
+//
+// }

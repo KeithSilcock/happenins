@@ -9,7 +9,7 @@
     <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
 
-    <script rel="script" type="text/javascript" src="main.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyC0vWkoQQodvGBX2l0i1_oRnO6V-9RMyLM&callback=initMap"></script>
 
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
@@ -17,7 +17,7 @@
     <title>Happenins</title>
     <style>
         #map{
-            height:100px;
+            height:100%;
             width:100%;
         }
     </style>
@@ -40,11 +40,11 @@
     <!-- input page -->
     <div class="mainBody col-lg-12">
         <!-- input module-->
-        <div id="inputrContianer" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10 " ></div>
+        <div id="inputrContianer" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10 pageHidden" ></div>
 
-        <div id="inputrContianer-wraper" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10 ">
+        <div id="inputrContianer-wraper" class="inputContainerToHide col-lg-7 col-md-7 col-sm-10 col-xs-10 pageHidden">
 
-            <div class="search-form  col-lg-7 col-md-7 col-sm-12 col-xs-12">
+            <div class="search-form  col-lg-7 col-md-7 col-sm-12 col-xs-12 ">
                 <h4>Find Event by: </h4>
 
                 <div class="input-group form-group">
@@ -108,25 +108,23 @@
 
                 <!-- events page -->
                 <div class="secondPageContainer pageHidden">
-
                     <div class="eventsContainer col-xs-12">
-
-
                     </div>
-
                 </div>
-                <div id="mapArea" class="containerSize col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
+
+                <div id="mapArea" class="containerSize col-lg-6 col-md-6 col-sm-12 col-xs-12"><div id="google-map"></div></div></div>
                 <div id="surroundingAreaInfo" class="containerSize col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
-
-
-
 
             </div>
         </div>
 
     </div>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPN4nvPi1zuanO-esg1xO-4UybPxShug0&libraries=places&callback=activePlaceSearch" async defer></script>
+
+
 </div>
+
+    <script rel="script" type="text/javascript" src="main.js"></script>
+
 </body>
 
 

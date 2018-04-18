@@ -164,7 +164,7 @@ button{
 
 }
 .event, .eventImg{
-   flex: 
+
 }
 .eventImg{
     width: 50%;
@@ -238,4 +238,11 @@ button{
 }
 .pageHidden{
     display: none;
+}
+
+#google-map {
+    height: 100%;
+    width: 100%;
+    margin: 0px;
+    padding: 0px
 }
