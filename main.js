@@ -3,9 +3,6 @@
  */
 
 
-var searchFoodItem;
-var foodLatitude;
-var foodLongitude;
 var eventSearchResultArray = [];
 var a = [];
 
@@ -35,7 +32,9 @@ const yelpBusinessResultsArray = [];
 
 
 function initializeApp() {
-    eventfulEventRequest()
+
+    // eventfulEventRequest()
+
     //addHoverHandlers();
     addClickHandlers();
     //eventfulEventRequest(startDate, endDate, category)
@@ -60,8 +59,12 @@ function addHoverHandler() {
  */
 
 function addClickHandlers() {
-    $('#searchButten').click(function(){
-        eventfulEventRequest();
+    $('#searchButton').click(function(){
+        $(".firstPageContainer").addClass('pageHidden');
+        //**** katy add this, do not remove ***////
+        $(".eventsDropDownCont").removeClass('pageHidden');
+        //***** katy edited ends ****////
+        $(".secondPageContainer").removeClass('pageHidden');
 
     });
 
@@ -146,56 +149,58 @@ console.log(newYelpCall);
  * Sends request to PredictHQ API to pull data based off search input from User
  */
 //function eventfulEventRequest(startDate, endDate, category){
-function eventfulEventRequest(){
+class eventfullEventRequester {
 
-    var eventSearchResultObject = {};
+    constructor() {
 
-    $.ajax({
-        //url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date="+  startDate +"00-" + endDate + "00&category=" +  category + "&image_sizes=blackborder250,block100&page_size=10&category=new",
-        url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=2018042000-2018042000&category=music&image_sizes=blackborder250,block100&page_size=20&category=new",
-        dataType: 'jsonp',
-        data: {},
-        success: function (rawData) {
-            for (var event=0; event<rawData.events.event.length; event++){
+    }
 
-                if (rawData.events.event[event].title !== null) {
-                    var title = rawData.events.event[event].title;
-                }
-                if (rawData.events.event[event].city_name !== null) {
-                    var cityName = rawData.events.event[event].city_name;
-                }
-                if (rawData.events.event[event].image !== null) {
-                    var imageSmallUrl = 'http:' + rawData.events.event[event].image.block100.url;
-                    var imageLargeUrl = 'http:' + rawData.events.event[event].image.blackborder250.url;
-                }
-                if (rawData.events.event[event].venue_address !== null) {
-                    var venue_address = rawData.events.event[event].venue_address;
-                }
-                if (rawData.events.event[event].venue_name!== null) {
-                    var venue_name = rawData.events.event[event].venue_name;
-                }
-                if (rawData.events.event[event].description !== null) {
-                    var description = rawData.events.event[event].description;
-                }
+    eventfulEventRequest(renderFunc, date, numOfEntries, category){
 
-                var startTime = rawData.events.event[event].start_time;
-                startTime = startTime.split(" ")[1]; // converting "2018-04-20 20:30:00" to "20:30:00"
-                var latitude = rawData.events.event[event].latitude;
-                var longitude = rawData.events.event[event].longitude;
+        var eventSearchResultObject = {};
 
-                eventSearchResultObject = {
-                    title: title,
-                    cityName: cityName,
-                    imageSmallUrl: imageSmallUrl,
-                    imageLargeUrl: imageLargeUrl,
-                    venueAddress: venue_address,
-                    venueName: venue_name,
-                    description: description,
-                    latitude: latitude,
-                    longitude: longitude,
-                    startTime: startTime,
+        $.ajax({
+            //url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date="+  startDate +"00-" + endDate + "00&category=" +  category + "&image_sizes=blackborder250,block100&page_size=10&category=new",
+            url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=2018042000-2018042000&category=music&image_sizes=blackborder250,block100&page_size=20&category=new",
+            dataType: 'jsonp',
+            data: {},
+            success: function (rawData) {
+                for (var event = 0; event < rawData.events.event.length; event++) {
+                    if (rawData.events.event[event].title !== null) {
+                        var title = rawData.events.event[event].title;
+                    }
+                    if (rawData.events.event[event].city_name !== null) {
+                        var cityName = rawData.events.event[event].city_name;
+                    }
+                    if (rawData.events.event[event].image !== null) {
+                        var imageSmallUrl = 'http:' + rawData.events.event[event].image.block100.url;
+                        var imageLargeUrl = 'http:' + rawData.events.event[event].image.blackborder250.url;
+                    }
+                    if (rawData.events.event[event].venue_address !== null) {
+                        var venue_address = rawData.events.event[event].venue_address;
+                    }
+                    if (rawData.events.event[event].venue_name !== null) {
+                        var venue_name = rawData.events.event[event].venue_name;
+                    }
+                    if (rawData.events.event[event].description !== null) {
+                        var description = rawData.events.event[event].description;
+                    }
+
+                    eventSearchResultObject = {
+                        title: title,
+                        cityName: cityName,
+                        imageSmallUrl: imageSmallUrl,
+                        imageLargeUrl: imageLargeUrl,
+                        venue_address: venue_address,
+                        venue_name: venue_name,
+                        description: description
+                    }
+
+                    eventSearchResultArray.push(eventSearchResultObject);
                 }
+                console.log(eventSearchResultArray);
 
+<<<<<<< HEAD
                 eventSearchResultArray.push(eventSearchResultObject);
             }
 
@@ -204,9 +209,18 @@ function eventfulEventRequest(){
         },
         error: function (error) { console.log(error) },
     });
+=======
+                renderFunc(eventSearchResultArray)
+>>>>>>> 086ec2b6bceccfb253751fc3614c6f02221df3cc
+
+            },
+            error: function (error) {
+                console.log(error)
+            },
+        });
 
 
-
+    }
 }
 
 
@@ -227,47 +241,157 @@ function eventfulEventRequest(){
  */
 
 $(window).on('load', function () {
+    let controller = new HappeninsController();
+    controller.requestEventData();
+    // let arrayOfDummyData = [
+    //     {
+    //         location: '24576 villa tonda',
+    //         'eventName': 'Huge Great Party',
+    //         'time': "14:30",
+    //         'date': "05-04-18",
+    //     },
+    //     {
+    //         location: '24576 villa tonda',
+    //         'eventName': 'Huge Great Party',
+    //         'time': "14:30",
+    //         'date': "05-04-18",
+    //     },
+    //     {
+    //         location: '24576 villa tonda',
+    //         'eventName': 'Huge Great Party',
+    //         'time': "14:30",
+    //         'date': "05-04-18",
+    //     },
+    //     {
+    //         location: '24576 villa tonda',
+    //         'eventName': 'Huge Great Party',
+    //         'time': "14:30",
+    //         'date': "05-04-18",
+    //     }];
 
-    let arrayOfDummyData = [
-        {
-            location: '24576 villa tonda',
-            'eventName': 'Huge Great Party',
-            'time': "14:30",
-            'date': "05-04-18",
-        },
-        {
-            location: '24576 villa tonda',
-            'eventName': 'Huge Great Party',
-            'time': "14:30",
-            'date': "05-04-18",
-        },
-        {
-            location: '24576 villa tonda',
-            'eventName': 'Huge Great Party',
-            'time': "14:30",
-            'date': "05-04-18",
-        },
-        {
-            location: '24576 villa tonda',
-            'eventName': 'Huge Great Party',
-            'time': "14:30",
-            'date': "05-04-18",
-        }];
-
-    let newEventRenderer = new EventRenderer(arrayOfDummyData);
 })
 
+
+class HappeninsController{
+    constructor(){
+        this.newEventfulRequest = new eventfullEventRequester(null, null,null);
+        this.newEventRenderer = new EventRenderer();
+
+        this.autoCompleteTimeout=null;
+        this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
+            'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
+            'other'];
+
+        this.handleEventHandlers();
+    }
+
+    requestEventData(){
+        this.newEventfulRequest.eventfulEventRequest(this.renderEventDataOnSuccess.bind(this), null, null, null)
+    }
+
+    renderEventDataOnSuccess(dataArray){
+        this.newEventRenderer.turnDataIntoDomElements(dataArray);
+    }
+
+
+
+
+    handleEventHandlers(){
+        $("#inputEventType").on({
+            'keyup': this.onKeyUp.bind(this),
+            'focusout': this.onFocusOutCloseAutoComplete.bind(this),
+            'focus': function () {
+                console.log('here')
+            }
+        })
+    }
+
+    onKeyUp(event) {
+        if(event.key==='Escape'){
+            this.removeAutoCompleteUL();
+        }else if(!this.autoCompleteTimeout) {
+            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this), 500);
+        }else{
+            clearTimeout(this.autoCompleteTimeout);
+            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this), 500);
+        }
+    }
+    onFocusOutCloseAutoComplete(event){
+        if(!this.focusOutTimeout) {
+            this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
+        }else{
+            clearTimeout(this.focusOutTimeout);
+            this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
+        }
+    }
+    autoCompleteCourse() {
+        this.removeAutoCompleteUL();
+
+        let categoryInput = $('#inputEventType');
+        let lettersSoFar = categoryInput.val().toLowerCase();
+
+        if(lettersSoFar.length===0){
+
+            // this.removeAutoCompleteUL();
+            return;
+        }
+
+        let autoCompleteUL=$("<ul>",{
+            'id':'autoComplete',
+        });
+        autoCompleteUL.on('click', '#autoCompleteLI', autoComplete.bind(this));
+
+        let allAutoCorrectMatches = [];
+
+        for(let categoryIndex=0; categoryIndex<this.arrayOfEventCategories.length; categoryIndex++){
+            let category = this.arrayOfEventCategories[categoryIndex];
+
+            let sliceToCheck = category.toLowerCase().slice(0,lettersSoFar.length);
+            if(category.length === lettersSoFar.length){
+                this.removeAutoCompleteUL();
+                continue;
+            }
+            if(sliceToCheck === lettersSoFar && lettersSoFar.length>0){
+                let autoCompleteLI = $("<li>",{
+                    text:category,
+                    'id':'autoCompleteLI',
+                });
+                allAutoCorrectMatches.push(autoCompleteLI);
+            }
+        }
+
+        if(allAutoCorrectMatches.length>0){
+            for(let index in allAutoCorrectMatches){
+                autoCompleteUL.append(allAutoCorrectMatches[index]);
+            }
+            $("#categoryInput").append(autoCompleteUL);
+        }
+
+        function autoComplete(event) {
+            var clickedObj=event.target;
+            categoryInput.val(clickedObj.outerText);
+            this.removeAutoCompleteUL();
+        }
+    }
+    removeAutoCompleteUL(event){
+        $("#autoComplete").remove();
+    }
+    autocompleteAllChoices(){
+
+    }
+}
+
 class EventRenderer{
-    constructor(arrayOfData){
-        this.arrayOfData = arrayOfData;
+    constructor(){
+        // this.arrayOfData = arrayOfData;
         this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
             'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
             'other'];
 
         this.renderDropDownMenu(this.arrayOfEventCategories);
-        this.turnDataIntoDomElements(this.arrayOfData)
+        // this.turnDataIntoDomElements(this.arrayOfData)
     }
-
+//dropDownMenu begin;
     renderDropDownMenu(arrayOfEventCats){
         let dropDownMenuUL=$(".dropDownUL");
 
@@ -275,11 +399,11 @@ class EventRenderer{
             let thisLI= $("<li>",{
                 'class': `dropDownLI dropDown${liName}`,
                 text: liName
-            })
+            });
             dropDownMenuUL.append(thisLI)
         })
     }
-
+//dropDownMenu end;
     turnDataIntoDomElements(arrayOfInfo){
         for(let objectIndex=0; objectIndex<arrayOfInfo.length; objectIndex++){
             let infoObject = arrayOfInfo[objectIndex];
@@ -292,31 +416,31 @@ class EventRenderer{
 
     parseData(infoToParse, odd){
         let eventContainer = $("<div>",{
-            'class':'event col-xs-12 col-md-5',
+            'class':'event col-xs-12 col-md-3',
             on:{
                 // 'click': this.handlePopOutAnimation.bind(this),
             },
         });
 
+        if(infoToParse.imageLargeUrl === undefined){
+            infoToParse.imageLargeUrl= 'includes/images/testPartyImg.jpeg'
+        }
+
         let pictureEl = $("<img>",{
-            'class':'eventImg eventContent col-xs-3 col-md-6',
-            src:"includes/images/testPartyImg.jpeg",
+            'class':'eventImg eventContent col-xs-3 col-md-12',
+            src:`${infoToParse.imageLargeUrl}`,
         });
         let nameEl = $("<div>",{
             'class':'eventName eventContent row col-xs-8 col-md-6',
-            text: infoToParse.eventName,
+            text: infoToParse.title,
         });
         let dateEl = $("<div>",{
             'class':'eventDate eventContent row  col-xs-8 col-md-6',
-            text: `When: ${infoToParse.time}, ${infoToParse.date}`,
+            // text: `When: ${infoToParse.time}, ${infoToParse.date}`,
         });
-        // let timeEl = $("<div>",{
-        //     'class':'eventTime',
-        //     text: infoToParse.time,
-        // });
         let locationEl = $("<div>",{
             'class':'eventLoc eventContent row  col-xs-8 col-md-6',
-            text: `Where: ${infoToParse.location}`,
+            text: `Where: ${infoToParse.venue_address}`,
         });
 
 
@@ -327,8 +451,7 @@ class EventRenderer{
 
         let extraInfoText = $("<div>",{
             'class':'eventExtraInfo',
-            text: "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids" +
-            "asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids asdfkdjfl asdlkfklsdjfksd sdfjids",
+            text: `${infoToParse.description}`,
 
         });
         let addButton = $("<button>", {
@@ -439,48 +562,44 @@ function submitYelpButtonClicked() {
  * creates a map to display onto page that will contain makers. Markers will be yelp results
  */
 
-function createGoogleMap(searchObj) {
-    function createMap() {
-        var losAngeles = {
-            latitude: 34.0522, longitude: -118.2437
-        };
-
-        var map = new google.maps.Map(document.getElementById('map'), {
+class createGoogleMap {
+    constructor(searchObj) {
+        this.latitude = searchObj.latitude;
+        this.longitude = searchObj.longitude;
+        this.map = new google.maps.Map(document.getElementById('map'), {
             center: losAngeles,
             zoom: 20
         });
-
-        var infoWindow = new google.maps.InfoWindow();
-        var service = new google.maps.places.PlacesService(map);
+        this.infoWindow = new google.maps.InfoWindow();
+        this.service = new google.maps.places.PlacesService(map);
         service.nearbySearch({
-            location: losAngeles,
+            location: {latitude: this.latitude, longitude: this.longitude},
             radius: 800,
             type: ['restaurant']
-        }, callback);
+        }, this.callback);
     }
-
-    function callback(results, status) {
-        if (status === google.maps.places.PlacesServiceStatus.OK) {
-            for (var i = 0; i < results.length; i++) {
-                createMarker(results[i]);
+    callback(results, status) {
+        if (status === google.maps.pleaces.PlacesServiceStatus.OK) {
+            for(let i = 0; i < results.length; i++) {
+                this.createMarker = this.createMarker.bind(this);
+                this.createMarker(results[i]);
             }
         }
     }
-
-    function createMarker(place) {
-        var placeLoc = place.geometry.location;
-        var marker = new google.maps.Marker({
+    createMarker(place) {
+        this.placeLocation = place.geometry.location;
+        this.marker = new google.maps.Marker({
             map: map,
-            position: place.geometry.location
+            position: placeLocation
         });
-
         google.maps.event.addListener(marker, 'click', function() {
             infowindow.setContent(place.name);
             infowindow.open(map, this);
+            // maybe open modal with restaurant information instead?
         });
     }
-
 }
+
 
 
 /***************************************************************************************************
@@ -490,9 +609,16 @@ function createGoogleMap(searchObj) {
  *
  */
 
-function autoCompleteLocation() {
+function activePlaceSearch(){
+        // var input = $('#search-city');
+        // var autocomplete = new google.maps.places.Autocomplete(input[0]);
+        var input = document.getElementById('search-city');
+        var autocomplete = new google.maps.places.Autocomplete(input);
 
 }
+
+
+
 
 
 
