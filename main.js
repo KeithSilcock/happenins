@@ -3,9 +3,6 @@
  */
 
 
-var searchFoodItem;
-var foodLatitude;
-var foodLongitude;
 var eventSearchResultArray = [];
 var a = [];
 
@@ -35,7 +32,9 @@ const yelpBusinessResultsArray = [];
 
 
 function initializeApp() {
+
     // eventfulEventRequest()
+
     //addHoverHandlers();
     addClickHandlers();
     //eventfulEventRequest(startDate, endDate, category)
