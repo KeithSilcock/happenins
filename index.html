@@ -29,13 +29,19 @@
 
     <header id="headerArea" class="container-fluid col-sm-12 col-lg-12">
         <div id="logo">logoArea</div>
-        <div class="page2 eventsDropDownCont dropdown col-xs-offset-7 col-xs-2 col-md-offset-10 col-md-1 clearfix">
-            <button data-toggle="dropdown" type="button" class="dropdown-toggle btn btn-primary">&#8801;<span class="caret"></span></button>
-            <ul class="dropdown-menu dropDownUL">
-
-
-            </ul>
+        <div class="input-group form-group col-md-offset-3 col-md-5 page2">
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-search"></span>
+            </span>
+            <input type="text" class="form-control categoryInput" name="userInputEventType" id="inputEventType2" placeholder="Event Type">
         </div>
+        <!--<div class="page2 eventsDropDownCont dropdown col-xs-offset-7 col-xs-2 col-md-offset-10 col-md-1 clearfix">-->
+        <!--<button data-toggle="dropdown" type="button" class="dropdown-toggle btn btn-primary">&#8801;<span class="caret"></span></button>-->
+        <!--<ul class="dropdown-menu dropDownUL">-->
+
+
+        <!--</ul>-->
+        <!--</div>-->
     </header>
     <!-- input page -->
     <div class="mainBody col-lg-12">
@@ -52,13 +58,13 @@
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-map-marker"></span>
                                         </span>
-                        <input class="form-control" id="search-city" placeholder="Enter a city" type="text" >
+                        <input class="form-control" id="search-city" value="Los Angeles, CA" placeholder="Enter a city" type="text" >
                     </div>
-                    <div class="input-group form-group">
+                    <div class="input-group form-group page2CategorySearch">
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-search"></span>
                                         </span>
-                        <input type="text" class="form-control" name="userInputEventType" id="inputEventType" placeholder="Event Type">
+                        <input type="text" class="form-control categoryInput" name="userInputEventType" id="inputEventType" placeholder="Music, Comedy, Festivals, Film, Food & Wine...">
                     </div>
                     <div class="input-group form-group">
                                         <span class="input-group-addon">

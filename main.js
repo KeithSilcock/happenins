@@ -212,7 +212,7 @@ class eventfullEventRequester {
  */
 
 $(window).on('load', function () {
-    let controller = new HappeninsController();
+    let controller = new CircleController();
     controller.requestEventData();
     // let arrayOfDummyData = [
     //     {
@@ -243,7 +243,7 @@ $(window).on('load', function () {
 })
 
 
-class HappeninsController{
+class CircleController{
     constructor(){
         this.newEventfulRequest = new eventfullEventRequester(null, null,null);
         this.newEventRenderer = new EventRenderer(this.changePageState.bind(this));
@@ -252,6 +252,27 @@ class HappeninsController{
         this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
             'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
             'other'];
+        this.categoryKeys={
+            'Music':'music',
+            'Comedy':'comedy',
+            'Kids/Family Fun':'family_fun_kids',
+            'Festivals':'festivals',
+            'Film':'film',
+            'Food & Wine':'food &amp; Wine',
+            'Art':'art',
+            'Holiday':'holiday',
+            'Museums':'museums',
+            'Buisiness':'business',
+            'Nightlife':'nightlife',
+            'Clubs':'clubs',
+            'Outdoors':'outdoors',
+            'Animals':'animals',
+            'Sales':'sales',
+            'Science':'science',
+            'Sports':'sports',
+            'Technology':'technology',
+            'Other':'other',
+        }
 
         this.changePageState(1);
 
@@ -275,7 +296,7 @@ class HappeninsController{
     }
     pageState3(){
         $('.page1').addClass('pageHidden');
-        $('.page2').removeClass('pageHidden');
+        $('.page2').addClass('pageHidden');
         $('.page3').removeClass('pageHidden');
     }
 
@@ -288,7 +309,7 @@ class HappeninsController{
     }
 
     handleEventHandlers(){
-        $("#inputEventType").on({
+        $("#inputEventType, #inputEventType2").on({
             'keyup': this.onKeyUp.bind(this),
             'focusout': this.onFocusOutCloseAutoComplete.bind(this),
             'focus': function () {
@@ -296,15 +317,14 @@ class HappeninsController{
             }
         });
 
-        $('#searchButton').click( () => {
-           this.changePageState(2);
+        $('#searchButton, .closePage3').on({
+            'click':() => {
+                this.changePageState(2);
+            }
         });
         $("#logo").on({
             'click': () => this.changePageState(1),
-        })
-        $(".closePage3").on({
-            'click': () => this.changePageState(2),
-        })
+        });
 
     }
 
@@ -313,10 +333,10 @@ class HappeninsController{
         if(event.key==='Escape'){
             this.removeAutoCompleteUL();
         }else if(!this.autoCompleteTimeout) {
-            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this), 500);
+            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this, event.target), 500);
         }else{
             clearTimeout(this.autoCompleteTimeout);
-            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this), 500);
+            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this, event.target), 500);
         }
     }
     onFocusOutCloseAutoComplete(event){
@@ -327,10 +347,11 @@ class HappeninsController{
             this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
         }
     }
-    autoCompleteCourse() {
+    autoCompleteCourse(inputToComplete) {
         this.removeAutoCompleteUL();
 
-        let categoryInput = $('#inputEventType');
+        let appendParent = $(inputToComplete).closest('.input-group')
+        let categoryInput = $(inputToComplete);
         let lettersSoFar = categoryInput.val().toLowerCase();
 
         if(lettersSoFar.length===0){
@@ -346,9 +367,7 @@ class HappeninsController{
 
         let allAutoCorrectMatches = [];
 
-        for(let categoryIndex=0; categoryIndex<this.arrayOfEventCategories.length; categoryIndex++){
-            let category = this.arrayOfEventCategories[categoryIndex];
-
+        for(let category in this.categoryKeys){
             let sliceToCheck = category.toLowerCase().slice(0,lettersSoFar.length);
             if(category.length === lettersSoFar.length){
                 this.removeAutoCompleteUL();
@@ -367,7 +386,7 @@ class HappeninsController{
             for(let index in allAutoCorrectMatches){
                 autoCompleteUL.append(allAutoCorrectMatches[index]);
             }
-            $("#categoryInput").append(autoCompleteUL);
+            appendParent.append(autoCompleteUL);
         }
 
         function autoComplete(event) {
