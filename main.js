@@ -3,9 +3,6 @@
  */
 
 
-var searchFoodItem;
-var foodLatitude;
-var foodLongitude;
 var eventSearchResultArray = [];
 var a = [];
 
