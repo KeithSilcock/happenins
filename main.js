@@ -198,7 +198,7 @@ function eventfulEventRequest(){
 
                 eventSearchResultArray.push(eventSearchResultObject);
             }
-            console.log(eventSearchResultArray);
+
             return eventSearchResultArray;
 
         },

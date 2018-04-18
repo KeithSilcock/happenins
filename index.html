@@ -18,7 +18,12 @@
 
 
     <title>Happenins</title>
-
+    <style>
+        #map{
+          height:100px;
+          width:100%;
+        }
+    </style>
 </head>
 <body>
 <!-- start with header area -->
@@ -50,14 +55,19 @@
                         </span>
                         <input type="date" class="form-control" name="userInputDate" id="inputDate">
                 </div>
-               
+
                 <button type="button" class="btn btn-warning btn-md" id="searchButton">Search</button>
 
-        </div> 
+        </div>
     <!-- end input form -->
+
+
 	</div>
+
+
+
   </div>
-  <script type="text/javascript">     
+  <script type="text/javascript">
       function activePlaceSearch(){
         // var input = $('#search-city');
         // var autocomplete = new google.maps.places.Autocomplete(input[0]);
@@ -65,8 +75,14 @@
         var autocomplete = new google.maps.places.Autocomplete(input);
 
     }
-  </script>
-   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPN4nvPi1zuanO-esg1xO-4UybPxShug0&libraries=places&callback=activePlaceSearch" async defer></script>
+</script>
+
+
+
+
+
+
+
 </body>
 
 
