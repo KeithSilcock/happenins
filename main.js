@@ -3,9 +3,6 @@
  */
 
 
-var searchFoodItem;
-var foodLatitude;
-var foodLongitude;
 var eventSearchResultArray = [];
 var a = [];
 
@@ -35,6 +32,9 @@ const yelpBusinessResultsArray = [];
 
 
 function initializeApp() {
+
+    // eventfulEventRequest()
+
     //addHoverHandlers();
     addClickHandlers();
     //eventfulEventRequest(startDate, endDate, category)
@@ -60,8 +60,11 @@ function addHoverHandler() {
 
 function addClickHandlers() {
     $('#searchButton').click(function(){
-        $(".firstPageContainer").addClass('pageHidden')
-        $(".secondPageContainer").removeClass('pageHidden')
+        $(".firstPageContainer").addClass('pageHidden');
+        //**** katy add this, do not remove ***////
+        $(".eventsDropDownCont").removeClass('pageHidden');
+        //***** katy edited ends ****////
+        $(".secondPageContainer").removeClass('pageHidden');
 
     });
 
@@ -377,7 +380,7 @@ class EventRenderer{
         this.renderDropDownMenu(this.arrayOfEventCategories);
         // this.turnDataIntoDomElements(this.arrayOfData)
     }
-
+//dropDownMenu begin;
     renderDropDownMenu(arrayOfEventCats){
         let dropDownMenuUL=$(".dropDownUL");
 
@@ -389,7 +392,7 @@ class EventRenderer{
             dropDownMenuUL.append(thisLI)
         })
     }
-
+//dropDownMenu end;
     turnDataIntoDomElements(arrayOfInfo){
         for(let objectIndex=0; objectIndex<arrayOfInfo.length; objectIndex++){
             let infoObject = arrayOfInfo[objectIndex];
@@ -595,9 +598,16 @@ class createGoogleMap {
  *
  */
 
-function autoCompleteLocation() {
+function activePlaceSearch(){
+        // var input = $('#search-city');
+        // var autocomplete = new google.maps.places.Autocomplete(input[0]);
+        var input = document.getElementById('search-city');
+        var autocomplete = new google.maps.places.Autocomplete(input);
 
 }
+
+
+
 
 
 

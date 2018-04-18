@@ -9,89 +9,73 @@
     <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
 
-
-
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <script rel="script" type="text/javascript" src="main.js"></script>
-
-
     <title>Happenins</title>
 
 </head>
 <body>
-<div class="firstPageContainer">
-    <!-- start with header area -->
     <header id="headerArea" class="container-fluid col-sm-12 col-lg-12">
-        <div id="logo">logoArea</div>
-        <div id="myEventLink"><a href="eventPage.html">My Event</a></div>
-    </header>
-    <!-- start with the mainBody area -->
-    <div id="mainBody" class="col-sm-12">
-        <div id="centerContianer" class="col-lg-12" >
-            <!-- start input form -->
-            <div class="search-form col-lg-7 col-md-7 col-sm-12 col-xs-12 ">
-                <h4>Find Event in: </h4>
-                <div class="input-group form-group">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-map-marker"></span>
-                        </span>
-                    <input class="form-control" id="search-city" placeholder="Enter a city" type="text" >
-                </div>
-                <div id="categoryInput" class="input-group form-group">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-search"></span>
-                        </span>
-                    <input type="text" class="form-control" name="userInputEventType" id="inputEventType" placeholder="Music, Comedy, Festivals, Food &amp; Wine...">
-                </div>
-                <div class="input-group form-group">
-                        <span class="input-group-addon">
-                            <span class="glyphicon glyphicon-calendar"></span>
-                        </span>
-                    <input type="date" class="form-control" name="userInputDate" id="inputDate">
-                </div>
+        <div id="logo">logoArea</div>    
+      
+<!--    <div id="myEventLink"><a href="eventPage.html">My Event</a></div> -->    
+        <div class="eventsDropDownCont dropdown col-xs-offset-7 col-xs-2 col-md-offset-10 col-md-1 clearfix pageHidden">
 
-                <button type="button" class="btn btn-warning btn-md" id="searchButton">Search</button>
-
-            </div>
-            <!-- end input form -->
-        </div>
-    </div>
-</div>
-<div class="secondPageContainer pageHidden">
-
-    <header id="headerArea2" class="container-fluid col-xs-12 col-sm-12 col-lg-12" >
-        <div id="logo2" class="col-xs-2">logoArea</div>
-        <!--<div id="myEventLink"><a href="index.html">Search Event</a></div>-->
-        <div class="eventsDropDownCont dropdown col-xs-offset-7 col-xs-2 col-md-offset-10 col-md-1 clearfix">
             <button data-toggle="dropdown" type="button" class="dropdown-toggle btn btn-primary">&#8801;<span class="caret"></span></button>
             <ul class="dropdown-menu dropDownUL">
 
             </ul>
         </div>
+
     </header>
+    <!-- input page -->
+    <div class="firstPageContainer">    
+        <div id="mainBody" class="col-sm-12">
+            <div id="centerContianer" class="col-lg-12" >
+                <!-- start input form -->
+                <div class="search-form col-lg-7 col-md-7 col-sm-12 col-xs-12 ">
+                    <h4>Find Event in: </h4>
+                    <div class="input-group form-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-map-marker"></span>
+                            </span>
+                        <input class="form-control" id="search-city" placeholder="Enter a city" type="text" >
+                    </div>
+                    <div class="input-group form-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-search"></span>
+                            </span>
+                        <input type="text" class="form-control" name="userInputEventType" id="inputEventType" placeholder="Event Type">
+                    </div>
+                    <div class="input-group form-group">
+                            <span class="input-group-addon">
+                                <span class="glyphicon glyphicon-calendar"></span>
+                            </span>
+                        <input type="date" class="form-control" name="userInputDate" id="inputDate">
+                    </div>
 
-    <div class="eventsContainer col-xs-12">
-
-
+                    <button type="button" class="btn btn-warning btn-md" id="searchButton">Search</button>
+                </div> 
+                <!-- end input page  form -->
+    	   </div>
+        </div>
     </div>
+    <!-- events page -->
+    <div class="secondPageContainer pageHidden">
+
+        <div class="eventsContainer col-xs-12">
+
+
+        </div>
 
 </div>
 
-<script type="text/javascript">
-    function activePlaceSearch(){
-        // var input = $('#search-city');
-        // var autocomplete = new google.maps.places.Autocomplete(input[0]);
-        var input = document.getElementById('search-city');
-        var autocomplete = new google.maps.places.Autocomplete(input);
+   <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPN4nvPi1zuanO-esg1xO-4UybPxShug0&libraries=places&callback=activePlaceSearch" async defer></script>
 
-    }
-</script>
-<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDPN4nvPi1zuanO-esg1xO-4UybPxShug0&libraries=places&callback=activePlaceSearch" async defer></script>
+
 </body>
-
-
 
 
 </html>
