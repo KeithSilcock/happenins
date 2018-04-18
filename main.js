@@ -201,6 +201,12 @@ class eventfullEventRequester {
                 console.log(eventSearchResultArray);
 
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+                renderFunc(eventSearchResultArray)
+
+
+>>>>>>> e2c0c76f673d8a87140e538e4a772c8013b92f48
                 eventSearchResultArray.push(eventSearchResultObject);
             }
 
@@ -209,15 +215,20 @@ class eventfullEventRequester {
         },
         error: function (error) { console.log(error) },
     });
+<<<<<<< HEAD
 =======
                 renderFunc(eventSearchResultArray)
 >>>>>>> 086ec2b6bceccfb253751fc3614c6f02221df3cc
+=======
+
+>>>>>>> e2c0c76f673d8a87140e538e4a772c8013b92f48
 
             },
             error: function (error) {
                 console.log(error)
             },
         });
+
 
 
     }
