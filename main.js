@@ -136,14 +136,10 @@ function initMap(lat,lng) {
     console.log(yelpBusinessResultsArray[0].coordinates.latitude)
     var mapOptions = {
         zoom: 16,
-        center: new google.maps.LatLng(lat,lng)
-
-        console.log(data);
-        console.log(this.yelpBusinessResultsArray);
-        console.log(latitude, longitude);
-        // submitYelpButtonClicked(this.eventCoord, this.searchObject)
-
+        center: new google.maps.LatLng(lat, lng)
     }
+
+
     var map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
     var markerLocation = {lat: 34.0522, lng: -118.2437};
     var markerLat;
@@ -393,7 +389,7 @@ class CircleController {
             'focusout': this.onFocusOutCloseAutoComplete.bind(this),
             'focus': function () {
                 ////console.log('here')
-
+            }
 
         });
 
