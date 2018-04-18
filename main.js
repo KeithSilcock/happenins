@@ -101,46 +101,20 @@ class YelpData {
         $.ajax(yelpAjaxCall);
     }
     pullBusinessData(data) {
-        console.log(data);
         testData = data.businesses;
         yelpBusinessResultsArray.length = 0;
         data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-        console.log(yelpBusinessResultsArray);
         var {latitude, longitude} = data.region.center;
+        console.log(data);
+        console.log(yelpBusinessResultsArray);
         console.log(latitude, longitude);
     }
 }
 
-var newYelpCall = new yelpData(yelpSearchObj);
+var newYelpCall = new YelpData(yelpSearchObj);
 
 console.log(newYelpCall);
 
-// var yelpAjaxCall = {
-//     dataType: "JSON",
-//     method: 'POST',
-//     url: "http://yelp.ongandy.com/businesses",
-//     data : {
-//         "access_token" : "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
-//         "term" : "bbq",
-//         "latitude" : 34.0522,
-//         "longitude" : -118.2437,
-//     },
-//     success : function(results) {
-//         console.log("success : " , results);
-//         results.businesses.map( item => yelpBusinessResultsArray.push( item ) );
-//         console.log(yelpBusinessResultsArray);
-//         var {latitude, longitude} = results.region.center;
-//         console.log(latitude, longitude);
-//     },
-//     error : function(errors) {
-//         console.log( "errors : " , errors );
-//     }
-// };
-//
-// $.ajax(yelpAjaxCall);
-
-
-// $.ajax(yelpAjaxCall);
 
 
 
