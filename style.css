@@ -82,6 +82,20 @@ header{
 
 
 
+
+#autoComplete{
+    list-style: none;
+    position: absolute;
+    top: 100%;
+    border: 1px solid black;
+    background-color: white;
+
+    z-index: 100;
+}
+#autoCompleteLI{
+
+}
+
 .search-form{
     text-align: center;
     position: relative;

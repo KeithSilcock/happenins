@@ -80,7 +80,7 @@ function addClickHandlers() {
  * @returns: {object} data from Yelp
  * Sends request to Yelp API to pull data based off search input from User
  */
-
+var testData = null;
 class yelpData {
     constructor(searchObj) {
         this.searchObject = searchObj;
@@ -102,6 +102,7 @@ class yelpData {
     }
     pullBusinessData(data) {
         console.log(data);
+        testData = data.businesses;
         yelpBusinessResultsArray.length = 0;
         data.businesses.map( item => yelpBusinessResultsArray.push( item ) );
         console.log(yelpBusinessResultsArray);
@@ -200,7 +201,7 @@ class eventfullEventRequester {
                     eventSearchResultArray.push(eventSearchResultObject);
                 }
                 console.log(eventSearchResultArray);
-              
+
                 renderFunc(eventSearchResultArray)
 
             },
@@ -212,7 +213,6 @@ class eventfullEventRequester {
 
     }
 }
-
 
 
 /***************************************************************************************************
@@ -266,6 +266,13 @@ class HappeninsController{
     constructor(){
         this.newEventfulRequest = new eventfullEventRequester(null, null,null);
         this.newEventRenderer = new EventRenderer();
+
+        this.autoCompleteTimeout=null;
+        this.arrayOfEventCategories = ['music','comedy','family_fun_kids','festivals','film','food', 'food &amp; Wine','art',
+            'holiday','museums','business','nightlife','clubs','outdoors','animals','sales','science','sports','technology',
+            'other'];
+
+        this.handleEventHandlers();
     }
 
     requestEventData(){
@@ -274,6 +281,93 @@ class HappeninsController{
 
     renderEventDataOnSuccess(dataArray){
         this.newEventRenderer.turnDataIntoDomElements(dataArray);
+    }
+
+
+
+
+    handleEventHandlers(){
+        $("#inputEventType").on({
+            'keyup': this.onKeyUp.bind(this),
+            'focusout': this.onFocusOutCloseAutoComplete.bind(this),
+            'focus': function () {
+                console.log('here')
+            }
+        })
+    }
+
+    onKeyUp(event) {
+        if(event.key==='Escape'){
+            this.removeAutoCompleteUL();
+        }else if(!this.autoCompleteTimeout) {
+            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this), 500);
+        }else{
+            clearTimeout(this.autoCompleteTimeout);
+            this.autoCompleteTimeout = setTimeout(this.autoCompleteCourse.bind(this), 500);
+        }
+    }
+    onFocusOutCloseAutoComplete(event){
+        if(!this.focusOutTimeout) {
+            this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
+        }else{
+            clearTimeout(this.focusOutTimeout);
+            this.focusOutTimeout = setTimeout(this.removeAutoCompleteUL, 200);
+        }
+    }
+    autoCompleteCourse() {
+        this.removeAutoCompleteUL();
+
+        let categoryInput = $('#inputEventType');
+        let lettersSoFar = categoryInput.val().toLowerCase();
+
+        if(lettersSoFar.length===0){
+
+            // this.removeAutoCompleteUL();
+            return;
+        }
+
+        let autoCompleteUL=$("<ul>",{
+            'id':'autoComplete',
+        });
+        autoCompleteUL.on('click', '#autoCompleteLI', autoComplete.bind(this));
+
+        let allAutoCorrectMatches = [];
+
+        for(let categoryIndex=0; categoryIndex<this.arrayOfEventCategories.length; categoryIndex++){
+            let category = this.arrayOfEventCategories[categoryIndex];
+
+            let sliceToCheck = category.toLowerCase().slice(0,lettersSoFar.length);
+            if(category.length === lettersSoFar.length){
+                this.removeAutoCompleteUL();
+                continue;
+            }
+            if(sliceToCheck === lettersSoFar && lettersSoFar.length>0){
+                let autoCompleteLI = $("<li>",{
+                    text:category,
+                    'id':'autoCompleteLI',
+                });
+                allAutoCorrectMatches.push(autoCompleteLI);
+            }
+        }
+
+        if(allAutoCorrectMatches.length>0){
+            for(let index in allAutoCorrectMatches){
+                autoCompleteUL.append(allAutoCorrectMatches[index]);
+            }
+            $("#categoryInput").append(autoCompleteUL);
+        }
+
+        function autoComplete(event) {
+            var clickedObj=event.target;
+            categoryInput.val(clickedObj.outerText);
+            this.removeAutoCompleteUL();
+        }
+    }
+    removeAutoCompleteUL(event){
+        $("#autoComplete").remove();
+    }
+    autocompleteAllChoices(){
+
     }
 }
 
@@ -462,6 +556,7 @@ class createGoogleMap {
     constructor(searchObj) {
         this.latitude = searchObj.latitude;
         this.longitude = searchObj.longitude;
+        this.searchArray = searchObj.businesses;
         this.map = new google.maps.Map(document.getElementById('map'), {
             center: losAngeles,
             zoom: 20
@@ -491,8 +586,24 @@ class createGoogleMap {
         google.maps.event.addListener(marker, 'click', function() {
             infowindow.setContent(place.name);
             infowindow.open(map, this);
-            // maybe open modal with restaurant information instead?
         });
+        this.provideLocationData(this.searchArray, this.marker);
+    }
+    provideLocationData(searchArray) {
+        searchArray.map(function(item, marker) {
+            this.locationDiv = $("<div>").addClass("locationDiv");
+            this.locationName = $("<p>").text(item.name).addClass("locationName");
+            this.locationImage = $("<img>").attr("src", item.image_url).addClass("locationImage");
+            this.locationLocation = $("<p>").text(item.location["display_address"].map( address => "" + address + ", " + address)).addClass("locationLocation");
+            this.locationPhoneNumber = $("<p>").text(item.phone).addClass("locationPhoneNumber");
+            this.locationPrice = $("<p>").text(item.price).addClass("locationPrice");
+            this.locationRating = $("<p>").text(item.rating).addClass("locationRating");
+            this.locationReviewCount = $("<p>").text(item.review_count).addClass("locationReviewCount");
+            this.locationURL = $("<p>").text(item.url).addClass("locationURL");
+
+            this.locationDiv.append(this.locationName, this.locationImage, this.locationPrice, this.locationRating, this.locationReviewCount, this.locationLocation, this.locationPhoneNumber, this.locationURL);
+            marker.append(this.locationDiv);
+        })
     }
 }
 

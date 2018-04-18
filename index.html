@@ -8,11 +8,19 @@
     <script src="https://code.jquery.com/jquery-3.1.0.js"></script>
     <script src="https://code.jquery.com/jquery-3.0.0.js"></script>
     <script src="https://code.jquery.com/jquery-2.2.4.js"></script>
+
     <script rel="script" type="text/javascript" src="main.js"></script>
+
     <link href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" rel="stylesheet" type="text/css" />
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
     <link rel="stylesheet" type="text/css" href="style.css">
     <title>Happenins</title>
+      <style>
+        #map{
+          height:100px;
+          width:100%;
+        }
+    </style>
 </head>
 <body>
 <div id="overlay-color"></div>
@@ -23,6 +31,7 @@
             <div class="eventsDropDownCont dropdown col-xs-offset-7 col-xs-2 col-md-offset-10 col-md-1 clearfix pageHidden">
                 <button data-toggle="dropdown" type="button" class="dropdown-toggle btn btn-primary">&#8801;<span class="caret"></span></button>
                 <ul class="dropdown-menu dropDownUL">
+  
 
                 </ul>
             </div>
@@ -91,10 +100,31 @@
                                 <span class="glyphicon glyphicon-time"></span>
                                 <span class="eventTime"> 8:30 PM</span>                         
                             </div>
+                            </span>
+                        <input type="date" class="form-control" name="userInputDate" id="inputDate">
+
+
+                </div>
+
+                <button type="button" class="btn btn-warning btn-md" id="searchButton">Search</button>
+
+        </div>
+    <!-- end input form -->
+
+
+	</div>
+
+
+
+  </div>
+  
+
+                    </div>
 
                         </div>
                         <div id="mapArea" class="containerSize col-lg-6 col-md-6 col-sm-12 col-xs-12"></div>
                         <div id="surroundingAreaInfo" class="containerSize col-lg-3 col-md-3 col-sm-12 col-xs-12"></div>
+
 
 
 
