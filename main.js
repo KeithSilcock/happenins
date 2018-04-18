@@ -529,6 +529,7 @@ function eventSubmitButtonClicked() {
 
 function submitYelpButtonClicked() {
     var searchObj = {};
+    //should have default values if no value entered
     searchObj.term = $(/*#searchTerm*/).val();
     searchObj.latitude = $(/*#latitude*/).val();
     searchObj.longitude = $(/*#longitude*/).val();
@@ -549,25 +550,30 @@ function submitYelpButtonClicked() {
  * creates a map to display onto page that will contain makers. Markers will be yelp results
  */
 
+
 class createGoogleMap {
     constructor(searchObj) {
         this.latitude = searchObj.latitude;
         this.longitude = searchObj.longitude;
+        this.searchCoordinates = {
+            lat : this.latitude,
+            lng : this.longitude
+        };
         this.searchArray = searchObj.businesses;
         this.map = new google.maps.Map(document.getElementById('map'), {
-            center: losAngeles,
-            zoom: 20
+            center: this.searchCoordinates,
+            zoom: 5
         });
         this.infoWindow = new google.maps.InfoWindow();
         this.service = new google.maps.places.PlacesService(map);
-        service.nearbySearch({
-            location: {latitude: this.latitude, longitude: this.longitude},
+        this.service.nearbySearch({
+            location: this.searchCoordinates,
             radius: 800,
             type: ['restaurant']
         }, this.callback);
     }
     callback(results, status) {
-        if (status === google.maps.pleaces.PlacesServiceStatus.OK) {
+        if (status === google.maps.places.PlacesServiceStatus.OK) {
             for(let i = 0; i < results.length; i++) {
                 this.createMarker = this.createMarker.bind(this);
                 this.createMarker(results[i]);
@@ -578,10 +584,10 @@ class createGoogleMap {
         this.placeLocation = place.geometry.location;
         this.marker = new google.maps.Marker({
             map: map,
-            position: placeLocation
+            position: this.placeLocation
         });
         google.maps.event.addListener(marker, 'click', function() {
-            infowindow.setContent(place.name);
+            infowindow.setContent(/**/);
             infowindow.open(map, this);
         });
         this.provideLocationData(this.searchArray, this.marker);
