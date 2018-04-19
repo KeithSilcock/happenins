@@ -307,14 +307,14 @@ button{
 
 
 
-/*.containerSize{
+.containerSize{
     height: 90%;
     border: 1px solid red;
     box-sizing: border-box;
     position: relative;
     top: 5%;
     margin: 1px;
-}*/
+}
 
 
 
@@ -345,13 +345,26 @@ button{
     padding: 0px;
 }
 
-.closePage3{
+.closePage3 {
     position: absolute;
-    left: 97%;
-
-    font-size: 2em;
-    color: grey;
+    left: 90%;
+    font-size: 3em;
+    /* color: grey; */
     font-weight: bold;
     cursor: pointer;
-
+    color: pink;
+    z-index: 1;
+}
+.closePage3:hover{
+    color:white;
+    text-shadow: 1px 1px 10px pink;
+}
+#mapArea{
+    height: 80vh;
+    width: 65vw;
+    padding: 0;
+}
+#google-map{
+    height:100%;
+    width: 100%;
 }

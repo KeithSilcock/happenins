@@ -90,26 +90,27 @@
  */
 
 
+var yelpBusinessResultsArray=[]
 class YelpData {
     constructor(eventCoord) {
         this.searchObject = {
             access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
             term: "restaurants",
-            latitude: 34.0522, // current number is for LA  /*DOM element search item - a number, can have decimals*/,
-            longitude: -118.2437, // current number is for LA   /*DOM element search item - a number, can have decimals*/,
-            location : "Los Angeles",
-            radius : 800,
-            categories: "American (New)",
+            // location : "Los Angeles",
+            radius : 300,
+            categories: "Asian",
             priceRange : "1,2,3,4",
             open_now: false,
             sort_by: "best_match"
         };
         this.testData = null;
         this.eventCoord = eventCoord;
+        this.searchObject.latitude = Number(this.eventCoord.latitude);
+        this.searchObject.longitude = Number(this.eventCoord.longitude);
         this.pullBusinessData = this.pullBusinessData.bind(this);
         this.ajaxCall = this.ajaxCall.bind(this);
         this.ajaxCall();
-        this.yelpBusinessResultsArray = [];
+        // this.yelpBusinessResultsArray = [];
         this.handleEventHandler();
     }
 
@@ -137,21 +138,24 @@ class YelpData {
         // let newGoogleMap = new GoogleMap()
 
         // this.testData = data.businesses;
-        this.yelpBusinessResultsArray = [];
-        this.submitYelpButtonClicked(this.eventCoord, this.searchObject);
+        yelpBusinessResultsArray = [];
+        this.searchObject.latitude = Number(this.eventCoord.latitude);
+        this.searchObject.longitude = Number(this.eventCoord.longitude);
+
+        // this.submitYelpButtonClicked(this.eventCoord, this.searchObject);
 
         if(data.businesses) {
             for (var businessIndex = 0; businessIndex < data.businesses.length; businessIndex++) {
-                this.yelpBusinessResultsArray.push(data.businesses[businessIndex]);
+                yelpBusinessResultsArray.push(data.businesses[businessIndex]);
             }
 
             var {latitude, longitude} = data.region.center;
-            console.log(this.yelpBusinessResultsArray);
-            // initMap(34.0522, -118.2437);
+            console.log(yelpBusinessResultsArray);
+            var newMap = initMap(Number(this.eventCoord.latitude), Number(this.eventCoord.longitude), yelpBusinessResultsArray);
 
-            let newGoogleMap = new GoogleMap(this.yelpBusinessResultsArray);
+            // let newGoogleMap = new GoogleMap(yelpBusinessResultsArray);
 
-            newGoogleMap.initMap(this.eventCoord.latitude, this.eventCoord.longitude);
+            // newGoogleMap.initMap(this.eventCoord.latitude, this.eventCoord.longitude);
             // newGoogleMap.initMap(34.0522, -118.2437);
         }
     }
@@ -183,40 +187,35 @@ class YelpData {
 //console.log(newYelpCall);
 
 
-class GoogleMap {
-    constructor(yelpResultArray) {
-        this.yelpBusinessResultsArray = yelpResultArray
+// class GoogleMap {
+//     constructor(yelpResultArray) {
+//         this.yelpBusinessResultsArray = yelpResultArray
+//     }
+
+
+function initMap(lat,lng, yelpBusinessResultsArray) {
+    console.log(yelpBusinessResultsArray[0].coordinates.latitude)
+    var mapOptions = {
+        zoom: 16,
+        center: new google.maps.LatLng(lat,lng)
     }
-
-    initMap(lat, lng) {
-        console.log(this.yelpBusinessResultsArray[0].coordinates.latitude)
-        var mapOptions = {
-            zoom: 16,
-            center: new google.maps.LatLng(lat, lng)
-        }
-
-        // console.log(data);
-        // console.log(this.yelpBusinessResultsArray);
-        // console.log(latitude, longitude);
-        // submitYelpButtonClicked(this.eventCoord, this.searchObject)
-
-
-        var map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
-        var markerLocation = {lat: 34.0522, lng: -118.2437};
-        var markerLat;
-        var markerLng;
-        for (let markerIndex = 0; markerIndex < this.yelpBusinessResultsArray.length; markerIndex++) {
-            markerLat = this.yelpBusinessResultsArray[markerIndex].coordinates.latitude;
-            markerLng = this.yelpBusinessResultsArray[markerIndex].coordinates.longitude;
-            var marker = new google.maps.Marker({
-                map: map,
-                position: new google.maps.LatLng(markerLat, markerLng),
-                animation: google.maps.Animation.DROP,
-            });
-        }
+    var map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
+    var markerLocation = {lat: 34.0522, lng: -118.2437};
+    var markerLat;
+    var markerLng;
+    for (markerIndex=0; markerIndex<yelpBusinessResultsArray.length; markerIndex++) {
+        markerLat = yelpBusinessResultsArray[markerIndex].coordinates.latitude;
+        markerLng = yelpBusinessResultsArray[markerIndex].coordinates.longitude;
+        var marker = new google.maps.Marker({
+            map: map,
+            position: new google.maps.LatLng(markerLat, markerLng),
+            animation: google.maps.Animation.DROP,
+        });
     }
-
+    return map
 }
+
+// }
 
 
 // var testSearchObject = {
@@ -244,16 +243,15 @@ class GoogleMap {
  * @returns: {object} data from PredictHQ
  * Sends request to PredictHQ API to pull data based off search input from User
  */
+var eventCoordinates={}
 //function eventfulEventRequest(startDate, endDate, category){
 class eventfulEventRequester {
     constructor() {
         this.searchObject = {
             access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
             term: "restaurants",
-            latitude: 34.0522, // current number is for LA  /*DOM element search item - a number, can have decimals*/,
-            longitude: -118.2437, // current number is for LA   /*DOM element search item - a number, can have decimals*/,
             location : "Los Angeles",
-            radius : 800,
+            radius : 10,
             categories: "American (New)",
             priceRange : "1,2,3,4",
             open_now: false,
@@ -340,14 +338,24 @@ class eventfulEventRequester {
                         venueState:venueState,
                     };
 
-                    var eventCoordinates = {
-                        latitude: eventSearchResultObject.latitude,
-                        longitude: eventSearchResultObject.longitude
+                    eventCoordinates = {
+                        latitude: Number(eventSearchResultObject.latitude),
+                        longitude: Number(eventSearchResultObject.longitude),
                     };
 
-                    var yelpData = new YelpData(eventCoordinates,this.searchObject);
+                    var searchObject = {
+                        access_token: "17TJfP0tFmBX3bHRcvUEDnVkR2VgnziO0jhDrwgPcrEJXjJ0H66V0H5kmMWQwTHX2cZfhynFzE3sjaEzBb-v7chrsyweKxQQIvPbbW5SvMZt01-PWWi7PPo2PEvVWnYx",
+                        term: "restaurants",
+                        location : "Los Angeles",
+                        radius : 10,
+                        categories: "American (New)",
+                        priceRange : "1,2,3,4",
+                        open_now: false,
+                        sort_by: "best_match"
+                    };
 
-
+                    searchObject.latitude = Number(venueLatitude);
+                    searchObject.longitude = Number(venueLongitude);
 
                     eventSearchResultArray.push(eventSearchResultObject);
                 }
@@ -736,7 +744,11 @@ class EventRenderer{
         }
     }
     openThirdPageInformation(thisObj, info, event){
-
+        let eventCoordinates = {
+            latitude:info.latitude,
+            longitude:info.longitude,
+        }
+        var yelpData = new YelpData(eventCoordinates,info);
         // thisObj.handlePopOutAnimation(event);
         // ^^^ keeps expanded list from closing, but need to fix in later edition
 
@@ -922,7 +934,7 @@ class CreateGoogleMap {
         this.service = new google.maps.places.PlacesService(map);
         this.service.nearbySearch({
             location: this.searchCoordinates,
-            radius: 800,
+            radius: 10,
             type: ['restaurant']
         }, this.callback);
     }
