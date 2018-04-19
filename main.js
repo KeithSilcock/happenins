@@ -215,7 +215,7 @@ class GoogleMap {
                 animation: google.maps.Animation.DROP,
             });
         }
-<<<<<<< HEAD
+    }
 }
 
 
