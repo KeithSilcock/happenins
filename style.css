@@ -368,3 +368,12 @@ button{
     height:100%;
     width: 100%;
 }
+
+#loader{
+    width: 10%;
+    position: absolute;
+    left: 50%;
+    top: 20%;
+    transform: translate(-50%, 0);
+    display: none;
+}
