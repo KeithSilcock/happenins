@@ -90,7 +90,7 @@
  */
 
 
-var yelpBusinessResultsArray=[]
+var yelpBusinessResultsArray=[];
 class YelpData {
     constructor(eventCoord) {
         this.searchObject = {
@@ -194,13 +194,13 @@ class YelpData {
 
 
 function initMap(lat,lng, yelpBusinessResultsArray) {
-    console.log(yelpBusinessResultsArray[0].coordinates.latitude)
+    //console.log(yelpBusinessResultsArray[0].coordinates.latitude)
     var mapOptions = {
         zoom: 16,
         center: new google.maps.LatLng(lat,lng)
     }
     var map = new google.maps.Map(document.getElementById('google-map'), mapOptions);
-    var markerLocation = {lat: 34.0522, lng: -118.2437};
+    //var markerLocation = {lat: 34.0522, lng: -118.2437};
     var markerLat;
     var markerLng;
     for (markerIndex=0; markerIndex<yelpBusinessResultsArray.length; markerIndex++) {
@@ -212,6 +212,13 @@ function initMap(lat,lng, yelpBusinessResultsArray) {
             animation: google.maps.Animation.DROP,
         });
     }
+    // marker for event
+    var marker = new google.maps.Marker({
+        map: map,
+        position: new google.maps.LatLng(lat,lng),
+        icon: 'includes/images/event-marker.png'
+    });
+
     return map
 }
 
@@ -958,6 +965,8 @@ class CreateGoogleMap {
         });
         this.provideLocationData(this.searchArray, this.marker);
     }
+
+
     provideLocationData(searchArray, marker /*businesses array*/) {
         searchArray.map(function(item) {
             this.locationDiv = $("<div>").addClass("locationDiv");
@@ -1002,5 +1011,3 @@ function activePlaceSearch(){
     var autocomplete = new google.maps.places.Autocomplete(input);
 
 }
-
-
