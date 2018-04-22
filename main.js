@@ -279,7 +279,7 @@ class eventfulEventRequester {
         let dateEnd=(Number(date) + 3).toString();
 
         let url=`https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=${date}00-${dateEnd}00&category=${category}&image_sizes=blackborder250,block100&page_size=${numOfEntries}&category=new`
-
+        document.getElementById("loader").style.display = 'block';
         $.ajax({
             //url: "https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date="+  startDate +"00-" + endDate + "00&category=" +  category + "&image_sizes=blackborder250,block100&page_size=10&category=new",
             //"https://api.eventful.com/json/events/search?app_key=Zb7jwSS8MQppFwhH&location=los angeles&within=15&date=2018042000-2018042000&category=music&image_sizes=blackborder250,block100&page_size=20&category=new",
@@ -369,7 +369,7 @@ class eventfulEventRequester {
                 console.log("eventSearchResultArray: ", eventSearchResultArray);
 
                 renderCallback(eventSearchResultArray);
-
+                document.getElementById("loader").style.display = 'none';
 
             },
             error: function (error) {
